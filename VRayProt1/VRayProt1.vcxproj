@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\visualray\game.cpp" />
+    <ClCompile Include="src\visualray\input_service\input_service.cpp" />
+    <ClCompile Include="src\visualray\layer_service\imgui_layer.cpp" />
+    <ClCompile Include="src\visualray\layer_service\layer_stack.cpp" />
+    <ClCompile Include="src\visualray\logger.cpp" />
+    <ClCompile Include="src\visualray\logservice.cpp" />
+    <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
+    <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
+    <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
+    <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
+    <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
+    <ClCompile Include="src\visualray\render_service\renderer.cpp" />
+    <ClCompile Include="src\visualray\render_service\rendering_buffer.cpp" />
+    <ClCompile Include="src\visualray\render_service\render_request.cpp" />
+    <ClCompile Include="src\visualray\render_service\texture_loader.cpp" />
+    <ClCompile Include="src\visualray\render_service\vertex_array.cpp" />
+    <ClCompile Include="src\visualray\util.cpp" />
+    <ClCompile Include="src\visualray\vrpch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\visualray\window_service\window.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\visualray.h" />
+    <ClInclude Include="src\visualray\entry_point.h" />
+    <ClInclude Include="src\visualray\event_service\event.h" />
+    <ClInclude Include="src\visualray\event_service\game_events.h" />
+    <ClInclude Include="src\visualray\event_service\keyboard_events.h" />
+    <ClInclude Include="src\visualray\event_service\mouse_events.h" />
+    <ClInclude Include="src\visualray\event_service\render_events.h" />
+    <ClInclude Include="src\visualray\game.h" />
+    <ClInclude Include="src\visualray\GLFW\glfw3.h" />
+    <ClInclude Include="src\visualray\GLFW\glfw3native.h" />
+    <ClInclude Include="src\visualray\input_codes.h" />
+    <ClInclude Include="src\visualray\input_service\input_service.h" />
+    <ClInclude Include="src\visualray\kernel.h" />
+    <ClInclude Include="src\visualray\layer_service\imgui_layer.h" />
+    <ClInclude Include="src\visualray\layer_service\layer_stack.h" />
+    <ClInclude Include="src\visualray\logger.h" />
+    <ClInclude Include="src\visualray\logservice.h" />
+    <ClInclude Include="src\visualray\managers\mesh_manager.h" />
+    <ClInclude Include="src\visualray\managers\resource_loader.h" />
+    <ClInclude Include="src\visualray\managers\resource_manager.h" />
+    <ClInclude Include="src\visualray\render_service\buffer_layout.h" />
+    <ClInclude Include="src\visualray\render_service\frustum_camera.h" />
+    <ClInclude Include="src\visualray\render_service\glsl_program.h" />
+    <ClInclude Include="src\visualray\render_service\renderer.h" />
+    <ClInclude Include="src\visualray\render_service\rendering_buffer.h" />
+    <ClInclude Include="src\visualray\render_service\render_request.h" />
+    <ClInclude Include="src\visualray\thirdparty\stb_image.h" />
+    <ClInclude Include="src\visualray\render_service\texture_loader.h" />
+    <ClInclude Include="src\visualray\render_service\vertex_array.h" />
+    <ClInclude Include="src\visualray\thirdparty\tiny_obj_loader.h" />
+    <ClInclude Include="src\visualray\util.h" />
+    <ClInclude Include="src\visualray\vrpch.h" />
+    <ClInclude Include="src\visualray\window_service\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{d7246c64-5795-4c28-9e0c-c9d655b5ec1f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
+      <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{82cbe796-1937-41cc-b3f0-7a85de81f8cf}</ProjectGuid>
+    <RootNamespace>VRayProt1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\Devshit\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>VR_PLATFORM_WIN;VR_INTERNAL;VR_PLATFORM_WIN_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>vrpch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\thirdparty\GLM;$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;$(SolutionDir)\thirdparty\GLAD\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)GLFW-prebuilt\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>VR_PLATFORM_WIN;VR_INTERNAL;VR_PLATFORM_WINNDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>vrpch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)GLFW-prebuilt\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

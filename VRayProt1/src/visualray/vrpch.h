@@ -1,0 +1,21 @@
+#pragma once
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <algorithm>
+#include <chrono>
+#include <ctime>
+#include <format>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <stdio.h>
+#include <stdint.h>
+#include <string>
+#include <thread>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
