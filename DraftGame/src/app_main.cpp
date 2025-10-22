@@ -1,12 +1,12 @@
 #include <visualray.h>
 
-class Devshit : public vray::Game {
+class DraftGame : public vray::Game {
 private:
 public:
-	Devshit() {
+	DraftGame() {
 		
 	}
-	~Devshit() {}
+	~DraftGame() {}
 
 	inline void update() override {
 		//VR_LOGINFO(std::to_string(Devshit::deltaTime()));
@@ -14,5 +14,5 @@ public:
 };
 
 vray::Game* vray::vrayMain() {
-	return new Devshit();
+	return new DraftGame();
 }
