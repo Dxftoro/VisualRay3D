@@ -1,6 +1,8 @@
 #pragma once
 #include "kernel.h"
 
+#include "thirdparty/EnTT/entt.hpp"
+#include "world/components.h"
 #include "render_service/renderer.h"
 #include "window_service/window.h"
 
@@ -14,13 +16,18 @@ namespace vray {
 		static float begTime;
 		static float endTime;
 		static float _deltaTime;
+		bool running;
 
 		Window* window;
-		bool running;
 		LayerStack layerStack;
 		Renderer* renderer;
 
+		entt::registry world;
+		using VisibleGroup = decltype(world.group<TransformComponent>(entt::get<RenderableComponent>));
+		VisibleGroup visibleGroup;
+
 		bool onWindowClosing(WindowCloseEvent& evt);
+		void renderSubmit();
 
 	public:
 		Game();

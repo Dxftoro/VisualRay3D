@@ -4,6 +4,7 @@
 #include "layer_service/imgui_layer.h"
 #include "input_service/input_service.h"
 #include "managers/resource_loader.h"
+#include "render_service/render_request.h"
 
 namespace vray {
 	float Game::begTime = 0.0f;
@@ -33,6 +34,7 @@ namespace vray {
 			throw std::runtime_error("Can't open file!");
 		}
 
+		visibleGroup = world.group<TransformComponent>(entt::get<RenderableComponent>);
 		renderer = new Renderer(window/*, vertexArray1*/);
 
 		MeshLoader loader;
@@ -78,6 +80,14 @@ namespace vray {
 	bool Game::onWindowClosing(WindowCloseEvent& evt) {
 		running = false;
 		return true;
+	}
+
+	void Game::renderSubmit() {
+		visibleGroup.each([this]
+		(entt::entity entity, TransformComponent& transform, RenderableComponent& renderable) {
+			RenderRequest request(&renderable.mesh, &(transform.getTransformMatrix()), 4U);
+			renderer->submit(std::move(request));
+		});
 	}
 
 	void Game::onEvent(Event& evt) {

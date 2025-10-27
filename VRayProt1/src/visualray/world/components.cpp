@@ -7,11 +7,15 @@ namespace vray {
 	glm::mat4& TransformComponent::getTransformMatrix() {
 		if (dirty) {
 			transformMatrix = glm::translate(transformMatrix, position);
-			transformMatrix = glm::rotate(transformMatrix, 90.0f, rotation);
+			transformMatrix *= glm::mat4_cast(rotation);
 			transformMatrix = glm::scale(transformMatrix, scale);
 			dirty = false;
 		}
 		return transformMatrix;
+	}
+
+	void TransformComponent::setRotation(glm::vec3 rotation) {
+		this->rotation = glm::quat(rotation);
 	}
 
 }

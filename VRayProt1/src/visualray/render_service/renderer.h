@@ -31,7 +31,7 @@ namespace vray {
 
         void clear();
         void update(float deltaTime);
-        void submit(const RenderRequest& query);
+        void submit(RenderRequest&& query);
         void flush();
 
         void onEvent(Event& evt);

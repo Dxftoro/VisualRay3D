@@ -105,7 +105,7 @@ namespace vray {
         }
     }
 
-    void Renderer::submit(const RenderRequest& request) {
+    void Renderer::submit(RenderRequest&& request) {
         renderQueue.push(request);
     }
 
