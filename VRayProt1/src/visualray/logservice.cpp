@@ -8,7 +8,7 @@ namespace vray {
 	Logger* vray::LogService::gameLogger;
 
 	void vray::LogService::init() {
-		engineLogger = new Logger(VR_LOGGER_PATTERN_DEFAULT, "VisualRay2D");
+		engineLogger = new Logger(VR_LOGGER_PATTERN_DEFAULT, "VisualRay3D");
 		gameLogger = new Logger(VR_LOGGER_PATTERN_DEFAULT, "Game");
 	}
 

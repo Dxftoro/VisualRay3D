@@ -4,21 +4,55 @@
 
 namespace vray {
 
-	class Resource {
-	protected:
-		std::string name;
+	//class IResourceManager {
+	//private:
+	//public:
+	//	virtual Resource& load(const std::string& filename, const std::string& resourceName = "") = 0;
+	//	virtual Resource& get(const std::string& resourceName) = 0;
+	//	virtual void clear() = 0;
+	//};
 
-	public:
-		Resource(const std::string& resourceName) : name(resourceName) {}
-		std::string getName() const { return name; }
-	};
+//	======================================================================================
+// 
+//	======================================================================================
 
-	class IResourceManager {
+	template <typename T>
+	class ResourceManager {
 	private:
+		static_assert(std::is_base_of_v<Resource, T>, "T must be inherited from Resource!");
+		std::unordered_map<std::string, std::unique_ptr<T>> resourceMap;
+
 	public:
-		virtual Resource& load(const std::string& filename, const std::string& resourceName = "") = 0;
-		virtual Resource& get(const std::string& resourceName) = 0;
-		virtual void clear() = 0;
+		ResourceManager() {}
+		~ResourceManager() {}
+
+		T* load(const std::string& filename, const std::string& resourceName = "");
+		T* get(const std::string& resourceName);
+		void clear() {}
 	};
+
+	template<typename T>
+	T* ResourceManager<T>::load(const std::string& filename, const std::string& resourceName) {
+		std::ifstream fin(filename);
+		if (!fin) {
+			throw std::runtime_error("\"" + filename + "\" - File not found!");
+		}
+
+		std::string finalName = resourceName == "" ? filename : resourceName;
+		std::unique_ptr<T> resourcePtr = std::make_unique<T>(fin);
+		fin.close();
+
+		T* rawPtr = resourcePtr.get();
+		resourceMap[finalName] = std::move(resourcePtr);
+
+		return rawPtr;
+	}
+
+	template<typename T>
+	T* ResourceManager<T>::get(const std::string& resourceName) {
+		auto it = resourceMap.find(resourceName);
+		if (it != resourceMap.end()) return it->second.get();
+		else return load(resourceName);
+	}
 
 }

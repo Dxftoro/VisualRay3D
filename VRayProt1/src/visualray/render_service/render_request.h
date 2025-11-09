@@ -2,17 +2,18 @@
 
 namespace vray {
 
-	class Mesh;
+	class CompRenderable;
+	class CompTransform;
+
 	class RenderRequest {
-	private:
-		const Mesh* mesh;
-		const void* transform;
+	public:
+		CompRenderable* renderable;
+		CompTransform* transform;
 		unsigned int drawMode;
 
-	public:
-		RenderRequest(const Mesh* _mesh, const void* _transform, unsigned int _drawMode)
-			: mesh(_mesh), transform(_transform), drawMode(_drawMode) {};
-		void complete() const;
+		RenderRequest(CompRenderable* _renderable, CompTransform* _transform, unsigned int _drawMode)
+			: renderable(_renderable), transform(_transform), drawMode(_drawMode) {};
+		//void complete() const;
 	};
 
 }

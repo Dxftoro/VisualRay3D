@@ -4,7 +4,7 @@
 
 namespace vray {
 
-	glm::mat4& TransformComponent::getTransformMatrix() {
+	const glm::mat4& CompTransform::getTransformMatrix() {
 		if (dirty) {
 			transformMatrix = glm::translate(transformMatrix, position);
 			transformMatrix *= glm::mat4_cast(rotation);
@@ -14,8 +14,26 @@ namespace vray {
 		return transformMatrix;
 	}
 
-	void TransformComponent::setRotation(glm::vec3 rotation) {
-		this->rotation = glm::quat(rotation);
+	const glm::mat3& CompTransform::getNormalMatrix() {
+		if (dirty) {
+			normalMatrix = glm::mat3(glm::transpose(glm::inverse(transformMatrix)));
+			dirty = false;
+		}
+		return normalMatrix;
 	}
 
+	void CompTransform::setPosition(glm::vec3 position) { 
+		this->position = position;
+		dirty = true;
+	}
+
+	void CompTransform::setRotation(glm::vec3 rotation) {
+		this->rotation = glm::quat(rotation);
+		dirty = true;
+	}
+
+	void CompTransform::setScale(glm::vec3 scale) { 
+		this->scale = scale;
+		dirty = true;
+	}
 }

@@ -7,13 +7,14 @@
 
 #include <glm/glm.hpp>
 
-#include "vertex_array.h"
+//#include "vertex_array.h"
 #include "glsl_program.h"
 #include "frustum_camera.h"
 #include "render_request.h"
 
 namespace vray {
 
+    class VertexArray;
     class Renderer {
     private:
         std::queue<RenderRequest> renderQueue;
@@ -32,7 +33,7 @@ namespace vray {
         void clear();
         void update(float deltaTime);
         void submit(RenderRequest&& query);
-        void flush();
+        inline void flush();
 
         void onEvent(Event& evt);
 

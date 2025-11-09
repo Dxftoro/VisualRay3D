@@ -8,11 +8,13 @@
 #include "imgui_impl_opengl3.h"
 
 #include "imgui_layer.h"
+#include "GLFW/glfw3.h"
+#include "imgui.h"
 
 namespace vray {
 
 	ImGuiLayer::ImGuiLayer(Window* _window) 
-		: window(_window), time(glfwGetTime()), open(true) {
+		: window(_window), time(glfwGetTime()), open(true), fps(1.0f) {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
@@ -20,9 +22,20 @@ namespace vray {
 
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window->getHandlerPtr(), true);
 		ImGui_ImplOpenGL3_Init();
+
+		fpsCounter = new std::thread([this] {
+			GLFWwindow* windowPtr = (GLFWwindow*)window->getHandlerPtr();
+			while (!glfwWindowShouldClose(windowPtr)) {
+				fps = (int)(1.0f / Game::deltaTime());
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
+		});
 	}
 
 	ImGuiLayer::~ImGuiLayer() {
+		fpsCounter->join();
+		delete[] fpsCounter;
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -48,19 +61,16 @@ namespace vray {
 		io.DeltaTime = (float)(newTime - time);
 		time = newTime;
 
-		if (open) {
-			ImGui::Begin("VisualRay debug", &open);
-			ImVec2 vec = ImGui::GetWindowPos();
-			
-			ImGui::Text("CODECVT BECOME DEPRECATED!");
-			if (ImGui::Button("Close")) { 
-				open = false;
-			}
-			ImGui::End();
-		}
-		else {
-			ImGui::ShowDemoWindow();
-		}
+		ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
+
+		ImGui::Begin("FPS", &open);
+		ImGui::Text("FPS: %d", fps);
+		ImGui::End();
+
+		//else {
+		//	ImGui::ShowDemoWindow();
+		//}
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

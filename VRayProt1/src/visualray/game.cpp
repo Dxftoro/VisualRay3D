@@ -1,5 +1,8 @@
 #include "vrpch.h"
 #include "game.h"
+
+#include <GLFW/glfw3.h>
+
 #include "event_service/game_events.h"
 #include "layer_service/imgui_layer.h"
 #include "input_service/input_service.h"
@@ -9,7 +12,8 @@
 namespace vray {
 	float Game::begTime = 0.0f;
 	float Game::endTime = 0.0f;
-	float Game::_deltaTime = 0.0f;
+	float Game::_deltaTime = 1.0f;
+	int Game::fpsLimit = 30;
 
 	Game::Game() : running(false) {
 		if (!glfwInit()) {
@@ -21,10 +25,9 @@ namespace vray {
 		window->setEventCallback(
 			std::bind(&Game::onEvent, this, std::placeholders::_1)
 		);
-		window->setVsync(true);
 
 		InputService::init(window);
-		//pushOverlay(new ImGuiLayer(window));
+		pushOverlay(new ImGuiLayer(window));
 
 		VR_ENGINE_LOGINFO("Trying to load mesh...");
 
@@ -34,13 +37,13 @@ namespace vray {
 			throw std::runtime_error("Can't open file!");
 		}
 
-		visibleGroup = world.group<TransformComponent>(entt::get<RenderableComponent>);
+		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
 		renderer = new Renderer(window/*, vertexArray1*/);
 
-		MeshLoader loader;
-		VertexArray* vertexArray1 = (VertexArray*)loader.load(fin);
-		renderer->setVertexArray(vertexArray1);
-		fin.close();
+		//MeshLoader loader;
+		//VertexArray* vertexArray1 = (VertexArray*)loader.load(fin);
+		//renderer->setVertexArray(vertexArray1);
+		//fin.close();
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));
@@ -57,12 +60,18 @@ namespace vray {
 		running = true;
 		VR_ENGINE_LOGINFO("Game application started running!");
 
+		begTime = glfwGetTime();
+
 		while (running) {
+			auto frameBegin = std::chrono::high_resolution_clock::now();
+			auto frameEnd = frameBegin + std::chrono::milliseconds(1000 / fpsLimit);
+
 			endTime = glfwGetTime();
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
 			this->update();
+			this->renderSubmit();
 
 			renderer->clear();
 			renderer->update(deltaTime());
@@ -72,6 +81,8 @@ namespace vray {
 
 			GameTickEvent evt;
 			window->swapBuffers();
+
+			std::this_thread::sleep_until(frameEnd);
 		}
 	}
 
@@ -84,8 +95,8 @@ namespace vray {
 
 	void Game::renderSubmit() {
 		visibleGroup.each([this]
-		(entt::entity entity, TransformComponent& transform, RenderableComponent& renderable) {
-			RenderRequest request(&renderable.mesh, &(transform.getTransformMatrix()), 4U);
+		(entt::entity entity, CompTransform& transform, CompRenderable& renderable) {
+			RenderRequest request(&renderable, &transform, 4U);
 			renderer->submit(std::move(request));
 		});
 	}

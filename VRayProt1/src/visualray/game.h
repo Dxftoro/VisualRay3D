@@ -9,6 +9,7 @@
 #include "event_service/event.h"
 #include "event_service/game_events.h"
 #include "layer_service/layer_stack.h"
+#include "managers/resource_manager.h"
 
 namespace vray {
 	class VRAYLIB Game {
@@ -16,20 +17,25 @@ namespace vray {
 		static float begTime;
 		static float endTime;
 		static float _deltaTime;
+		static int fpsLimit;
 		bool running;
 
 		Window* window;
 		LayerStack layerStack;
 		Renderer* renderer;
 
-		entt::registry world;
-		using VisibleGroup = decltype(world.group<TransformComponent>(entt::get<RenderableComponent>));
-		VisibleGroup visibleGroup;
-
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void renderSubmit();
 
 	public:
+		entt::registry world;
+	private:
+		using VisibleGroup = decltype(world.group<CompTransform>(entt::get<CompRenderable>));
+		VisibleGroup visibleGroup;
+
+	public:
+		ResourceManager<Mesh> meshes;
+
 		Game();
 		virtual ~Game();
 
@@ -39,6 +45,8 @@ namespace vray {
 
 		void onEvent(Event& evt);
 
+		Window* getWindow() const { return window; }
+
 		inline void pushLayer(Layer* layer) { layerStack.pushLayer(layer); }
 		inline void pushOverlay(Layer* overlay) { layerStack.pushOverlay(overlay); }
 
@@ -46,6 +54,8 @@ namespace vray {
 		inline void popOverlay(Layer* overlay) { layerStack.popOverlay(); }
 
 		static float deltaTime();
+		static float getFpsLimit() { return fpsLimit; };
+		static void	setFpsLimit(int _fpsLimit) { fpsLimit = _fpsLimit; };
 	};
 
 	Game* vrayMain();

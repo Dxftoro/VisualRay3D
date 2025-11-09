@@ -4,6 +4,9 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "renderer.h"
+#include "vertex_array.h"
+#include "world/components.h"
+
 #include "event_service/game_events.h"
 #include "event_service/mouse_events.h"
 
@@ -41,7 +44,7 @@ namespace vray {
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_ALPHA_TEST);
-        vertexArray->unbind();
+        //vertexArray->unbind();
     }
 
     Renderer::~Renderer() {
@@ -87,17 +90,13 @@ namespace vray {
             program.use();
             program.setUniform("projectionMatrix", camera->getProjectionMatrix());
             program.setUniform("viewMatrix", camera->getViewMatrix());
-            program.setUniform("modelMatrix", modelMatrix);
-            program.setUniform("normalMatrix", normalMatrix);
+
+            flush();
         }
         catch (std::runtime_error exc) {
             VR_ENGINE_LOGERROR(exc.what());
             return;
         }
-
-        vertexArray->bind();
-        vertexArray->drawElements(DrawMode::TRIANGLES);
-        vertexArray->unbind();
 
         int errorCode;
         if ((errorCode = glGetError())) {
@@ -111,7 +110,16 @@ namespace vray {
 
     void Renderer::flush() {
         while (!renderQueue.empty()) {
-            renderQueue.front().complete();
+            RenderRequest& request = renderQueue.front();
+
+            program.setUniform("modelMatrix", request.transform->getTransformMatrix());
+            program.setUniform("normalMatrix", request.transform->getNormalMatrix());
+
+            VertexArray* vertexArray = request.renderable->mesh->getVertexArray();
+            vertexArray->bind();
+            vertexArray->drawElements(static_cast<DrawMode>(request.drawMode));
+            vertexArray->unbind();
+
             renderQueue.pop();
         }
     }

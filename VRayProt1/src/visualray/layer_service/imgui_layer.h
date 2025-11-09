@@ -2,17 +2,18 @@
 #include "vrpch.h"
 #include "kernel.h"
 
-#include "GLFW/glfw3.h"
-#include "imgui.h"
+#include "game.h"
 #include "layer_stack.h"
 
 namespace vray {
 
-	class ImGuiLayer : public Layer {
+	class VRAYLIB ImGuiLayer : public Layer {
 	private:
 		Window* window;
 		double time;
 		bool open;
+		int fps;
+		std::thread* fpsCounter;
 
 	public:
 		ImGuiLayer(Window* window);
