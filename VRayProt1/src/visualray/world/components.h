@@ -5,7 +5,7 @@
 
 namespace vray {
 
-	struct CompTransform {
+	struct VRAYLIB CompTransform {
 	private:
 		glm::vec3 position;
 		glm::quat rotation;
@@ -37,9 +37,11 @@ namespace vray {
 		void setScale(glm::vec3 scale);
 	};
 
-	struct CompRenderable {
+	struct VRAYLIB CompRenderable {
 		Mesh* mesh;
-		CompRenderable(Mesh* _mesh) : mesh(_mesh) {}
+		Texture* texture;
+		CompRenderable(Mesh* _mesh, Texture* _texture)
+			: mesh(_mesh), texture(_texture) {}
 	};
 
 }

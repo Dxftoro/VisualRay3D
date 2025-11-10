@@ -18,7 +18,6 @@ namespace vray {
     class Renderer {
     private:
         std::queue<RenderRequest> renderQueue;
-        VertexArray* vertexArray;
         FrustumCamera* camera;
         Window* currentWindow;
         GlslProgram program;
@@ -38,7 +37,6 @@ namespace vray {
         void onEvent(Event& evt);
 
         FrustumCamera*& getCamera() { return camera; }
-        void setVertexArray(VertexArray* vertexArray) { this->vertexArray = vertexArray; }
     };
 
 }

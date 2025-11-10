@@ -30,4 +30,16 @@ namespace vray {
 		bool isACopy() const { return copy; }
 	};
 
+	class VRAYLIB Texture : public Resource {
+	private:
+		unsigned int handle;
+
+	public:
+		Texture(const std::string& filename);
+		~Texture();
+
+		void bind() const;
+		void unbind() const;
+	};
+
 }

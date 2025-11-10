@@ -35,6 +35,7 @@ namespace vray {
 
 	public:
 		ResourceManager<Mesh> meshes;
+		ResourceManager<Texture> textures;
 
 		Game();
 		virtual ~Game();

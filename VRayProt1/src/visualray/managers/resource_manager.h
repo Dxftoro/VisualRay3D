@@ -39,7 +39,15 @@ namespace vray {
 		}
 
 		std::string finalName = resourceName == "" ? filename : resourceName;
-		std::unique_ptr<T> resourcePtr = std::make_unique<T>(fin);
+		std::unique_ptr<T> resourcePtr;
+
+		if constexpr (std::is_same_v<T, Texture>) {
+			resourcePtr = std::make_unique<T>(filename);
+		}
+		else {
+			resourcePtr = std::make_unique<T>(fin);
+		}
+
 		fin.close();
 
 		T* rawPtr = resourcePtr.get();

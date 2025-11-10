@@ -6,6 +6,7 @@ namespace vray {
 
 	const glm::mat4& CompTransform::getTransformMatrix() {
 		if (dirty) {
+			transformMatrix = glm::identity<glm::mat4>();
 			transformMatrix = glm::translate(transformMatrix, position);
 			transformMatrix *= glm::mat4_cast(rotation);
 			transformMatrix = glm::scale(transformMatrix, scale);
