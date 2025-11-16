@@ -11,7 +11,7 @@ namespace vray {
 
 	void InputService::init(Window* _activeWindow) {
 		if (activeWindow) {
-			throw std::runtime_error("Active window is set in InputService!");
+			throw std::runtime_error("Active window is already set in InputService!");
 		}
 		activeWindow = _activeWindow;
 	}

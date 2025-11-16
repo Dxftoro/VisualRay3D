@@ -14,19 +14,21 @@
 
 namespace vray {
 
-    class VertexArray;
+    struct CompCamera;
     class Renderer {
     private:
         std::queue<RenderRequest> renderQueue;
-        FrustumCamera* camera;
+        CompCamera* camera;
         Window* currentWindow;
         GlslProgram program;
 
         glm::mat4 modelMatrix;
         glm::mat3 normalMatrix;
 
+        bool initialCamera;
+
     public:
-        Renderer(Window* currentWindow/*, VertexArray* vertexArray*/);
+        Renderer(Window* currentWindow);
         ~Renderer();
 
         void clear();
@@ -36,7 +38,8 @@ namespace vray {
 
         void onEvent(Event& evt);
 
-        FrustumCamera*& getCamera() { return camera; }
+        void setCamera(CompCamera* camera);
+        CompCamera*& getCamera() { return camera; }
     };
 
 }

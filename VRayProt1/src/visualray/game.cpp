@@ -15,7 +15,7 @@ namespace vray {
 	float Game::_deltaTime = 1.0f;
 	int Game::fpsLimit = 30;
 
-	Game::Game() : running(false) {
+	Game::Game() : running(false), cameraSystem(nullptr) {
 		if (!glfwInit()) {
 			VR_ENGINE_LOGERROR("Can't initialize GLFW!");
 			throw std::runtime_error("Can't initialize GLFW!");
@@ -23,7 +23,7 @@ namespace vray {
 
 		window = Window::create(WindowParams());
 		window->setEventCallback(
-			std::bind(&Game::onEvent, this, std::placeholders::_1)
+			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
 		);
 
 		InputService::init(window);
@@ -38,12 +38,8 @@ namespace vray {
 		}
 
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
-		renderer = new Renderer(window/*, vertexArray1*/);
-
-		//MeshLoader loader;
-		//VertexArray* vertexArray1 = (VertexArray*)loader.load(fin);
-		//renderer->setVertexArray(vertexArray1);
-		//fin.close();
+		renderer = new Renderer(window);
+		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));
@@ -101,11 +97,12 @@ namespace vray {
 		});
 	}
 
-	void Game::onEvent(Event& evt) {
+	void Game::onEventInternal(Event& evt) {
 		EventDispatcher dispatcher(evt);
 		dispatcher.fire<WindowCloseEvent>(
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
+		onEvent(evt);
 		renderer->onEvent(evt);
 		glfwSetCursorPos((GLFWwindow*)window->getHandlerPtr(), window->getWidth() / 2, window->getHeight() / 2);
 	}

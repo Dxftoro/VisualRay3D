@@ -1,9 +1,18 @@
 #pragma once
 #include "components.h"
-#include "render_service/renderer.h"
+#include "kernel.h"
 
 namespace vray {
 
-	/* It's literaly empty now. */
+	class Renderer;
+
+	class VRAYLIB CameraSystem {
+	private:
+		Renderer* renderer;
+
+	public:
+		CameraSystem(Renderer* _renderer) : renderer(_renderer) {}
+		void setActiveCamera(CompCamera* camera);
+	};
 
 }

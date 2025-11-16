@@ -3,6 +3,7 @@
 
 #include "thirdparty/EnTT/entt.hpp"
 #include "world/components.h"
+#include "world/systems.h"
 #include "render_service/renderer.h"
 #include "window_service/window.h"
 
@@ -26,6 +27,7 @@ namespace vray {
 
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void renderSubmit();
+		void onEventInternal(Event& evt);
 
 	public:
 		entt::registry world;
@@ -34,6 +36,8 @@ namespace vray {
 		VisibleGroup visibleGroup;
 
 	public:
+		CameraSystem cameraSystem;
+
 		ResourceManager<Mesh> meshes;
 		ResourceManager<Texture> textures;
 
@@ -43,8 +47,7 @@ namespace vray {
 		inline void run();
 		inline void stop();
 		virtual void update() = 0;
-
-		void onEvent(Event& evt);
+		virtual void onEvent(Event& evt) = 0;
 
 		Window* getWindow() const { return window; }
 

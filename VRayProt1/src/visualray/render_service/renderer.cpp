@@ -17,13 +17,14 @@
 
 namespace vray {
 
-	Renderer::Renderer(Window* _currentWindow/*, VertexArray* _vertexArray*/)
-		: currentWindow(_currentWindow)/*, vertexArray(_vertexArray)*/ {
+	Renderer::Renderer(Window* _currentWindow)
+		: currentWindow(_currentWindow), initialCamera(true) {
+
 		if (!gladLoadGL()) {
 			throw std::runtime_error("Can't load OpenGL!");
 		}
 
-		camera = new FrustumCamera(90,
+		camera = new CompCamera(90,
 			currentWindow->getWidth(),
 			currentWindow->getHeight(), 0.1f, 300.0f);
 
@@ -48,7 +49,7 @@ namespace vray {
 	}
 
 	Renderer::~Renderer() {
-		if (camera) delete camera;
+		if (camera && initialCamera) delete camera;
 	}
 
 	void Renderer::clear() {
@@ -57,34 +58,6 @@ namespace vray {
 	}
 
 	void Renderer::update(float deltaTime) {
-		glm::vec3 cameraPosition = camera->getPosition();
-		static float moveSpeed = 10.0f;
-
-		if (InputService::keyPressed(VR_KEY_W)) {
-			cameraPosition.z -= moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-		if (InputService::keyPressed(VR_KEY_S)) {
-			cameraPosition.z += moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-		if (InputService::keyPressed(VR_KEY_A)) {
-			cameraPosition.x -= moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-		if (InputService::keyPressed(VR_KEY_D)) {
-			cameraPosition.x += moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-		if (InputService::keyPressed(VR_KEY_Q)) {
-			cameraPosition.y += moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-		if (InputService::keyPressed(VR_KEY_E)) {
-			cameraPosition.y -= moveSpeed * deltaTime;
-			camera->setPosition(cameraPosition);
-		}
-
 		try {
 			program.use();
 			program.setUniform("projectionMatrix", camera->getProjectionMatrix());
@@ -127,9 +100,6 @@ namespace vray {
 	}
 
 	void Renderer::onEvent(Event& evt) {
-		static glm::vec2 mouseBase(currentWindow->getWidth() / 2, currentWindow->getHeight() / 2);
-		static bool viewPicked = false;
-
 		switch (evt.getType()) {
 		case EventType::WINDOW_RESIZE: {
 			WindowResizeEvent& resizeEvt = dynamic_cast<WindowResizeEvent&>(evt);
@@ -137,31 +107,15 @@ namespace vray {
 			resizeEvt.dump();
 			break;
 		}
-		case EventType::MOUSE_CLICK: {
-			//MouseClickEvent clickEvt = dynamic_cast<MouseClickEvent&>(evt);
-			viewPicked = true;
-			break;
-		}
-		case EventType::MOUSE_MOVED: {
-			if (viewPicked) {
-				MouseMovedEvent& moveEvt = dynamic_cast<MouseMovedEvent&>(evt);
-
-				glm::vec3 newRotation = camera->getRotation();
-				newRotation.x += (moveEvt.getX() - mouseBase.x) / 5.0f;
-				newRotation.y += (mouseBase.y - moveEvt.getY()) / 5.0f;
-
-				if (newRotation.x < 0.0f) newRotation.x += 360.0f;
-				if (newRotation.x > 360.0f) newRotation.x -= 360.0f;
-
-				if (newRotation.y < -90.0f) newRotation.y = -90.0f;
-				if (newRotation.y > 90.0f) newRotation.y = 90.0f;
-
-				camera->setRotation(newRotation);
-			}
-			break;
-		}
 		default: break;
 		}
 	}
 
+	void Renderer::setCamera(CompCamera* camera) {
+		if (initialCamera) {
+			delete this->camera;
+			initialCamera = false;
+		}
+		this->camera = camera;
+	}
 }

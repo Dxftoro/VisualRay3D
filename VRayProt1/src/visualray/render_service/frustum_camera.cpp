@@ -10,7 +10,7 @@ namespace vray {
 	:	projectionMatrix(glm::perspectiveFov(glm::radians(fov), width, height, near, far)),
 		position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false) {
 
-		viewMatrix = glm::lookAt(position, glm::vec3(0.0f), glm::vec3(0.0f, 0.1f, 0.0f));
+		viewMatrix = glm::lookAt(position, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	void FrustumCamera::updateMatrices() {
