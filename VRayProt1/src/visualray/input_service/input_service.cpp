@@ -8,6 +8,7 @@
 namespace vray {
 
 	Window* InputService::activeWindow = nullptr;
+	bool InputService::_mouseLocked = false;
 
 	void InputService::init(Window* _activeWindow) {
 		if (activeWindow) {
@@ -36,4 +37,16 @@ namespace vray {
 		return y;
 	}
 
+	void InputService::setMouseLocked(bool locked) { _mouseLocked = locked; }
+
+	bool InputService::isMouseLocked() { return _mouseLocked; }
+
+	void InputService::tryLockMouse() {
+		if (_mouseLocked) {
+			glfwSetCursorPos(
+				(GLFWwindow*)activeWindow->getHandlerPtr(), 
+				activeWindow->getWidth() / 2, activeWindow->getHeight() / 2
+			);
+		}
+	}
 }

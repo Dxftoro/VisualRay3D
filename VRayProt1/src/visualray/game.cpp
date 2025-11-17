@@ -102,9 +102,10 @@ namespace vray {
 		dispatcher.fire<WindowCloseEvent>(
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
+
+		InputService::tryLockMouse();
 		onEvent(evt);
 		renderer->onEvent(evt);
-		glfwSetCursorPos((GLFWwindow*)window->getHandlerPtr(), window->getWidth() / 2, window->getHeight() / 2);
 	}
 
 	float Game::deltaTime() { return _deltaTime; }
