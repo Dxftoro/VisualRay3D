@@ -72,7 +72,7 @@ public:
 
 		vray::Mesh* teapotMesh = meshes.load("models/teapot.obj", "teapot");
 		vray::Mesh* cubeMesh = meshes.load("models/cube.obj", "cube");
-		vray::Texture* stoneBricks = textures.load("models/sponza/KAMEN.JPG", "stone_bricks");
+		vray::Texture* stoneBricks = textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = textures.load("textures/default.png", "default");
 
 		player = world.create();
