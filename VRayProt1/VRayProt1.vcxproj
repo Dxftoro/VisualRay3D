@@ -20,6 +20,7 @@
     <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
     <ClCompile Include="src\visualray\managers\resource.cpp" />
     <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
+    <ClCompile Include="src\visualray\physics_service\physics.cpp" />
     <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
     <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
@@ -62,6 +63,8 @@
     <ClInclude Include="src\visualray\managers\mesh_manager.h" />
     <ClInclude Include="src\visualray\managers\resource_loader.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
+    <ClInclude Include="src\visualray\physics_service\physics.h" />
+    <ClInclude Include="src\visualray\physics_service\physics_impl.h" />
     <ClInclude Include="src\visualray\render_service\buffer_layout.h" />
     <ClInclude Include="src\visualray\render_service\frustum_camera.h" />
     <ClInclude Include="src\visualray\render_service\glsl_program.h" />

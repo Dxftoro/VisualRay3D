@@ -58,8 +58,8 @@ private:
 			if (newRotation.x < 0.0f) newRotation.x += 360.0f;
 			if (newRotation.x > 360.0f) newRotation.x -= 360.0f;
 
-			if (newRotation.y < -90.0f) newRotation.y = -90.0f;
-			if (newRotation.y > 90.0f) newRotation.y = 90.0f;
+			if (newRotation.y < -89.0f) newRotation.y = -89.0f;
+			if (newRotation.y > 89.0f) newRotation.y = 89.0f;
 
 			camera->setRotation(newRotation);
 		}
