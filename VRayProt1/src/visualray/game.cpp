@@ -10,6 +10,8 @@
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
+#include "physics_service/rp3d_physics.h"
+
 namespace vray {
 	float Game::begTime = 0.0f;
 	float Game::endTime = 0.0f;
@@ -69,6 +71,7 @@ namespace vray {
 
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
 		renderer = new Renderer(window);
+		physics = new Rp3dPhysics(world);
 		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
@@ -80,6 +83,7 @@ namespace vray {
 
 	Game::~Game() {
 		delete renderer;
+		delete physics;
 		glfwTerminate();
 		VR_ENGINE_LOGINFO("GLFW terminated.");
 	}

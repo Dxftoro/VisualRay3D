@@ -5,6 +5,7 @@
 #include "world/components.h"
 #include "world/systems.h"
 #include "render_service/renderer.h"
+#include "physics_service/physics.h"
 #include "window_service/window.h"
 
 #include "event_service/event.h"
@@ -24,6 +25,7 @@ namespace vray {
 		Window* window;
 		LayerStack layerStack;
 		Renderer* renderer;
+		IPhysics* physics;
 
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void renderSubmit();

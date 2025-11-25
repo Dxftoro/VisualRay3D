@@ -73,4 +73,8 @@ namespace vray {
 		bool isActive() const { return active; }
 	};
 
+	struct CompDynamic {
+
+	};
+
 }
