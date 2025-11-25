@@ -10,15 +10,22 @@ namespace vray {
 
 	class Rp3dPhysics : public IPhysics {
 	private:
+		rp3d::PhysicsCommon physicsCommon;
 		rp3d::PhysicsWorld* physicsWorld;
 		std::unordered_map<entt::entity, rp3d::RigidBody*> bodyTable;
 		entt::registry& world;
 
-		using DynamicGroup = decltype(world.group<CompDynamic>(entt::get<CompTransform>));
+		using DynamicGroup = decltype(world.group<CompHitbox>(entt::get<CompTransform>));
 		DynamicGroup dynamicGroup;
 
 	private:
-		void onEntityAddded(entt::registry& world, entt::entity entity);
+		void onEntityAdded(entt::registry& world, entt::entity entity);
+		inline void createPhysicsBody(entt::entity entity);
+
+		static rp3d::Vector3 glmToVec3(const glm::vec3& vec);
+		static rp3d::Quaternion glmToQuat(const glm::quat& quat);
+		static glm::vec3 vec3ToGlm(const rp3d::Vector3& vec);
+		static glm::quat quatToGlm(const rp3d::Quaternion& quat);
 
 	public:
 		Rp3dPhysics(entt::registry& world);

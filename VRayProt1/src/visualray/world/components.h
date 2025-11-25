@@ -73,8 +73,13 @@ namespace vray {
 		bool isActive() const { return active; }
 	};
 
-	struct CompDynamic {
-
+	struct VRAYLIB CompHitbox {
+		enum class ShapeType : short int { BOX, CAPSULE, SPHERE } shapeType;
+		enum class PhysType : short int { STATIC, DYNAMIC, KINEMATIC } physType;
+		glm::vec3 size;
+		float radius;
+		float mass;
 	};
 
+	// TODO: CompMaterial
 }
