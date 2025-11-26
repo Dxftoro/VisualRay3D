@@ -76,6 +76,39 @@ namespace vray {
 		VR_ENGINE_LOGINFO("Hitbox created!");
 	}
 
+	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
+		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
+		world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
+		physicsWorld = physicsCommon.createPhysicsWorld();
+	}
+
+	void Rp3dPhysics::update(float deltaTime) {
+		for (entt::entity entity : dynamicGroup) {
+			auto it = bodyTable.find(entity);
+			if (it == bodyTable.end()) createPhysicsBody(entity);
+
+			const CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
+
+			if (transform.isDirty()) {
+				bodyTable[entity]->setTransform({
+					glmToVec3(transform.getPosition()),
+					glmToQuat(transform.getRotation())
+				});
+			}
+		}
+
+		physicsWorld->update(deltaTime);
+
+		for (entt::entity entity : dynamicGroup) {
+			CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
+			const rp3d::Transform& rp3dTransform = bodyTable[entity]->getTransform();
+			
+			transform.setPosition(vec3ToGlm(rp3dTransform.getPosition()));
+			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
+		}
+	}
+
+
 	rp3d::Vector3 Rp3dPhysics::glmToVec3(const glm::vec3& vec) {
 		return { vec.x, vec.y, vec.z };
 	}
@@ -90,21 +123,6 @@ namespace vray {
 
 	glm::quat Rp3dPhysics::quatToGlm(const rp3d::Quaternion& quat) {
 		return { quat.w, quat.x, quat.y, quat.z };
-	}
-
-	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
-		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
-		world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
-		physicsWorld = physicsCommon.createPhysicsWorld();
-	}
-
-	void Rp3dPhysics::update(float deltaTime) {
-		for (entt::entity entity : dynamicGroup) {
-			auto it = bodyTable.find(entity);
-			if (it == bodyTable.end()) createPhysicsBody(entity);
-
-			const CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
-		}
 	}
 
 }

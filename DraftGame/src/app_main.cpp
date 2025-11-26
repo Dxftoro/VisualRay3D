@@ -82,6 +82,13 @@ public:
 
 		vray::CompRenderable teapotRenderable(teapotMesh, textures.get("stone_bricks"));
 		vray::CompTransform cubeTransform, teapotTransform, plathformTransform;
+		vray::CompHitbox plathformHitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::STATIC,
+			.size = glm::vec3(20.0f, 0.25f, 20.0f),
+			.radius = 10,
+			.mass = 10.0f
+		};
 
 		cubeTransform.setScale({ 5.0f, 5.0f, 5.0f });
 		cubeTransform.setPosition({ -50.0f, 0.0f, -1.0f });
@@ -89,7 +96,7 @@ public:
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f});
 		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
 
-		plathformTransform.setScale({ 20.0f, 0.25f, 20.f });
+		plathformTransform.setScale({ 20.0f, 0.25f, 20.0f });
 
 		camera = &world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
 			getWindow()->getWidth(),
@@ -99,6 +106,8 @@ public:
 		world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		world.emplace<vray::CompTransform>(cube, cubeTransform);
 		world.emplace<vray::CompTransform>(plathform, plathformTransform);
+
+		world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
 
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
 		world.emplace<vray::CompRenderable>(cube,

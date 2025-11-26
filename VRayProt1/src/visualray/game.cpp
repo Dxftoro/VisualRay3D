@@ -19,32 +19,32 @@ namespace vray {
 	int Game::fpsLimit = 30;
 
 	void testPhysics() {
-		rp3d::PhysicsCommon physicsCommon;
+		//rp3d::PhysicsCommon physicsCommon;
 
-		// Create a physics world
-		rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+		//// Create a physics world
+		//rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
 
-		// Create a rigid body in the world
-		rp3d::Vector3 position(0, 20, 0);
-		rp3d::Quaternion orientation = rp3d::Quaternion::identity();
-		rp3d::Transform transform(position, orientation);
-		rp3d::RigidBody* body = world->createRigidBody(transform);
+		//// Create a rigid body in the world
+		//rp3d::Vector3 position(0, 20, 0);
+		//rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+		//rp3d::Transform transform(position, orientation);
+		//rp3d::RigidBody* body = world->createRigidBody(transform);
 
-		const rp3d::decimal timeStep = 1.0f / 60.0f;
+		//const rp3d::decimal timeStep = 1.0f / 60.0f;
 
-		// Step the simulation a few steps
-		for (int i = 0; i < 20; i++) {
+		//// Step the simulation a few steps
+		//for (int i = 0; i < 20; i++) {
 
-			world->update(timeStep);
+		//	world->update(timeStep);
 
-			// Get the updated position of the body
-			const rp3d::Transform& transform = body->getTransform();
-			const rp3d::Vector3& position = transform.getPosition();
+		//	// Get the updated position of the body
+		//	const rp3d::Transform& transform = body->getTransform();
+		//	const rp3d::Vector3& position = transform.getPosition();
 
-			// Display the position of the body
-			std::cout << "Body Position: (" << position.x << ", " <<
-				position.y << ", " << position.z << ")" << std::endl;
-		}
+		//	// Display the position of the body
+		//	std::cout << "Body Position: (" << position.x << ", " <<
+		//		position.y << ", " << position.z << ")" << std::endl;
+		//}
 	}
 
 	Game::Game() : running(false), cameraSystem(nullptr) {
@@ -101,6 +101,8 @@ namespace vray {
 			endTime = glfwGetTime();
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
+
+			physics->update(_deltaTime);
 
 			this->update();
 			this->renderSubmit();

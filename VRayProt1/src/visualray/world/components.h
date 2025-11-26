@@ -12,29 +12,32 @@ namespace vray {
 		glm::vec3 scale;
 		glm::mat4 transformMatrix;
 		glm::mat3 normalMatrix;
-		mutable bool dirty;
+		mutable bool dirty, sync;
 
 	public:
 		CompTransform()
 			: position(0.0f), rotation(glm::identity<glm::quat>()), scale(1.0f),
-			  transformMatrix(1.0f), normalMatrix(1.0f), dirty(true) {}
+			  transformMatrix(1.0f), normalMatrix(1.0f), dirty(true), sync(false) {}
 
 		CompTransform(
 			const glm::vec3& _position,
 			const glm::quat& _rotation,
 			const glm::vec3& _scale)
 			: position(_position), rotation(_rotation), scale(_scale),
-			transformMatrix(1.0f), normalMatrix(1.0f), dirty(true) {}
+			transformMatrix(1.0f), normalMatrix(1.0f), dirty(true), sync(false) {}
 
 		const glm::vec3& getPosition() const { return position; }
 		const glm::quat& getRotation() const { return rotation; }
 		const glm::vec3& getScale() const { return scale; }
 		const glm::mat4& getTransformMatrix();
 		const glm::mat3& getNormalMatrix();
+		bool isDirty() const { return dirty; };
 
-		void setPosition(glm::vec3 position);
-		void setRotation(glm::vec3 rotation);
-		void setScale(glm::vec3 scale);
+		void setPosition(const glm::vec3& position);
+		void setRotation(const glm::vec3& rotation);
+		void setRotation(const glm::quat& rotation);
+		void setScale(const glm::vec3& scale);
+		void setSync(bool sync) { this->sync = sync; };
 	};
 
 	struct VRAYLIB CompRenderable {

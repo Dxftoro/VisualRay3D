@@ -23,17 +23,22 @@ namespace vray {
 		return normalMatrix;
 	}
 
-	void CompTransform::setPosition(glm::vec3 position) { 
+	void CompTransform::setPosition(const glm::vec3& position) { 
 		this->position = position;
 		dirty = true;
 	}
 
-	void CompTransform::setRotation(glm::vec3 rotation) {
+	void CompTransform::setRotation(const glm::vec3& rotation) {
 		this->rotation = glm::quat(rotation);
 		dirty = true;
 	}
 
-	void CompTransform::setScale(glm::vec3 scale) { 
+	void CompTransform::setRotation(const glm::quat& rotation) {
+		this->rotation = rotation;
+		dirty = true;
+	}
+
+	void CompTransform::setScale(const glm::vec3& scale) { 
 		this->scale = scale;
 		dirty = true;
 	}
