@@ -5,7 +5,7 @@ namespace vray {
 
 	LayerStack::~LayerStack() {
 		for (Layer* layer : layerContainer) delete layer;
-		for (Layer* layer : layerContainer) delete layer;
+		//for (Layer* overlay : overlayContainer) delete overlay;
 	}
 
 	inline void LayerStack::pushLayer(Layer* layer) { 

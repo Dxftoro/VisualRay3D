@@ -25,7 +25,7 @@ namespace vray {
 		} data;
 
 		void* window;
-		bool vsyncEnabled;
+		bool vsyncEnabled, closed;
 
 		void tryInitialize();
 		void terminate();
@@ -47,6 +47,8 @@ namespace vray {
 		inline void swapBuffers();
 
 		bool isVsyncEnabled() const { return vsyncEnabled; };
+		bool isClosed() const { return closed; }
+		void setClosed(bool closed) { this->closed = closed; }
 	};
 
 }

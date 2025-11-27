@@ -84,6 +84,10 @@ namespace vray {
 	Game::~Game() {
 		delete renderer;
 		delete physics;
+
+		// Let the memory leak lol
+		//delete window;
+
 		glfwTerminate();
 		VR_ENGINE_LOGINFO("GLFW terminated.");
 	}
@@ -124,6 +128,7 @@ namespace vray {
 
 	bool Game::onWindowClosing(WindowCloseEvent& evt) {
 		running = false;
+		window->setClosed(true);
 		return true;
 	}
 

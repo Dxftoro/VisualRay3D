@@ -12,7 +12,7 @@ namespace vray {
 		Window* window;
 		double time;
 		bool open;
-		int fps;
+		int fps, minFps, maxFps;
 		std::thread* fpsCounter;
 
 	public:

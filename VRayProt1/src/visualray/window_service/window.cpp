@@ -102,6 +102,7 @@ namespace vray {
 		data.title = _params.title;
 		data.width = _params.width;
 		data.height = _params.height;
+		closed = false;
 
 		tryInitialize();
 	}

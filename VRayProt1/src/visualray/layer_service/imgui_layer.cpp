@@ -14,7 +14,9 @@
 namespace vray {
 
 	ImGuiLayer::ImGuiLayer(Window* _window) 
-		: window(_window), time(glfwGetTime()), open(true), fps(1.0f) {
+		: window(_window), time(glfwGetTime()), open(true),
+		fps(1.0f), minFps(1000), maxFps(0.0f) {
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
@@ -24,10 +26,11 @@ namespace vray {
 		ImGui_ImplOpenGL3_Init();
 
 		fpsCounter = new std::thread([this] {
-			GLFWwindow* windowPtr = (GLFWwindow*)window->getHandlerPtr();
-			while (!glfwWindowShouldClose(windowPtr)) {
+			while (!window->isClosed()) {
 				fps = (int)(1.0f / Game::deltaTime());
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+				if (fps < minFps) minFps = fps;
+				if (fps > maxFps) maxFps = fps;
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 		});
 	}

@@ -5,28 +5,7 @@
 
 namespace vray {
 
-	void Rp3dPhysics::onEntityAdded(entt::registry& world, entt::entity entity) {
-		if (!dynamicGroup.contains(entity)) {
-			VR_ENGINE_LOGWARN("Added hitbox on entity with no transform!");
-			return;
-		}
-
-		CompHitbox& hitboxInfo = world.get<CompHitbox>(entity);
-		CompTransform& transform = world.get<CompTransform>(entity);
-
-		rp3d::Transform rp3dTransform{
-			glmToVec3(transform.getPosition()),
-			glmToQuat(transform.getRotation())
-		};
-
-		rp3d::RigidBody* rigidBody = physicsWorld->createRigidBody(rp3dTransform);
-
-		bodyTable[entity] = rigidBody;
-
-		VR_ENGINE_LOGINFO("Hitbox created!");
-	}
-
-	void Rp3dPhysics::createPhysicsBody(entt::entity entity) {
+	BodyTableIterator Rp3dPhysics::createPhysicsBody(entt::entity entity) {
 		CompHitbox& hitbox = dynamicGroup.get<CompHitbox>(entity);
 		CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
 
@@ -72,40 +51,46 @@ namespace vray {
 		default: break;
 		}
 
-		bodyTable[entity] = rigidBody;
+		BodyTableIterator it = bodyTable.emplace(entity, BodySyncData{ rigidBody, false }).first;
 		VR_ENGINE_LOGINFO("Hitbox created!");
+		return it;
 	}
 
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
 		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
-		world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
+		//world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
 		physicsWorld = physicsCommon.createPhysicsWorld();
 	}
 
 	void Rp3dPhysics::update(float deltaTime) {
-		for (entt::entity entity : dynamicGroup) {
+		dynamicGroup.each([this](entt::entity entity, 
+			const CompHitbox& hitbox, const CompTransform& transform) {
+
 			auto it = bodyTable.find(entity);
-			if (it == bodyTable.end()) createPhysicsBody(entity);
+			if (it == bodyTable.end()) it = createPhysicsBody(entity);
 
-			const CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
+			BodySyncData& bodySyncData = it->second;
+			bodySyncData.synchronized = (bodySyncData.synchronized && !transform.isDirty());
 
-			if (transform.isDirty()) {
-				bodyTable[entity]->setTransform({
+			if (!bodySyncData.synchronized) {
+				bodySyncData.body->setTransform({
 					glmToVec3(transform.getPosition()),
 					glmToQuat(transform.getRotation())
 				});
+				bodySyncData.synchronized = true;
 			}
-		}
+		});
 
 		physicsWorld->update(deltaTime);
 
-		for (entt::entity entity : dynamicGroup) {
-			CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
-			const rp3d::Transform& rp3dTransform = bodyTable[entity]->getTransform();
-			
+		dynamicGroup.each([this](entt::entity entity, CompHitbox& hitbox, CompTransform& transform){
+			auto it = bodyTable.find(entity);
+			BodySyncData& bodySyncData = it->second;
+			const rp3d::Transform & rp3dTransform = bodySyncData.body->getTransform();
+
 			transform.setPosition(vec3ToGlm(rp3dTransform.getPosition()));
 			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
-		}
+		});
 	}
 
 
