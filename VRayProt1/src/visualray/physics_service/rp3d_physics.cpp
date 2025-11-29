@@ -52,7 +52,7 @@ namespace vray {
 		}
 
 		BodyTableIterator it = bodyTable.emplace(entity, BodySyncData{ rigidBody, false }).first;
-		VR_ENGINE_LOGINFO("Hitbox created!");
+		VR_ENGINE_LOGINFO("Hitbox created for entity " + std::to_string((uint32_t)entity));
 		return it;
 	}
 
@@ -60,6 +60,8 @@ namespace vray {
 		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
 		//world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
 		physicsWorld = physicsCommon.createPhysicsWorld();
+
+		// physicsWorld->getDebugRenderer(); /* WAIT WTF?! WHOOOAAAH!!! */
 	}
 
 	void Rp3dPhysics::update(float deltaTime) {

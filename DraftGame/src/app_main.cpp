@@ -80,8 +80,11 @@ public:
 		cube = world.create();
 		plathform = world.create();
 
+		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
+
 		vray::CompRenderable teapotRenderable(teapotMesh, textures.get("stone_bricks"));
 		vray::CompTransform cubeTransform, teapotTransform, plathformTransform;
+		
 		vray::CompHitbox plathformHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::STATIC,
@@ -90,9 +93,18 @@ public:
 			.mass = 10.0f
 		};
 
+		vray::CompHitbox teapotHitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::DYNAMIC,
+			.size = glm::vec3(5.0f, 5.0f, 5.0f),
+			.radius = 10,
+			.mass = 10.0f
+		};
+
 		cubeTransform.setScale({ 5.0f, 5.0f, 5.0f });
 		cubeTransform.setPosition({ -50.0f, 0.0f, -1.0f });
 
+		teapotTransform.setPosition({ 5.0f, 10.0f, 5.0f });
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f});
 		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
 
@@ -108,6 +120,7 @@ public:
 		world.emplace<vray::CompTransform>(plathform, plathformTransform);
 
 		world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
+		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
 
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
 		world.emplace<vray::CompRenderable>(cube,
@@ -124,11 +137,11 @@ public:
 	inline void update() override {
 		handleKeys();
 
-		vray::CompTransform& transform = world.get<vray::CompTransform>(teapot);
+		//vray::CompTransform& transform = world.get<vray::CompTransform>(teapot);
 
-		timeAccumulator += deltaTime();
-		transform.setPosition({0.0f, 0.0f, 
-			amplitude * glm::sin(timeAccumulator * frequency)});
+		//timeAccumulator += deltaTime();
+		//transform.setPosition({0.0f, 0.0f, 
+		//	amplitude * glm::sin(timeAccumulator * frequency)});
 	}
 
 	inline void onEvent(vray::Event& evt) { handleRotation(evt); }
