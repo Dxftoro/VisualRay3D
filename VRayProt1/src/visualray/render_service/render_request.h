@@ -1,4 +1,5 @@
 #pragma once
+#include "vrpch.h"
 
 namespace vray {
 
@@ -7,12 +8,20 @@ namespace vray {
 
 	class RenderRequest {
 	public:
+		enum class Type : uint16_t {
+			DRAW_MESH,
+			DRAW_DEBUG_LINES
+		};
+
 		CompRenderable* renderable;
 		CompTransform* transform;
-		unsigned int drawMode;
+		uint16_t drawMode;
+		Type requestType;
 
-		RenderRequest(CompRenderable* _renderable, CompTransform* _transform, unsigned int _drawMode)
-			: renderable(_renderable), transform(_transform), drawMode(_drawMode) {};
+		RenderRequest(CompRenderable* _renderable, CompTransform* _transform,
+			uint16_t _drawMode, Type _requestType = Type::DRAW_MESH)
+			: renderable(_renderable), transform(_transform),
+			drawMode(_drawMode), requestType(_requestType) {};
 		//void complete() const;
 	};
 

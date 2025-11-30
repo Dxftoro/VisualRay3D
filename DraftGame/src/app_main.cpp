@@ -101,8 +101,16 @@ public:
 			.mass = 10.0f
 		};
 
+		vray::CompHitbox cubeHitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::DYNAMIC,
+			.size = glm::vec3(5.0f, 5.0f, 5.0f),
+			.radius = 10,
+			.mass = 12.0f
+		};
+
 		cubeTransform.setScale({ 5.0f, 5.0f, 5.0f });
-		cubeTransform.setPosition({ -50.0f, 0.0f, -1.0f });
+		cubeTransform.setPosition({ -20.0f, 0.0f, -1.0f });
 
 		teapotTransform.setPosition({ 5.0f, 10.0f, 5.0f });
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f});
@@ -121,6 +129,7 @@ public:
 
 		world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
 		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
+		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
 
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
 		world.emplace<vray::CompRenderable>(cube,

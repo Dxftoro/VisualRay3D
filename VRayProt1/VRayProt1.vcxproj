@@ -20,13 +20,13 @@
     <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
     <ClCompile Include="src\visualray\managers\resource.cpp" />
     <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
+    <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp" />
     <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
     <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
     <ClCompile Include="src\visualray\render_service\renderer.cpp" />
     <ClCompile Include="src\visualray\render_service\rendering_buffer.cpp" />
-    <ClCompile Include="src\visualray\render_service\render_request.cpp" />
     <ClCompile Include="src\visualray\render_service\texture_loader.cpp" />
     <ClCompile Include="src\visualray\render_service\vertex_array.cpp" />
     <ClCompile Include="src\visualray\util.cpp" />
@@ -64,7 +64,7 @@
     <ClInclude Include="src\visualray\managers\resource_loader.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
     <ClInclude Include="src\visualray\physics_service\physics.h" />
-    <ClInclude Include="src\visualray\physics_service\physics_impl.h" />
+    <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_physics.h" />
     <ClInclude Include="src\visualray\render_service\buffer_layout.h" />
     <ClInclude Include="src\visualray\render_service\frustum_camera.h" />

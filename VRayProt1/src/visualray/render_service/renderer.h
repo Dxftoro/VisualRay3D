@@ -12,6 +12,8 @@
 #include "frustum_camera.h"
 #include "render_request.h"
 
+#define VR_RENDERER_MAX_DEBUG_LINES     1000
+
 namespace vray {
 
     struct CompCamera;
@@ -20,7 +22,9 @@ namespace vray {
         std::queue<RenderRequest> renderQueue;
         CompCamera* camera;
         Window* currentWindow;
-        GlslProgram program;
+        GlslProgram program, debugProgram;
+
+        uint32_t debugVao, debugVbo;
 
         glm::mat4 modelMatrix;
         glm::mat3 normalMatrix;
@@ -40,6 +44,9 @@ namespace vray {
 
         void setCamera(CompCamera* camera);
         CompCamera*& getCamera() { return camera; }
+
+        void drawDebugPrimitives(const std::vector<float>& vertexData,
+            const std::vector<int>& elements);
     };
 
 }

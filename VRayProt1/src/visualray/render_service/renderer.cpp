@@ -33,6 +33,11 @@ namespace vray {
 			program.compileShader("shaders\\triangle.frag", ShaderType::FRAGMENT);
 			program.link();
 			program.validate();
+
+			debugProgram.compileShader("shaders\\debug.vert", ShaderType::VERTEX);
+			debugProgram.compileShader("shaders\\debug.frag", ShaderType::FRAGMENT);
+			debugProgram.link();
+			debugProgram.validate();
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -45,7 +50,21 @@ namespace vray {
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
-		//vertexArray->unbind();
+
+		glGenVertexArrays(1, &debugVao);
+		glGenBuffers(1, &debugVbo);
+
+		glBindVertexArray(debugVao);
+		glBindBuffer(GL_ARRAY_BUFFER, debugVbo);
+
+		glBufferData(GL_ARRAY_BUFFER, VR_RENDERER_MAX_DEBUG_LINES * sizeof(float) * 3,
+			nullptr, GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float), (const void*)0);
+		glEnableVertexAttribArray(0);
+
+
+
 	}
 
 	Renderer::~Renderer() {
@@ -117,5 +136,20 @@ namespace vray {
 			initialCamera = false;
 		}
 		this->camera = camera;
+	}
+
+	void Renderer::drawDebugPrimitives(const std::vector<float>& vertexData,
+		const std::vector<int>& elements) {
+
+		glBindBuffer(GL_ARRAY_BUFFER, debugVbo);
+		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
+			vertexData.data(), GL_DYNAMIC_DRAW);
+
+		debugProgram.use();
+		debugProgram.setUniform("projectionMatrix", camera->getProjectionMatrix());
+		debugProgram.setUniform("viewMatrix", camera->getViewMatrix());
+
+		glBindVertexArray(debugVao);
+		glDrawArrays(GL_LINES, 0, vertexData.size());
 	}
 }

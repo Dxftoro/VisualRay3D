@@ -38,6 +38,8 @@ namespace vray {
 		Rp3dPhysics(entt::registry& world);
 
 		virtual void update(float deltaTime) override;
+		rp3d::DebugRenderer& getDebugRenderer() const;
+		rp3d::PhysicsWorld* getPhysicsWorld() const;
 	};
 
 }

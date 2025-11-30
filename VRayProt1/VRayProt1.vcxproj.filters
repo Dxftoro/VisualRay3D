@@ -69,9 +69,6 @@
     <ClCompile Include="src\visualray\util.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\render_service\render_request.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="src\visualray\world\components.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -82,6 +79,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -422,10 +422,10 @@
     <ClInclude Include="src\visualray\physics_service\physics.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\physics_service\physics_impl.h">
+    <ClInclude Include="src\visualray\physics_service\rp3d_physics.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\physics_service\rp3d_physics.h">
+    <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

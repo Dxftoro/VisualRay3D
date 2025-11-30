@@ -58,10 +58,11 @@ namespace vray {
 
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
 		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
-		//world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
 		physicsWorld = physicsCommon.createPhysicsWorld();
-
-		// physicsWorld->getDebugRenderer(); /* WAIT WTF?! WHOOOAAAH!!! */
+		
+		physicsWorld->setIsDebugRenderingEnabled(true);
+		physicsWorld->getDebugRenderer()
+			.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 	}
 
 	void Rp3dPhysics::update(float deltaTime) {
@@ -95,6 +96,13 @@ namespace vray {
 		});
 	}
 
+	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {
+		return physicsWorld->getDebugRenderer();
+	}
+
+	rp3d::PhysicsWorld* Rp3dPhysics::getPhysicsWorld() const {
+		return physicsWorld;
+	}
 
 	rp3d::Vector3 Rp3dPhysics::glmToVec3(const glm::vec3& vec) {
 		return { vec.x, vec.y, vec.z };
