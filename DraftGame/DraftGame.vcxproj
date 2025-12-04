@@ -95,6 +95,8 @@
     <ClCompile Include="src\app_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\debug.frag" />
+    <None Include="shaders\debug.vert" />
     <None Include="shaders\triangle.frag" />
     <None Include="shaders\triangle.vert" />
     <None Include="src\shaders\triangle.frag" />

@@ -26,6 +26,7 @@ namespace vray {
 		LayerStack layerStack;
 		Renderer* renderer;
 		IPhysics* physics;
+		IPhysicsDebugSystem* physicsDebugSystem;
 
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void renderSubmit();

@@ -24,7 +24,7 @@ namespace vray {
         Window* currentWindow;
         GlslProgram program, debugProgram;
 
-        uint32_t debugVao, debugVbo;
+        uint32_t debugVao, debugVbo, debugVertexCount;
 
         glm::mat4 modelMatrix;
         glm::mat3 normalMatrix;
@@ -45,7 +45,7 @@ namespace vray {
         void setCamera(CompCamera* camera);
         CompCamera*& getCamera() { return camera; }
 
-        void drawDebugPrimitives(const std::vector<float>& vertexData,
+        void updateDebugPrimitives(const std::vector<float>& vertexData,
             const std::vector<int>& elements);
     };
 

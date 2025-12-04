@@ -84,6 +84,12 @@
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\physics_service\jolt_physics.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\visualray\kernel.h">
@@ -426,6 +432,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\physics_service\rp3d_logger.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\physics_service\jolt_physics.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

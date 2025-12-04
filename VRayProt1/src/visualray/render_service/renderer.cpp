@@ -60,11 +60,11 @@ namespace vray {
 		glBufferData(GL_ARRAY_BUFFER, VR_RENDERER_MAX_DEBUG_LINES * sizeof(float) * 3,
 			nullptr, GL_DYNAMIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float), (const void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float), (const void*)0);
+		glBindVertexArray(0);
 
-
-
+		debugVertexCount = 0;
 	}
 
 	Renderer::~Renderer() {
@@ -83,6 +83,13 @@ namespace vray {
 			program.setUniform("viewMatrix", camera->getViewMatrix());
 
 			flush();
+
+			debugProgram.use();
+			debugProgram.setUniform("projectionMatrix", camera->getProjectionMatrix());
+			debugProgram.setUniform("viewMatrix", camera->getViewMatrix());
+
+			glBindVertexArray(debugVao);
+			glDrawArrays(GL_LINES, 0, debugVertexCount);
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -138,18 +145,13 @@ namespace vray {
 		this->camera = camera;
 	}
 
-	void Renderer::drawDebugPrimitives(const std::vector<float>& vertexData,
+	void Renderer::updateDebugPrimitives(const std::vector<float>& vertexData,
 		const std::vector<int>& elements) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, debugVbo);
 		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
 			vertexData.data(), GL_DYNAMIC_DRAW);
 
-		debugProgram.use();
-		debugProgram.setUniform("projectionMatrix", camera->getProjectionMatrix());
-		debugProgram.setUniform("viewMatrix", camera->getViewMatrix());
-
-		glBindVertexArray(debugVao);
-		glDrawArrays(GL_LINES, 0, vertexData.size());
+		debugVertexCount = elements.size();
 	}
 }

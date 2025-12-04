@@ -11,41 +11,13 @@
 #include "render_service/render_request.h"
 
 #include "physics_service/rp3d_physics.h"
+#include "physics_service/rp3d_debug_system.h"
 
 namespace vray {
 	float Game::begTime = 0.0f;
 	float Game::endTime = 0.0f;
 	float Game::_deltaTime = 1.0f;
 	int Game::fpsLimit = 30;
-
-	void testPhysics() {
-		//rp3d::PhysicsCommon physicsCommon;
-
-		//// Create a physics world
-		//rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
-
-		//// Create a rigid body in the world
-		//rp3d::Vector3 position(0, 20, 0);
-		//rp3d::Quaternion orientation = rp3d::Quaternion::identity();
-		//rp3d::Transform transform(position, orientation);
-		//rp3d::RigidBody* body = world->createRigidBody(transform);
-
-		//const rp3d::decimal timeStep = 1.0f / 60.0f;
-
-		//// Step the simulation a few steps
-		//for (int i = 0; i < 20; i++) {
-
-		//	world->update(timeStep);
-
-		//	// Get the updated position of the body
-		//	const rp3d::Transform& transform = body->getTransform();
-		//	const rp3d::Vector3& position = transform.getPosition();
-
-		//	// Display the position of the body
-		//	std::cout << "Body Position: (" << position.x << ", " <<
-		//		position.y << ", " << position.z << ")" << std::endl;
-		//}
-	}
 
 	Game::Game() : running(false), cameraSystem(nullptr) {
 		if (!glfwInit()) {
@@ -61,29 +33,21 @@ namespace vray {
 		InputService::init(window);
 		pushOverlay(new ImGuiLayer(window));
 
-		VR_ENGINE_LOGINFO("Trying to load mesh...");
-
-		std::ifstream fin("models\\teapot.obj");
-		if (!fin) {
-			VR_ENGINE_LOGERROR("Can't open file!");
-			throw std::runtime_error("Can't open file!");
-		}
-
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
 		renderer = new Renderer(window);
 		physics = new Rp3dPhysics(world);
+		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
 		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VERSION));
-
-		testPhysics();
 	}
 
 	Game::~Game() {
 		delete renderer;
 		delete physics;
+		delete physicsDebugSystem;
 
 		// Let the memory leak lol
 		//delete window;
@@ -98,6 +62,7 @@ namespace vray {
 
 		begTime = glfwGetTime();
 
+		int frameInterval = 1, frameNumber = 0;
 		while (running) {
 			auto frameBegin = std::chrono::high_resolution_clock::now();
 			auto frameEnd = frameBegin + std::chrono::milliseconds(1000 / fpsLimit);
@@ -107,6 +72,11 @@ namespace vray {
 			begTime = endTime;
 
 			physics->update(_deltaTime);
+			if (frameNumber >= frameInterval) {
+				physicsDebugSystem->update(true);
+				frameNumber = 0;
+			}
+			else frameNumber++;
 
 			this->update();
 			this->renderSubmit();

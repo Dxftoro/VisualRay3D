@@ -1,8 +1,6 @@
 #pragma once
 #include "physics.h"
 #include "rp3d_physics.h"
-#include "render_service/rendering_buffer.h"
-#include "render_service/vertex_array.h"
 #include "render_service/renderer.h"
 
 namespace vray {
@@ -16,9 +14,6 @@ namespace vray {
 		std::vector<float> vertexData;
 		std::vector<int> elements;
 	
-	private:
-		static BufferLayout lineDataLayout;
-
 	public:
 		Rp3dDebugSystem(Rp3dPhysics* _physics, Renderer* _renderer) 
 			: physics(_physics), renderer(_renderer), i(0) {};

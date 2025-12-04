@@ -20,7 +20,9 @@
     <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
     <ClCompile Include="src\visualray\managers\resource.cpp" />
     <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
+    <ClCompile Include="src\visualray\physics_service\jolt_physics.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
+    <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp" />
     <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
     <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
@@ -63,8 +65,10 @@
     <ClInclude Include="src\visualray\managers\mesh_manager.h" />
     <ClInclude Include="src\visualray\managers\resource_loader.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
+    <ClInclude Include="src\visualray\physics_service\jolt_physics.h" />
     <ClInclude Include="src\visualray\physics_service\physics.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h" />
+    <ClInclude Include="src\visualray\physics_service\rp3d_logger.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_physics.h" />
     <ClInclude Include="src\visualray\render_service\buffer_layout.h" />
     <ClInclude Include="src\visualray\render_service\frustum_camera.h" />
@@ -164,6 +168,9 @@
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
       <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
+      <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -215,7 +222,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>vrpch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\thirdparty\GLM;$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\thirdparty\GLM;$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;$(SolutionDir)thirdparty\JoltPhysics\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
