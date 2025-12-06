@@ -2,7 +2,6 @@
 #include "game.h"
 
 #include <GLFW/glfw3.h>
-#include <reactphysics3d/reactphysics3d.h>
 
 #include "event_service/game_events.h"
 #include "layer_service/imgui_layer.h"
