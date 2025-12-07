@@ -2,6 +2,7 @@
 #include "game.h"
 
 #include <GLFW/glfw3.h>
+//#include <reactphysics3d/reactphysics3d.h>
 
 #include "event_service/game_events.h"
 #include "layer_service/imgui_layer.h"
@@ -9,8 +10,9 @@
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
-#include "physics_service/rp3d_physics.h"
-#include "physics_service/rp3d_debug_system.h"
+#include "physics_service/ode_physics.h"
+//#include "physics_service/rp3d_physics.h"
+//#include "physics_service/rp3d_debug_system.h"
 
 namespace vray {
 	float Game::begTime = 0.0f;
@@ -34,8 +36,8 @@ namespace vray {
 
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
 		renderer = new Renderer(window);
-		physics = new Rp3dPhysics(world);
-		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
+		physics = new OdePhysics(world);
+		//physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
 		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
@@ -46,7 +48,7 @@ namespace vray {
 	Game::~Game() {
 		delete renderer;
 		delete physics;
-		delete physicsDebugSystem;
+		//delete physicsDebugSystem;
 
 		// Let the memory leak lol
 		//delete window;
@@ -71,11 +73,11 @@ namespace vray {
 			begTime = endTime;
 
 			physics->update(_deltaTime);
-			if (frameNumber >= frameInterval) {
-				physicsDebugSystem->update(true);
-				frameNumber = 0;
-			}
-			else frameNumber++;
+			//if (frameNumber >= frameInterval) {
+			//	physicsDebugSystem->update(true);
+			//	frameNumber = 0;
+			//}
+			//else frameNumber++;
 
 			this->update();
 			this->renderSubmit();

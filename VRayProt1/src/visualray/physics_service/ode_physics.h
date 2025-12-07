@@ -3,17 +3,15 @@
 #include "world/components.h"
 
 #include "thirdparty/EnTT/entt.hpp"
-
-#define dSINGLE
 #include <ode/ode.h>
 
-#define VR_ODED(GLM_VEC)	(GLM_VEC).x, (GLM_VEC).z, (GLM_VEC).y
+#define VR_ODED(GLM_VEC)	(GLM_VEC).x, (GLM_VEC).y, (GLM_VEC).z
 #define VR_ODEDQ(GLM_QUAT)	{ (GLM_QUAT).w, (GLM_QUAT).x, (GLM_QUAT).y, (GLM_QUAT).z }
-#define VR_GLMD(ODE_VEC)	{ (ODE_VEC)[0], (ODE_VEC)[2], (ODE_VEC)[1] }
+#define VR_GLMD(ODE_VEC)	{ (ODE_VEC)[0], (ODE_VEC)[1], (ODE_VEC)[2] }
 #define VR_GLMDQ(ODE_QUAT)	{ (ODE_QUAT)[1], (ODE_QUAT)[2], (ODE_QUAT)[3], (ODE_QUAT)[0] }
 
 #define VR_ODE_DEFAULT_DENSITY	1.0
-#define VR_MAX_NUM_CONTACTS		8
+#define VR_MAX_NUM_CONTACTS		4
 
 namespace vray {
 
@@ -51,6 +49,8 @@ namespace vray {
 
 	private:
 		static void handleCollisions(void* data, dGeomID geom1, dGeomID geom2);
+		static void handleMessages(int errnum, const char* msg, va_list ap);
+
 		BodyTableIterator createPhysicsBody(entt::entity entity,
 			const CompHitbox& hitbox, const CompTransform& transform);
 
