@@ -19,5 +19,6 @@
 #include "visualray/event_service/mouse_events.h"
 #include "visualray/window_service/window.h"
 #include "visualray/render_service/renderer.h"
+#include "visualray/util.h"
 
 #include "visualray/entry_point.h"

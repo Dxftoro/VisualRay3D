@@ -172,22 +172,25 @@ namespace vray {
 
 		dContact contacts[VR_MAX_NUM_CONTACTS];
 
-		int numc = dCollide(geom1, geom2, VR_MAX_NUM_CONTACTS, &contacts[0].geom, sizeof(dContact));
+		int numc = dCollide(geom1, geom2, VR_MAX_NUM_CONTACTS,
+			&contacts[0].geom, sizeof(dContact));
 
 		for (int i = 0; i < numc; i++) {
-			contacts[i].surface.mode = /*dContactSoftERP | dContactSoftCFM |*/ dContactApprox1 | dContactSlip1 | dContactSlip2;
+			contacts[i].surface.mode = dContactBounce | dContactSoftCFM | dContactSoftERP;
 
-			contacts[i].surface.mu = 0.8;
-			//contacts[i].surface.soft_erp = 0.2;
-			//contacts[i].surface.soft_cfm = 1e-5;
+			contacts[i].surface.mu = 0.8f;
 
-			dJointID contact = dJointCreateContact(collisionData->world, collisionData->contactGroup,
+			contacts[i].surface.bounce = 0.1f;
+			contacts[i].surface.bounce_vel = 0.1f;
+			contacts[i].surface.soft_cfm = 1e-4f; 
+			contacts[i].surface.soft_erp = 0.8f;
+
+			dJointID contact = dJointCreateContact(collisionData->world,
+				collisionData->contactGroup,
 				&contacts[i]);
-
 			dJointAttach(contact, body1, body2);
 		}
 	}
-
 	void OdePhysics::handleMessages(int errnum, const char* msg, va_list ap) {
 		/* Empty */
 	}

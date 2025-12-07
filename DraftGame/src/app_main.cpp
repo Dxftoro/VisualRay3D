@@ -3,7 +3,7 @@
 
 class DraftGame : public vray::Game {
 private:
-	entt::entity player, teapot, cube, plathform;
+	entt::entity player, teapot, plathform;
 	vray::CompCamera* camera;
 
 	float prevAngle, amplitude, frequency, timeAccumulator;
@@ -65,6 +65,49 @@ private:
 		}
 	}
 
+	void spawnCube(const glm::vec3& position) {
+		entt::entity cube = world.create();
+		
+		vray::CompTransform cubeTransform;
+		cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
+		cubeTransform.setPosition(position);
+		
+		vray::CompHitbox cubeHitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::DYNAMIC,
+			.size = cubeTransform.getScale() * 0.9f,
+			.radius = 1,
+			.mass = 12.0f
+		};
+
+		world.emplace<vray::CompTransform>(cube, cubeTransform);
+		world.emplace<vray::CompRenderable>(cube,
+			vray::CompRenderable(meshes.get("cube"), textures.get("stone_bricks")));
+		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
+	}
+
+	void spawnTeapot(const glm::vec3& position) {
+		entt::entity teapot = world.create();
+
+		vray::CompTransform teapotTransform;
+		teapotTransform.setPosition(position);
+		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
+		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
+		
+		vray::CompHitbox teapotHitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::DYNAMIC,
+			.size = glm::vec3(2.0f, 2.0f, 2.0f),
+			.radius = 10,
+			.mass = 10.0f
+		};
+
+		vray::CompRenderable teapotRenderable(meshes.get("teapot"), textures.get("stone_bricks"));
+		world.emplace<vray::CompTransform>(teapot, teapotTransform);
+		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
+		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
+	}
+
 public:
 	DraftGame() {
 		DraftGame::setFpsLimit(70);
@@ -75,25 +118,20 @@ public:
 		vray::Texture* stoneBricks = textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = textures.load("textures/default.png", "default");
 
+		prevAngle = 0.0f;
+		amplitude = 2.0f;
+		frequency = 0.5f;
+		timeAccumulator = 0.0f;
+
 		player = world.create();
-		teapot = world.create();
-		cube = world.create();
 		plathform = world.create();
 
 		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
-		vray::CompRenderable teapotRenderable(teapotMesh, textures.get("stone_bricks"));
-		vray::CompTransform cubeTransform, teapotTransform, plathformTransform;
+		vray::CompTransform plathformTransform;
 		
-		cubeTransform.setScale({ 2.0f, 2.0f, 2.0f });
-		cubeTransform.setPosition({ -5.0f, 20.0f, -1.0f });
-
-		teapotTransform.setPosition({ 5.0f, 20.0f, 5.0f });
-		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
-		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
-
-		plathformTransform.setPosition({ 0.0f, 0.0f, 0.0f });
-		plathformTransform.setScale({ 20.0f, 0.25f, 20.0f });
+		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
+		plathformTransform.setScale({ 20.0f, 1.0f, 20.0f });
 
 		vray::CompHitbox plathformHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
@@ -103,44 +141,23 @@ public:
 			.mass = 10.0f
 		};
 
-		vray::CompHitbox teapotHitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = glm::vec3(5.0f, 5.0f, 5.0f),
-			.radius = 10,
-			.mass = 10.0f
-		};
-
-		vray::CompHitbox cubeHitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = cubeTransform.getScale(),
-			.radius = 10,
-			.mass = 12.0f
-		};
-
 		camera = &world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
 			getWindow()->getWidth(),
 			getWindow()->getHeight(), 0.1f, 300.0f));
 		cameraSystem.setActiveCamera(camera);
 
-		world.emplace<vray::CompTransform>(teapot, teapotTransform);
-		world.emplace<vray::CompTransform>(cube, cubeTransform);
 		world.emplace<vray::CompTransform>(plathform, plathformTransform);
-
 		world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
-		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
-		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
-
-		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
-		world.emplace<vray::CompRenderable>(cube,
-			vray::CompRenderable(cubeMesh, textures.get("stone_bricks")));
 		world.emplace<vray::CompRenderable>(plathform, vray::CompRenderable(cubeMesh, defaultTexture));
 
-		prevAngle = 0.0f;
-		amplitude = 2.0f;
-		frequency = 0.5f;
-		timeAccumulator = 0.0f;
+		for (int i = 0; i < 15; i++) {
+			spawnCube({
+				vray::frand(-5.0f, 5.0f),
+				40.0,
+				vray::frand(-5.0f, 5.0f)});
+		}
+
+		//spawnTeapot({ 5.0f, 20.0f, 5.0f });
 	}
 	~DraftGame() {}
 
