@@ -14,7 +14,7 @@ out vec2 TexCoord;
 
 void main() {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
-	vec4 lightPosition = vec4(6.0, 10.0, 0.0, 1.0);
+	vec4 lightPosition = vec4(3.0, 6.0, 0.0, 1.0);
 	vec3 Kd = vec3(0.1, 0.1, 0.1);
 	vec3 Ld = vec3(10.0, 10.0, 10.0);
 

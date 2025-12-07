@@ -8,7 +8,7 @@
 #define VR_ODED(GLM_VEC)	(GLM_VEC).x, (GLM_VEC).y, (GLM_VEC).z
 #define VR_ODEDQ(GLM_QUAT)	{ (GLM_QUAT).w, (GLM_QUAT).x, (GLM_QUAT).y, (GLM_QUAT).z }
 #define VR_GLMD(ODE_VEC)	{ (ODE_VEC)[0], (ODE_VEC)[1], (ODE_VEC)[2] }
-#define VR_GLMDQ(ODE_QUAT)	{ (ODE_QUAT)[1], (ODE_QUAT)[2], (ODE_QUAT)[3], (ODE_QUAT)[0] }
+#define VR_GLMDQ(ODE_QUAT)	{ (ODE_QUAT)[0], (ODE_QUAT)[1], (ODE_QUAT)[2], (ODE_QUAT)[3] }
 
 #define VR_ODE_DEFAULT_DENSITY	1.0
 #define VR_MAX_NUM_CONTACTS		4

@@ -86,13 +86,13 @@ public:
 		vray::CompTransform cubeTransform, teapotTransform, plathformTransform;
 		
 		cubeTransform.setScale({ 2.0f, 2.0f, 2.0f });
-		cubeTransform.setPosition({ -5.0f, 40.0f, -1.0f });
+		cubeTransform.setPosition({ -5.0f, 20.0f, -1.0f });
 
-		teapotTransform.setPosition({ 5.0f, 40.0f, 5.0f });
+		teapotTransform.setPosition({ 5.0f, 20.0f, 5.0f });
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
 		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
 
-		plathformTransform.setPosition({ 0.0f, 20.0f, 0.0f });
+		plathformTransform.setPosition({ 0.0f, 0.0f, 0.0f });
 		plathformTransform.setScale({ 20.0f, 0.25f, 20.0f });
 
 		vray::CompHitbox plathformHitbox{
