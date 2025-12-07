@@ -144,6 +144,7 @@ public:
 		camera = &world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
 			getWindow()->getWidth(),
 			getWindow()->getHeight(), 0.1f, 300.0f));
+		camera->setPosition({ 0.0f, 30.0f, 0.0f });
 		cameraSystem.setActiveCamera(camera);
 
 		world.emplace<vray::CompTransform>(plathform, plathformTransform);
