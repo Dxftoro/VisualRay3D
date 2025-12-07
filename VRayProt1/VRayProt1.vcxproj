@@ -20,6 +20,7 @@
     <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
     <ClCompile Include="src\visualray\managers\resource.cpp" />
     <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
+    <ClCompile Include="src\visualray\physics_service\ode_physics.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="src\visualray\managers\mesh_manager.h" />
     <ClInclude Include="src\visualray\managers\resource_loader.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
+    <ClInclude Include="src\visualray\physics_service\ode_physics.h" />
     <ClInclude Include="src\visualray\physics_service\physics.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_logger.h" />
@@ -220,13 +222,13 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>vrpch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\thirdparty\GLM;$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\thirdparty\GLM;$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;$(SolutionDir)\thirdparty\ODE\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)GLFW-prebuilt\lib-vc2022;$(SolutionDir)thirdparty\ReactPhysics3D\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)GLFW-prebuilt\lib-vc2022;$(SolutionDir)thirdparty\ReactPhysics3D\lib;$(SolutionDir)thirdparty\ODE\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib;reactphysics3d.lib;oded.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
