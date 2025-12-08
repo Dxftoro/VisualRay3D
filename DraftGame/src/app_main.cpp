@@ -153,12 +153,12 @@ public:
 
 		for (int i = 0; i < 15; i++) {
 			spawnCube({
-				vray::frand(-5.0f, 5.0f),
+				vray::frand(-2.0f, 2.0f),
 				40.0,
-				vray::frand(-5.0f, 5.0f)});
+				vray::frand(-2.0f, 2.0f)});
 		}
 
-		//spawnTeapot({ 5.0f, 20.0f, 5.0f });
+		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 	}
 	~DraftGame() {}
 

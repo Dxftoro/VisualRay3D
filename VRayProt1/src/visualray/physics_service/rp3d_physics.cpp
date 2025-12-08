@@ -106,6 +106,8 @@ namespace vray {
 		physicsWorld->update(deltaTime);
 
 		dynamicGroup.each([this](entt::entity entity, CompHitbox& hitbox, CompTransform& transform){
+			if (hitbox.physType == CompHitbox::PhysType::STATIC) return;
+
 			auto it = bodyTable.find(entity);
 			BodySyncData& bodySyncData = it->second;
 			const rp3d::Transform & rp3dTransform = bodySyncData.body->getTransform();
