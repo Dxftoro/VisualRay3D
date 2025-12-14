@@ -95,17 +95,12 @@ namespace vray {
 			if (it == bodyTable.end()) it = createPhysicsBody(entity);
 
 			BodySyncData& bodySyncData = it->second;
-			bodySyncData.synchronized = (bodySyncData.synchronized && !transform.isDirty());
-
-			if (!bodySyncData.synchronized) {
-				//VR_ENGINE_LOGWARN("NOT SYNC!!!");
-
+			if (!transform.isSync()) {
 				bodySyncData.body->setTransform({
 					glmToVec3(transform.getPosition()),
 					glmToQuat(transform.getRotation())
 				});
-				bodySyncData.synchronized = true;
-				//transform.setSync(true);
+				transform.setSync(true);
 			}
 		});
 
@@ -120,6 +115,7 @@ namespace vray {
 
 			transform.setPosition(vec3ToGlm(rp3dTransform.getPosition()));
 			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
+			transform.setSync(true);
 		});
 	}
 

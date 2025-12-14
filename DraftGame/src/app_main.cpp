@@ -39,10 +39,14 @@ private:
 		if (vray::InputService::keyPressed(VR_KEY_E)) {
 			cameraPosition.y -= moveSpeed * deltaTime();
 		}
+
 		if (vray::InputService::keyPressed(VR_KEY_UP)) {
 			teapotPosition.x += (moveSpeed - 1) * deltaTime();
 			teapotTransform.setPosition(teapotPosition);
-			VR_LOGINFO("TEA");
+		}
+		if (vray::InputService::keyPressed(VR_KEY_DOWN)) {
+			teapotPosition.x -= (moveSpeed - 1) * deltaTime();
+			teapotTransform.setPosition(teapotPosition);
 		}
 
 		camera->setPosition(cameraPosition);
