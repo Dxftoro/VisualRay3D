@@ -1,3 +1,9 @@
+/*
+
+TODO: Uniform layouts and attribute layouts
+
+*/
+
 #pragma once
 #include "vrpch.h"
 #include "kernel.h"
@@ -30,12 +36,26 @@ namespace vray {
 
 	std::string loadFile(const std::string& filename);
 
+	class GlslProgram;
+	class GlslUniform {
+	private:
+		GLuint program;
+		GLint location;
+		std::string name;
+
+	public:
+		GlslUniform() : program(0), location(-1) {}
+		GlslUniform(GlslProgram* program, const std::string& name);
+
+		unsigned int VRAYLIB getProgram() const { return program; }
+		int VRAYLIB getLocation() const { return location; }
+		std::string getName() const { return name; }
+	};
+
 	class GlslProgram {
 	private:
 		GLuint handle;
 		bool linked;
-
-		int getUniformLocation(const std::string& name);
 
 	public:
 		GlslProgram() : handle(0), linked(false) {}
@@ -47,13 +67,17 @@ namespace vray {
 		void VRAYLIB unuse();
 		void VRAYLIB validate();
 
-		int VRAYLIB getHandle() const { return handle; }
+		int VRAYLIB getUniformLocation(const std::string& name);
+		unsigned int VRAYLIB getHandle() const { return handle; }
+		GlslUniform VRAYLIB getUniform(const std::string& name);
+
 		bool VRAYLIB isLinked() const { return linked; }
 
 		//void bindFragDataLocation(GLuint location, const std::string& name);
-		void VRAYLIB setUniform(const std::string& name, const glm::mat2& matrix);
-		void VRAYLIB setUniform(const std::string& name, const glm::mat3& matrix);
-		void VRAYLIB setUniform(const std::string& name, const glm::mat4& matrix);
+
+		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat2& matrix);
+		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat3& matrix);
+		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat4& matrix);
 
 		void VRAYLIB printActiveUniforms() const;
 	};

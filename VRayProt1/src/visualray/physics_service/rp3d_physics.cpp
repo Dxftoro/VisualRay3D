@@ -70,8 +70,11 @@ namespace vray {
 
 		rp3d::DebugRenderer& debugRenderer = physicsWorld->getDebugRenderer();
 		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+		
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+		
 		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
+		
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
 
@@ -86,7 +89,7 @@ namespace vray {
 
 	void Rp3dPhysics::update(float deltaTime) {
 		dynamicGroup.each([this](entt::entity entity, 
-			const CompHitbox& hitbox, const CompTransform& transform) {
+			CompHitbox& hitbox, CompTransform& transform) {
 
 			auto it = bodyTable.find(entity);
 			if (it == bodyTable.end()) it = createPhysicsBody(entity);
@@ -95,11 +98,14 @@ namespace vray {
 			bodySyncData.synchronized = (bodySyncData.synchronized && !transform.isDirty());
 
 			if (!bodySyncData.synchronized) {
+				//VR_ENGINE_LOGWARN("NOT SYNC!!!");
+
 				bodySyncData.body->setTransform({
 					glmToVec3(transform.getPosition()),
 					glmToQuat(transform.getRotation())
 				});
 				bodySyncData.synchronized = true;
+				//transform.setSync(true);
 			}
 		});
 

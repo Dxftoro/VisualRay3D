@@ -47,6 +47,11 @@ namespace vray {
 		return str_buff.str();
 	}
 
+	GlslUniform::GlslUniform(GlslProgram* glslProgram, const std::string& _name)
+	: program(glslProgram->getHandle()), name(_name) {
+		location = glslProgram->getUniformLocation(name);
+	}
+
 	GlslProgram::~GlslProgram() {
 		glDeleteProgram(handle);
 	}
@@ -106,19 +111,20 @@ namespace vray {
 		return location;
 	}
 
-	void GlslProgram::setUniform(const std::string& name, const glm::mat2& matrix) {
-		GLint location = getUniformLocation(name);
-		glUniformMatrix2fv(location, 1, GL_FALSE, &matrix[0][0]);
+	GlslUniform GlslProgram::getUniform(const std::string& name) {
+		return GlslUniform(this, name);
 	}
 
-	void GlslProgram::setUniform(const std::string& name, const glm::mat3& matrix) {
-		GLint location = getUniformLocation(name);
-		glUniformMatrix3fv(location, 1, GL_FALSE, &matrix[0][0]);
+	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat2& matrix) {
+		glUniformMatrix2fv(uniform.getLocation(), 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	void GlslProgram::setUniform(const std::string& name, const glm::mat4& matrix) {
-		GLint location = getUniformLocation(name);
-		glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat3& matrix) {
+		glUniformMatrix3fv(uniform.getLocation(), 1, GL_FALSE, &matrix[0][0]);
+	}
+
+	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat4& matrix) {
+		glUniformMatrix4fv(uniform.getLocation(), 1, GL_FALSE, &matrix[0][0]);
 	}
 
 	void GlslProgram::printActiveUniforms() const {

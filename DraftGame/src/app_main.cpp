@@ -18,6 +18,9 @@ private:
 		static float moveSpeed = 10.0f;
 		float currentAngle = glm::radians(camera->getRotation().x);
 
+		vray::CompTransform& teapotTransform = world.get<vray::CompTransform>(teapot);
+		glm::vec3 teapotPosition = teapotTransform.getPosition();
+
 		if (vray::InputService::keyPressed(VR_KEY_W)) {
 			moveRotated(cameraPosition, currentAngle, moveSpeed);
 		}
@@ -35,6 +38,11 @@ private:
 		}
 		if (vray::InputService::keyPressed(VR_KEY_E)) {
 			cameraPosition.y -= moveSpeed * deltaTime();
+		}
+		if (vray::InputService::keyPressed(VR_KEY_UP)) {
+			teapotPosition.x += (moveSpeed - 1) * deltaTime();
+			teapotTransform.setPosition(teapotPosition);
+			VR_LOGINFO("TEA");
 		}
 
 		camera->setPosition(cameraPosition);
@@ -97,7 +105,7 @@ private:
 		vray::CompHitbox teapotHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = glm::vec3(2.0f, 2.0f, 2.0f),
+			.size = glm::vec3(1.0f, 2.0f, 2.0f),
 			.radius = 10,
 			.mass = 10.0f
 		};
@@ -106,6 +114,8 @@ private:
 		world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
+
+		this->teapot = teapot;
 	}
 
 public:
@@ -125,8 +135,6 @@ public:
 
 		player = world.create();
 		plathform = world.create();
-
-		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
 		vray::CompTransform plathformTransform;
 		
@@ -159,6 +167,7 @@ public:
 		}
 
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });
+		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 	}
 	~DraftGame() {}
 

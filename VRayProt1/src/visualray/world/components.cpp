@@ -26,21 +26,25 @@ namespace vray {
 	void CompTransform::setPosition(const glm::vec3& position) { 
 		this->position = position;
 		dirty = true;
+		sync = false;
 	}
 
 	void CompTransform::setRotation(const glm::vec3& rotation) {
 		this->rotation = glm::quat(rotation);
 		dirty = true;
+		sync = false;
 	}
 
 	void CompTransform::setRotation(const glm::quat& rotation) {
 		this->rotation = rotation;
 		dirty = true;
+		sync = false;
 	}
 
 	void CompTransform::setScale(const glm::vec3& scale) { 
 		this->scale = scale;
 		dirty = true;
+		sync = false;
 	}
 
 	CompCamera::CompCamera(float fov, float width, float height, float near, float far)

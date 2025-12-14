@@ -38,6 +38,14 @@ namespace vray {
 			debugProgram.compileShader("shaders\\debug.frag", ShaderType::FRAGMENT);
 			debugProgram.link();
 			debugProgram.validate();
+
+			uProjectionMatrix = program.getUniform("projectionMatrix");
+			uViewMatrix = program.getUniform("viewMatrix");
+			uModelMatrix = program.getUniform("modelMatrix");
+			uNormalMatrix = program.getUniform("normalMatrix");
+
+			uDebugProjectionMatrix = debugProgram.getUniform("projectionMatrix");
+			uDebugViewMatrix = debugProgram.getUniform("viewMatrix");
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -79,14 +87,15 @@ namespace vray {
 	void Renderer::update(float deltaTime) {
 		try {
 			program.use();
-			program.setUniform("projectionMatrix", camera->getProjectionMatrix());
-			program.setUniform("viewMatrix", camera->getViewMatrix());
+			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
+			program.setUniform(uViewMatrix, camera->getViewMatrix());
 
 			flush();
 
+			/* UNIFORM ORDER IS CRITICAL!!! */
 			debugProgram.use();
-			debugProgram.setUniform("projectionMatrix", camera->getProjectionMatrix());
-			debugProgram.setUniform("viewMatrix", camera->getViewMatrix());
+			debugProgram.setUniform(uDebugProjectionMatrix, camera->getProjectionMatrix());
+			debugProgram.setUniform(uDebugViewMatrix, camera->getViewMatrix());
 
 			glBindVertexArray(debugVao);
 			glDrawArrays(GL_LINES, 0, debugVertexCount);
@@ -110,8 +119,8 @@ namespace vray {
 		while (!renderQueue.empty()) {
 			RenderRequest& request = renderQueue.front();
 
-			program.setUniform("modelMatrix", request.transform->getTransformMatrix());
-			program.setUniform("normalMatrix", request.transform->getNormalMatrix());
+			program.setUniform(uModelMatrix, request.transform->getTransformMatrix());
+			program.setUniform(uNormalMatrix, request.transform->getNormalMatrix());
 
 			VertexArray* vertexArray = request.renderable->mesh->getVertexArray();
 			

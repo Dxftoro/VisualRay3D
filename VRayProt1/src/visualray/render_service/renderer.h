@@ -23,7 +23,11 @@ namespace vray {
         CompCamera* camera;
         Window* currentWindow;
         GlslProgram program, debugProgram;
+        
+        GlslUniform uProjectionMatrix, uViewMatrix, 
+                    uModelMatrix, uNormalMatrix;
 
+        GlslUniform uDebugProjectionMatrix, uDebugViewMatrix;
         uint32_t debugVao, debugVbo, debugVertexCount;
 
         glm::mat4 modelMatrix;

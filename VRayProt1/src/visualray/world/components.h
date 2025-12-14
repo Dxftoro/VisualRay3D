@@ -12,6 +12,8 @@ namespace vray {
 		glm::vec3 scale;
 		glm::mat4 transformMatrix;
 		glm::mat3 normalMatrix;
+
+		/* TODO: Remake as bit-mask */
 		mutable bool dirty, sync;
 
 	public:
@@ -31,7 +33,7 @@ namespace vray {
 		const glm::vec3& getScale() const { return scale; }
 		const glm::mat4& getTransformMatrix();
 		const glm::mat3& getNormalMatrix();
-		bool isDirty() const { return dirty; };
+		bool isDirty() const { return dirty && !sync; };
 
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
