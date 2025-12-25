@@ -94,7 +94,7 @@ private:
 
 		world.emplace<vray::CompTransform>(cube, cubeTransform);
 		world.emplace<vray::CompRenderable>(cube,
-			vray::CompRenderable(meshes.get("cube"), textures.get("stone_bricks")));
+			vray::CompRenderable(meshes.get("cube"), textures.get("default")));
 		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
 	}
 
@@ -111,10 +111,10 @@ private:
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
 			.size = glm::vec3(1.0f, 2.0f, 2.0f),
 			.radius = 10,
-			.mass = 10.0f
+			.mass = 12.0f
 		};
 
-		vray::CompRenderable teapotRenderable(meshes.get("teapot"), textures.get("stone_bricks"));
+		vray::CompRenderable teapotRenderable(/*nullptr*/ meshes.get("teapot"), textures.get("stone_bricks"));
 		world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
@@ -123,12 +123,13 @@ private:
 	}
 
 public:
-	DraftGame() {
+	DraftGame() : Game(vray::WindowParams("Draft Game", 860, 482)) {
 		DraftGame::setFpsLimit(70);
 		vray::InputService::setMouseLocked(true);
 
 		vray::Mesh* teapotMesh = meshes.load("models/teapot.obj", "teapot");
 		vray::Mesh* cubeMesh = meshes.load("models/cube.obj", "cube");
+		vray::Mesh* ershikMesh = meshes.load("models/Ershik.obj", "ershik");
 		vray::Texture* stoneBricks = textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = textures.load("textures/default.png", "default");
 
@@ -165,9 +166,9 @@ public:
 
 		for (int i = 0; i < 15; i++) {
 			spawnCube({
-				vray::frand(-2.0f, 2.0f),
+				vray::frand(-5.0f, 5.0f),
 				40.0,
-				vray::frand(-2.0f, 2.0f)});
+				vray::frand(-5.0f, 5.0f)});
 		}
 
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });

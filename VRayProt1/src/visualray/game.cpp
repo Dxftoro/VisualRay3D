@@ -20,13 +20,13 @@ namespace vray {
 	float Game::_deltaTime = 1.0f;
 	int Game::fpsLimit = 30;
 
-	Game::Game() : running(false), cameraSystem(nullptr) {
-		if (!glfwInit()) {
+	Game::Game(const WindowParams& windowParams) : running(false), cameraSystem(nullptr) {
+		if (glfwInit() == GLFW_FALSE) {
 			VR_ENGINE_LOGERROR("Can't initialize GLFW!");
 			throw std::runtime_error("Can't initialize GLFW!");
 		}
 
-		window = Window::create(WindowParams());
+		window = Window::create(windowParams);
 		window->setEventCallback(
 			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
 		);

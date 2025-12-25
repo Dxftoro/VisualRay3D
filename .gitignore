@@ -3,6 +3,8 @@
 bin/
 bin-int/
 Devshit/models/
+packages/
+Tests/
 
 # Files
 *.user

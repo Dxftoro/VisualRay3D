@@ -113,6 +113,18 @@ namespace vray {
 		return new Window(params);
 	}
 
+	std::string Window::getErrorLog() {
+		const char* description;
+		int code = glfwGetError(&description);
+		std::string errorLog = "Window - no error";
+
+		if (code != GLFW_NO_ERROR) {
+			errorLog = std::format("GLFW Error: {0} - {1}", code, description);
+		}
+
+		return errorLog;
+	}
+
 	void Window::onUpdate() {
 		glfwPollEvents();
 		GameUpdateEvent evt;

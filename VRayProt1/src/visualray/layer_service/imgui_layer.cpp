@@ -29,9 +29,9 @@ namespace vray {
 			while (!window->isClosed()) {
 				fps = (int)(1.0f / Game::deltaTime());
 
-				//std::ofstream fout("D:/fps_profiling.txt", std::ios::app);
-				//fout << fps << std::endl;
-				//fout.close();
+				std::ofstream fout("D:/fps_profiling.txt", std::ios::app);
+				fout << fps << std::endl;
+				fout.close();
 
 				if (fps < minFps) minFps = fps;
 				if (fps > maxFps) maxFps = fps;

@@ -61,19 +61,19 @@ namespace vray {
 	}
 
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
-		static Rp3dLogger logger;
-		physicsCommon.setLogger(&logger);
+		//static Rp3dLogger logger;
+		//physicsCommon.setLogger(&logger);
 		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
 		physicsWorld = physicsCommon.createPhysicsWorld();
 		
 		physicsWorld->setIsDebugRenderingEnabled(true);
 
 		rp3d::DebugRenderer& debugRenderer = physicsWorld->getDebugRenderer();
-		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 		
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
 		
-		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
+		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
 		
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
 		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);

@@ -35,6 +35,7 @@ namespace vray {
 		~Window();
 
 		static Window* create(const WindowParams& params);
+		static std::string getErrorLog();
 
 		std::string getTitle() const { return data.title; };
 		int getWidth() const { return data.width; };

@@ -44,8 +44,8 @@ namespace vray {
 		ResourceManager<Mesh> meshes;
 		ResourceManager<Texture> textures;
 
-		Game();
-		virtual ~Game();
+		Game(const WindowParams& windowParams);
+		~Game();
 
 		inline void run();
 		inline void stop();
