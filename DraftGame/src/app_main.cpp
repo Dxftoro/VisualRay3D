@@ -123,7 +123,7 @@ private:
 	}
 
 public:
-	DraftGame() : Game(vray::WindowParams("Draft Game", 860, 482)) {
+	DraftGame(int argc, char* argv[]) : Game(vray::WindowParams("Draft Game", 860, 482)) {
 		DraftGame::setFpsLimit(70);
 		vray::InputService::setMouseLocked(true);
 

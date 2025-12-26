@@ -65,5 +65,16 @@ namespace vray {
 		static void	setFpsLimit(int _fpsLimit) { fpsLimit = _fpsLimit; };
 	};
 
-	Game* vrayMain();
+	template<typename GameT>
+	Game* createGame(int argc, char* argv[]) {
+		if constexpr (requires { GameT(argc, argv); }) {
+			return new GameT(argc, argv);
+		}
+		else {
+			return new GameT();
+		}
+	}
+
+	Game* vrayMain(int argc, char* argv[]);
+
 }

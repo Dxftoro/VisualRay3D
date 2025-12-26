@@ -6,8 +6,7 @@
 	#define VR_PLATFORM_WIN
 #endif
 
-//#define VR_START			vray::Game*
-#define VR_IMPLEMENT_GAME(GAME)		vray::Game* vray::vrayMain() { return new GAME(); }
+#define VR_IMPLEMENT_GAME(GAME) vray::Game* vray::vrayMain(int argc, char* argv[]) { return vray::createGame<GAME>(argc, argv); }
 
 /* ------- Engine files ------- */
 #include "visualray/game.h"
