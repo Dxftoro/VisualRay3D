@@ -54,17 +54,18 @@ private:
 	}
 
 	inline void handleRotation(vray::Event& evt) {
-		static glm::vec2 mouseBase(getWindow()->getWidth() / 2, getWindow()->getHeight() / 2);
+		static glm::vec2 mouseBase(getWindow()->getWidth() * 0.5f, getWindow()->getHeight() * 0.5f);
 
 		if (evt.getType() == vray::EventType::MOUSE_MOVED
 			&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED) {
-			//inputService.setMouseOnCenter();
-
 			vray::MouseMovedEvent& moveEvt = dynamic_cast<vray::MouseMovedEvent&>(evt);
 
 			glm::vec3 newRotation = camera->getRotation();
-			newRotation.x += (moveEvt.getX() - mouseBase.x) / 5.0f;
-			newRotation.y += (mouseBase.y - moveEvt.getY()) / 5.0f;
+			newRotation.x += (moveEvt.getX() - mouseBase.x) * 0.2f;
+			newRotation.y += (mouseBase.y - moveEvt.getY()) * 0.2f;
+
+			mouseBase.x = moveEvt.getX();
+			mouseBase.y = moveEvt.getY();
 
 			if (newRotation.x < 0.0f) newRotation.x += 360.0f;
 			if (newRotation.x > 360.0f) newRotation.x -= 360.0f;
