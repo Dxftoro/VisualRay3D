@@ -57,8 +57,8 @@ private:
 		static glm::vec2 mouseBase(getWindow()->getWidth() / 2, getWindow()->getHeight() / 2);
 
 		if (evt.getType() == vray::EventType::MOUSE_MOVED
-			/*&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED*/) {
-			inputService.setMouseOnCenter();
+			&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED) {
+			//inputService.setMouseOnCenter();
 
 			vray::MouseMovedEvent& moveEvt = dynamic_cast<vray::MouseMovedEvent&>(evt);
 
@@ -82,10 +82,10 @@ private:
 			if (keyEvt.getKeyCode() != VR_KEY_TAB) return;
 			
 			vray::InputService::CursorMode cursorMode = inputService.getCursorMode();
-			//if (cursorMode == vray::InputService::CursorMode::DISABLED)
-			//	inputService.setCursorMode(vray::InputService::CursorMode::NORMAL);
-			//else
-			//	inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
+			if (cursorMode == vray::InputService::CursorMode::DISABLED)
+				inputService.setCursorMode(vray::InputService::CursorMode::NORMAL);
+			else
+				inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
 		}
 	}
 

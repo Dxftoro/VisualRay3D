@@ -44,7 +44,8 @@ namespace vray {
 	}
 
 	void InputService::setCursorMode(CursorMode mode) {
-		glfwSetInputMode((GLFWwindow*)activeWindow, GLFW_CURSOR, (int)mode);
+		glfwSetInputMode((GLFWwindow*)activeWindow->getHandlerPtr(),
+			GLFW_CURSOR, (int)mode);
 		currentCursorMode = mode;
 	}
 
