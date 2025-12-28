@@ -7,21 +7,16 @@
 
 namespace vray {
 
-	Window* InputService::activeWindow = nullptr;
-	bool InputService::_mouseLocked = false;
-
-	void InputService::init(Window* _activeWindow) {
-		if (activeWindow) {
-			throw std::runtime_error("Active window is already set in InputService!");
-		}
-		activeWindow = _activeWindow;
+	InputService::~InputService() {
+		VR_ENGINE_LOGINFO("Cleaning up input service");
+		activeWindow = nullptr;
 	}
 
-	bool InputService::keyPressed(const int& key) {
+	bool InputService::keyPressed(const int key) {
 		return glfwGetKey((GLFWwindow*)activeWindow->getHandlerPtr(), key);
 	}
 
-	bool InputService::mouseButtonPressed(const int& mouseButton) {
+	bool InputService::mouseButtonPressed(const int mouseButton) {
 		return glfwGetMouseButton((GLFWwindow*)activeWindow->getHandlerPtr(), mouseButton);
 	}
 
@@ -37,16 +32,24 @@ namespace vray {
 		return y;
 	}
 
-	void InputService::setMouseLocked(bool locked) { _mouseLocked = locked; }
-
-	bool InputService::isMouseLocked() { return _mouseLocked; }
-
-	void InputService::tryLockMouse() {
-		if (_mouseLocked) {
-			glfwSetCursorPos(
-				(GLFWwindow*)activeWindow->getHandlerPtr(), 
-				activeWindow->getWidth() / 2, activeWindow->getHeight() / 2
-			);
-		}
+	void InputService::setMousePosition(double x, double y) {
+		glfwSetCursorPos((GLFWwindow*)activeWindow, x, y);
 	}
+
+	void InputService::setMouseOnCenter() {
+		glfwSetCursorPos(
+			(GLFWwindow*)activeWindow->getHandlerPtr(),
+			activeWindow->getWidth() / 2, activeWindow->getHeight() / 2
+		);
+	}
+
+	void InputService::setCursorMode(CursorMode mode) {
+		glfwSetInputMode((GLFWwindow*)activeWindow, GLFW_CURSOR, (int)mode);
+		currentCursorMode = mode;
+	}
+
+	InputService::CursorMode InputService::getCursorMode() {
+		return currentCursorMode;
+	}
+
 }

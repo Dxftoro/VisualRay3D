@@ -6,7 +6,6 @@
 
 #include "event_service/game_events.h"
 #include "layer_service/imgui_layer.h"
-#include "input_service/input_service.h"
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
@@ -26,18 +25,22 @@ namespace vray {
 			throw std::runtime_error("Can't initialize GLFW!");
 		}
 
-		window = Window::create(windowParams);
+		window = std::unique_ptr<Window>(Window::create(windowParams));
 		window->setEventCallback(
 			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
 		);
 
-		InputService::init(window);
-		pushOverlay(new ImGuiLayer(window));
+		inputService = InputService(window.get());
+		pushOverlay(new ImGuiLayer(window.get()));
 
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
-		renderer = new Renderer(window);
-		physics = new Rp3dPhysics(world);
-		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
+		renderer = new Renderer(window.get());
+
+		physics = nullptr;
+		physicsDebugSystem = nullptr;
+
+		//physics = new Rp3dPhysics(world);
+		//physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
 		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
@@ -46,15 +49,13 @@ namespace vray {
 	}
 
 	Game::~Game() {
-		delete renderer;
-		delete physics;
-		delete physicsDebugSystem;
+		//delete renderer;
+		//delete physics;
+		//delete physicsDebugSystem;
 
 		// Let the memory leak lol
 		//delete window;
-
-		glfwTerminate();
-		VR_ENGINE_LOGINFO("GLFW terminated.");
+		//VR_ENGINE_LOGINFO("Window closed");
 	}
 
 	inline void Game::run() {
@@ -72,12 +73,12 @@ namespace vray {
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
-			physics->update(_deltaTime);
-			if (frameNumber >= frameInterval) {
-				physicsDebugSystem->update(true);
-				frameNumber = 0;
-			}
-			else frameNumber++;
+			//physics->update(_deltaTime);
+			//if (frameNumber >= frameInterval) {
+			//	physicsDebugSystem->update(true);
+			//	frameNumber = 0;
+			//}
+			//else frameNumber++;
 
 			this->update();
 			this->renderSubmit();
@@ -117,7 +118,7 @@ namespace vray {
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
 
-		InputService::tryLockMouse();
+		//InputService::tryLockMouse();
 		onEvent(evt);
 		renderer->onEvent(evt);
 	}

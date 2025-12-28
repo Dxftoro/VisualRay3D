@@ -1,4 +1,5 @@
 #include <visualray.h>
+#include <visualray/event_service/keyboard_events.h>
 #include <visualray/layer_service/imgui_layer.h>
 
 class DraftGame : public vray::Game {
@@ -21,30 +22,30 @@ private:
 		vray::CompTransform& teapotTransform = world.get<vray::CompTransform>(teapot);
 		glm::vec3 teapotPosition = teapotTransform.getPosition();
 
-		if (vray::InputService::keyPressed(VR_KEY_W)) {
+		if (inputService.keyPressed(VR_KEY_W)) {
 			moveRotated(cameraPosition, currentAngle, moveSpeed);
 		}
-		if (vray::InputService::keyPressed(VR_KEY_S)) {
+		if (inputService.keyPressed(VR_KEY_S)) {
 			moveRotated(cameraPosition, currentAngle + glm::pi<float>(), moveSpeed);
 		}
-		if (vray::InputService::keyPressed(VR_KEY_A)) {
+		if (inputService.keyPressed(VR_KEY_A)) {
 			moveRotated(cameraPosition, currentAngle - glm::pi<float>() / 2, moveSpeed);
 		}
-		if (vray::InputService::keyPressed(VR_KEY_D)) {
+		if (inputService.keyPressed(VR_KEY_D)) {
 			moveRotated(cameraPosition, currentAngle + glm::pi<float>() / 2, moveSpeed);
 		}
-		if (vray::InputService::keyPressed(VR_KEY_Q)) {
+		if (inputService.keyPressed(VR_KEY_Q)) {
 			cameraPosition.y += moveSpeed * deltaTime();
 		}
-		if (vray::InputService::keyPressed(VR_KEY_E)) {
+		if (inputService.keyPressed(VR_KEY_E)) {
 			cameraPosition.y -= moveSpeed * deltaTime();
 		}
 
-		if (vray::InputService::keyPressed(VR_KEY_UP)) {
+		if (inputService.keyPressed(VR_KEY_UP)) {
 			teapotPosition.x += (moveSpeed - 1) * deltaTime();
 			teapotTransform.setPosition(teapotPosition);
 		}
-		if (vray::InputService::keyPressed(VR_KEY_DOWN)) {
+		if (inputService.keyPressed(VR_KEY_DOWN)) {
 			teapotPosition.x -= (moveSpeed - 1) * deltaTime();
 			teapotTransform.setPosition(teapotPosition);
 		}
@@ -55,12 +56,10 @@ private:
 	inline void handleRotation(vray::Event& evt) {
 		static glm::vec2 mouseBase(getWindow()->getWidth() / 2, getWindow()->getHeight() / 2);
 
-		if (evt.getType() == vray::EventType::MOUSE_MOVED) {
-			//case EventType::MOUSE_CLICK: {
-			//	//MouseClickEvent clickEvt = dynamic_cast<MouseClickEvent&>(evt);
-			//	viewPicked = true;
-			//	break;
-			//}
+		if (evt.getType() == vray::EventType::MOUSE_MOVED
+			/*&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED*/) {
+			inputService.setMouseOnCenter();
+
 			vray::MouseMovedEvent& moveEvt = dynamic_cast<vray::MouseMovedEvent&>(evt);
 
 			glm::vec3 newRotation = camera->getRotation();
@@ -74,6 +73,19 @@ private:
 			if (newRotation.y > 89.0f) newRotation.y = 89.0f;
 
 			camera->setRotation(newRotation);
+		}
+	}
+
+	inline void handleMouseUnlock(vray::Event& evt) {
+		if (evt.getType() == vray::KEY_PRESSED) {
+			vray::KeyPressedEvent keyEvt = dynamic_cast<vray::KeyPressedEvent&>(evt);
+			if (keyEvt.getKeyCode() != VR_KEY_TAB) return;
+			
+			vray::InputService::CursorMode cursorMode = inputService.getCursorMode();
+			//if (cursorMode == vray::InputService::CursorMode::DISABLED)
+			//	inputService.setCursorMode(vray::InputService::CursorMode::NORMAL);
+			//else
+			//	inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
 		}
 	}
 
@@ -114,7 +126,7 @@ private:
 			.mass = 12.0f
 		};
 
-		vray::CompRenderable teapotRenderable(/*nullptr*/ meshes.get("teapot"), textures.get("stone_bricks"));
+		vray::CompRenderable teapotRenderable(meshes.get("teapot"), textures.get("stone_bricks"));
 		world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
 		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
@@ -123,9 +135,9 @@ private:
 	}
 
 public:
-	DraftGame(int argc, char* argv[]) : Game(vray::WindowParams("Draft Game", 860, 482)) {
+	DraftGame() : Game(vray::WindowParams("Draft Game", 860, 482)) {
 		DraftGame::setFpsLimit(70);
-		vray::InputService::setMouseLocked(true);
+		inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
 
 		vray::Mesh* teapotMesh = meshes.load("models/teapot.obj", "teapot");
 		vray::Mesh* cubeMesh = meshes.load("models/cube.obj", "cube");
@@ -186,7 +198,10 @@ public:
 		//	amplitude * glm::sin(timeAccumulator * frequency)});
 	}
 
-	inline void onEvent(vray::Event& evt) { handleRotation(evt); }
+	inline void onEvent(vray::Event& evt) { 
+		handleRotation(evt);
+		handleMouseUnlock(evt);
+	}
 };
 
 VR_IMPLEMENT_GAME(DraftGame);

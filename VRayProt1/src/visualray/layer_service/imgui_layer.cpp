@@ -29,20 +29,22 @@ namespace vray {
 			while (!window->isClosed()) {
 				fps = (int)(1.0f / Game::deltaTime());
 
-				std::ofstream fout("D:/fps_profiling.txt", std::ios::app);
-				fout << fps << std::endl;
-				fout.close();
+				//std::ofstream fout("D:/fps_profiling.txt", std::ios::app);
+				//fout << fps << std::endl;
+				//fout.close();
 
 				if (fps < minFps) minFps = fps;
 				if (fps > maxFps) maxFps = fps;
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
+
+			VR_ENGINE_LOGINFO("Window caught closed!");
 		});
 	}
 
 	ImGuiLayer::~ImGuiLayer() {
 		fpsCounter->join();
-		delete[] fpsCounter;
+		delete fpsCounter;
 
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

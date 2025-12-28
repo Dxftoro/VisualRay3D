@@ -1,9 +1,11 @@
 #include "vrpch.h"
 #include "layer_stack.h"
+#include "logservice.h"
 
 namespace vray {
 
 	LayerStack::~LayerStack() {
+		VR_ENGINE_LOGINFO("Trying to destroy the layer stack...");
 		for (Layer* layer : layerContainer) delete layer;
 		//for (Layer* overlay : overlayContainer) delete overlay;
 	}

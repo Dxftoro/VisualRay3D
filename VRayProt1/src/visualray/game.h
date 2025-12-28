@@ -7,6 +7,7 @@
 #include "render_service/renderer.h"
 #include "physics_service/physics.h"
 #include "window_service/window.h"
+#include "input_service/input_service.h"
 
 #include "event_service/event.h"
 #include "event_service/game_events.h"
@@ -14,6 +15,7 @@
 #include "managers/resource_manager.h"
 
 namespace vray {
+
 	class VRAYLIB Game {
 	private:
 		static float begTime;
@@ -22,7 +24,7 @@ namespace vray {
 		static int fpsLimit;
 		bool running;
 
-		Window* window;
+		std::unique_ptr<Window> window;
 		LayerStack layerStack;
 		Renderer* renderer;
 		IPhysics* physics;
@@ -40,6 +42,7 @@ namespace vray {
 
 	public:
 		CameraSystem cameraSystem;
+		InputService inputService;
 
 		ResourceManager<Mesh> meshes;
 		ResourceManager<Texture> textures;
@@ -52,7 +55,7 @@ namespace vray {
 		virtual void update() = 0;
 		virtual void onEvent(Event& evt) = 0;
 
-		Window* getWindow() const { return window; }
+		Window* getWindow() const { return window.get(); }
 
 		inline void pushLayer(Layer* layer) { layerStack.pushLayer(layer); }
 		inline void pushOverlay(Layer* overlay) { layerStack.pushOverlay(overlay); }
