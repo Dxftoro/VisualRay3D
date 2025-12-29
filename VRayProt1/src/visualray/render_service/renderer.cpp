@@ -28,11 +28,23 @@ namespace vray {
 			currentWindow->getWidth(),
 			currentWindow->getHeight(), 0.1f, 300.0f);
 
-		lightPos = glm::vec4(3.0f, 6.0f, 0.0f, 1.0f);
+		material = {
+			.ka = glm::identity<glm::vec3>(),
+			.kd = glm::identity<glm::vec3>(),
+			.ks = glm::identity<glm::vec3>(),
+			.shininess = 64
+		};
+
+		light = {
+			.position = glm::vec4(3.0f, 6.0f, 0.0f, 1.0f),
+			.la = glm::vec3(0.03f),
+			.ld = glm::vec3(0.6),
+			.ls = glm::vec3(1.0)
+		};
 
 		try {
-			program.compileShader("shaders\\triangle.vert", ShaderType::VERTEX);
-			program.compileShader("shaders\\triangle.frag", ShaderType::FRAGMENT);
+			program.compileShader("shaders\\phong.vert", ShaderType::VERTEX);
+			program.compileShader("shaders\\phong.frag", ShaderType::FRAGMENT);
 			program.link();
 			program.validate();
 
@@ -41,11 +53,12 @@ namespace vray {
 			debugProgram.link();
 			debugProgram.validate();
 
+			uLight				= program.getUniform("light");
+			uMaterial			= program.getUniform("material");
 			uProjectionMatrix	= program.getUniform("projectionMatrix");
 			uViewMatrix			= program.getUniform("viewMatrix");
 			uModelMatrix		= program.getUniform("modelMatrix");
 			uNormalMatrix		= program.getUniform("normalMatrix");
-			uLightPos			= program.getUniform("lightPosition");
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
@@ -54,10 +67,6 @@ namespace vray {
 			VR_ENGINE_LOGERROR(exc.what());
 			std::terminate();
 		}
-
-		modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		modelMatrix = glm::rotate(modelMatrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		normalMatrix = glm::mat3(glm::transpose(glm::inverse(modelMatrix)));
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
@@ -92,7 +101,8 @@ namespace vray {
 			program.use();
 			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 			program.setUniform(uViewMatrix, camera->getViewMatrix());
-			program.setUniform(uLightPos, lightPos);
+			program.setUniform(uLight, light);
+			program.setUniform(uLight, material);
 
 			flush();
 

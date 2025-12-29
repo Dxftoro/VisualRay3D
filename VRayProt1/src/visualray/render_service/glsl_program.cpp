@@ -41,11 +41,11 @@ namespace vray {
 
 		fin.seekg(0);
 
-		std::ostringstream str_buff;
-		str_buff << fin.rdbuf();
+		std::ostringstream strBuff;
+		strBuff << fin.rdbuf();
 		fin.close();
 
-		return str_buff.str();
+		return strBuff.str();
 	}
 
 	GlslUniform::GlslUniform(GlslProgram* glslProgram, const std::string& _name)
@@ -114,6 +114,14 @@ namespace vray {
 
 	GlslUniform GlslProgram::getUniform(const std::string& name) {
 		return GlslUniform(this, name);
+	}
+
+	GlslUniformBuffer GlslProgram::createUnifromBuffer(const std::string& name, size_t size) {
+		GLuint binding = lastUboBinding;
+		uboBindingTable[name] = binding;
+
+		lastUboBinding++;
+		return GlslUniformBuffer(this, name, binding, size);
 	}
 
 	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat2& matrix) {

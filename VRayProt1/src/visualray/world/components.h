@@ -87,5 +87,18 @@ namespace vray {
 		float mass;
 	};
 
-	// TODO: CompMaterial
+	struct CompVisualMaterial {
+		glm::vec3 ka;
+		glm::vec3 kd;
+		glm::vec3 ks;
+		float shininess;
+	};
+
+	struct CompPointLight {
+		glm::vec4 position;
+		glm::vec3 la;
+		glm::vec3 ld;
+		glm::vec3 ls;
+	};
+
 }

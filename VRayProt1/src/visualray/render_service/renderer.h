@@ -17,6 +17,9 @@
 namespace vray {
 
     struct CompCamera;
+    struct CompVisualMaterial;
+    struct CompPointLight;
+
     class Renderer {
     private:
         std::queue<RenderRequest> renderQueue;
@@ -24,15 +27,18 @@ namespace vray {
         Window* currentWindow;
         GlslProgram program, debugProgram;
         
-        GlslUniform uProjectionMatrix, uViewMatrix, 
-                    uModelMatrix, uNormalMatrix, uLightPos;
+        GlslUniform uLight,
+                    uMaterial,
+                    uProjectionMatrix,
+                    uViewMatrix, 
+                    uModelMatrix,
+                    uNormalMatrix;
 
         GlslUniform uDebugProjectionMatrix, uDebugViewMatrix;
         uint32_t debugVao, debugVbo, debugVertexCount;
 
-        glm::mat4 modelMatrix;
-        glm::mat3 normalMatrix;
-        glm::vec4 lightPos;
+        CompVisualMaterial material;
+        CompPointLight light;
 
         bool initialCamera;
 

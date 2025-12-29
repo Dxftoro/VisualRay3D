@@ -9,6 +9,7 @@ TODO: Uniform layouts and attribute layouts
 #include "kernel.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "glsl_uniform_buffer.h"
 
 namespace vray {
 
@@ -56,9 +57,11 @@ namespace vray {
 	private:
 		GLuint handle;
 		bool linked;
+		GLuint lastUboBinding;
+		std::unordered_map<std::string, GLuint> uboBindingTable;
 
 	public:
-		GlslProgram() : handle(0), linked(false) {}
+		GlslProgram() : handle(0), linked(false), lastUboBinding(0) {}
 		~GlslProgram();
 
 		void VRAYLIB compileShader(const std::string& filename, ShaderType type);
@@ -70,6 +73,8 @@ namespace vray {
 		int VRAYLIB getUniformLocation(const std::string& name);
 		unsigned int VRAYLIB getHandle() const { return handle; }
 		GlslUniform VRAYLIB getUniform(const std::string& name);
+
+		GlslUniformBuffer VRAYLIB createUnifromBuffer(const std::string& name, size_t size);
 
 		bool VRAYLIB isLinked() const { return linked; }
 
