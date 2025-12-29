@@ -52,7 +52,6 @@ int AllocHook(int allocType, void* userData, size_t size,
 	extern vray::Game* vray::vrayMain(int argc, char* argv[]);
 
 	int main(int argc, char* argv[]) {
-        //_CrtSetAllocHook(AllocHook);
 		vray::LogService::init();
 		auto game = vray::vrayMain(argc, argv);
 		game->run();

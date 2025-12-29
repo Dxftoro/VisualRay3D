@@ -25,13 +25,14 @@ namespace vray {
         GlslProgram program, debugProgram;
         
         GlslUniform uProjectionMatrix, uViewMatrix, 
-                    uModelMatrix, uNormalMatrix;
+                    uModelMatrix, uNormalMatrix, uLightPos;
 
         GlslUniform uDebugProjectionMatrix, uDebugViewMatrix;
         uint32_t debugVao, debugVbo, debugVertexCount;
 
         glm::mat4 modelMatrix;
         glm::mat3 normalMatrix;
+        glm::vec4 lightPos;
 
         bool initialCamera;
 

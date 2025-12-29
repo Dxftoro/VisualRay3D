@@ -4,6 +4,7 @@
 
 #include "logservice.h"
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace vray {
 
@@ -125,6 +126,14 @@ namespace vray {
 
 	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat4& matrix) {
 		glUniformMatrix4fv(uniform.getLocation(), 1, GL_FALSE, &matrix[0][0]);
+	}
+
+	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::vec3& vec) {
+		glUniform3fv(uniform.getLocation(), 1, &vec[0]);
+	}
+
+	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::vec4& vec) {
+		glUniform4fv(uniform.getLocation(), 1, &vec[0]);
 	}
 
 	void GlslProgram::printActiveUniforms() const {

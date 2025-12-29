@@ -78,6 +78,8 @@ namespace vray {
 		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat2& matrix);
 		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat3& matrix);
 		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::mat4& matrix);
+		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::vec3& vec);
+		void VRAYLIB setUniform(const GlslUniform& uniform, const glm::vec4& vec);
 
 		void VRAYLIB printActiveUniforms() const;
 	};

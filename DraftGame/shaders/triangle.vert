@@ -8,13 +8,14 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform mat3 normalMatrix;
+uniform vec4 lightPosition;
 
 out vec4 AreaColor;
 out vec2 TexCoord;
 
 void main() {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
-	vec4 lightPosition = vec4(3.0, 6.0, 0.0, 1.0);
+//	vec4 lightPosition = vec4(3.0, 6.0, 0.0, 1.0);
 	vec3 Kd = vec3(0.1, 0.1, 0.1);
 	vec3 Ld = vec3(10.0, 10.0, 10.0);
 

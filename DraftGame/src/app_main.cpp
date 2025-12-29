@@ -59,13 +59,15 @@ private:
 		if (evt.getType() == vray::EventType::MOUSE_MOVED
 			&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED) {
 			vray::MouseMovedEvent& moveEvt = dynamic_cast<vray::MouseMovedEvent&>(evt);
+			double newX = moveEvt.getX();
+			double newY = moveEvt.getY();
 
 			glm::vec3 newRotation = camera->getRotation();
-			newRotation.x += (moveEvt.getX() - mouseBase.x) * 0.2f;
-			newRotation.y += (mouseBase.y - moveEvt.getY()) * 0.2f;
+			newRotation.x += (newX - mouseBase.x) * 0.2f;
+			newRotation.y += (mouseBase.y - newY) * 0.2f;
 
-			mouseBase.x = moveEvt.getX();
-			mouseBase.y = moveEvt.getY();
+			mouseBase.x = newX;
+			mouseBase.y = newY;
 
 			if (newRotation.x < 0.0f) newRotation.x += 360.0f;
 			if (newRotation.x > 360.0f) newRotation.x -= 360.0f;

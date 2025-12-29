@@ -13,10 +13,9 @@ namespace vray {
 	}
 
 	void vray::LogService::destroy() {
+		engineLogger->logInfo("Destroying log service");
 		delete engineLogger;
 		delete gameLogger;
-
-		std::cout << "Log service destroyed!" << std::endl;
 	}
 
 	inline Logger* vray::LogService::getGameLogger() { return gameLogger; }

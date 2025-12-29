@@ -36,11 +36,8 @@ namespace vray {
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
 		renderer = new Renderer(window.get());
 
-		physics = nullptr;
-		physicsDebugSystem = nullptr;
-
-		//physics = new Rp3dPhysics(world);
-		//physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
+		physics = new Rp3dPhysics(world);
+		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
 		cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
@@ -49,13 +46,12 @@ namespace vray {
 	}
 
 	Game::~Game() {
-		//delete renderer;
-		//delete physics;
-		//delete physicsDebugSystem;
-
-		// Let the memory leak lol
-		//delete window;
-		//VR_ENGINE_LOGINFO("Window closed");
+		VR_ENGINE_LOGINFO("Clearing renderer");
+		delete renderer;
+		VR_ENGINE_LOGINFO("Clearing physics");
+		delete physics;
+		VR_ENGINE_LOGINFO("Clearing physics debug system");
+		delete physicsDebugSystem;
 	}
 
 	inline void Game::run() {
@@ -73,12 +69,12 @@ namespace vray {
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
-			//physics->update(_deltaTime);
-			//if (frameNumber >= frameInterval) {
-			//	physicsDebugSystem->update(true);
-			//	frameNumber = 0;
-			//}
-			//else frameNumber++;
+			physics->update(_deltaTime);
+			if (frameNumber >= frameInterval) {
+				physicsDebugSystem->update(true);
+				frameNumber = 0;
+			}
+			else frameNumber++;
 
 			this->update();
 			this->renderSubmit();
@@ -88,8 +84,6 @@ namespace vray {
 
 			window->onUpdate();
 			layerStack.update();
-
-			GameTickEvent evt;
 			window->swapBuffers();
 
 			std::this_thread::sleep_until(frameEnd);
@@ -118,7 +112,6 @@ namespace vray {
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
 
-		//InputService::tryLockMouse();
 		onEvent(evt);
 		renderer->onEvent(evt);
 	}

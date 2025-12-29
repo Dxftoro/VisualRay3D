@@ -28,6 +28,8 @@ namespace vray {
 			currentWindow->getWidth(),
 			currentWindow->getHeight(), 0.1f, 300.0f);
 
+		lightPos = glm::vec4(3.0f, 6.0f, 0.0f, 1.0f);
+
 		try {
 			program.compileShader("shaders\\triangle.vert", ShaderType::VERTEX);
 			program.compileShader("shaders\\triangle.frag", ShaderType::FRAGMENT);
@@ -39,13 +41,14 @@ namespace vray {
 			debugProgram.link();
 			debugProgram.validate();
 
-			uProjectionMatrix = program.getUniform("projectionMatrix");
-			uViewMatrix = program.getUniform("viewMatrix");
-			uModelMatrix = program.getUniform("modelMatrix");
-			uNormalMatrix = program.getUniform("normalMatrix");
+			uProjectionMatrix	= program.getUniform("projectionMatrix");
+			uViewMatrix			= program.getUniform("viewMatrix");
+			uModelMatrix		= program.getUniform("modelMatrix");
+			uNormalMatrix		= program.getUniform("normalMatrix");
+			uLightPos			= program.getUniform("lightPosition");
 
-			uDebugProjectionMatrix = debugProgram.getUniform("projectionMatrix");
-			uDebugViewMatrix = debugProgram.getUniform("viewMatrix");
+			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
+			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -89,6 +92,7 @@ namespace vray {
 			program.use();
 			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 			program.setUniform(uViewMatrix, camera->getViewMatrix());
+			program.setUniform(uLightPos, lightPos);
 
 			flush();
 
