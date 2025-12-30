@@ -15,11 +15,11 @@ namespace vray {
 		return transformMatrix;
 	}
 
-	const glm::mat3& CompTransform::getNormalMatrix() {
-		if (dirty) {
-			normalMatrix = glm::mat3(glm::transpose(glm::inverse(transformMatrix)));
-			dirty = false;
-		}
+	const glm::mat3& CompTransform::getNormalMatrix() const {
+		//if (dirty) {
+		//	normalMatrix = glm::mat3(glm::transpose(glm::inverse(transformMatrix)));
+		//	dirty = false;
+		//}
 		return normalMatrix;
 	}
 
@@ -45,6 +45,10 @@ namespace vray {
 		this->scale = scale;
 		dirty = true;
 		sync = false;
+	}
+
+	void CompTransform::setNormalMatrix(const glm::mat3 normalMatrix) {
+		this->normalMatrix = normalMatrix;
 	}
 
 	CompCamera::CompCamera(float fov, float width, float height, float near, float far)

@@ -36,13 +36,14 @@ namespace vray {
 		const glm::quat& getRotation() const { return rotation; }
 		const glm::vec3& getScale() const { return scale; }
 		const glm::mat4& getTransformMatrix();
-		const glm::mat3& getNormalMatrix();
+		const glm::mat3& getNormalMatrix() const;
 		bool isDirty() const { return dirty; };
 		bool isSync() const { return sync; }
 
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
 		void setRotation(const glm::quat& rotation);
+		void setNormalMatrix(const glm::mat3 normalMatrix);
 		void setScale(const glm::vec3& scale);
 		void setSync(bool sync) { this->sync = sync; };
 	};

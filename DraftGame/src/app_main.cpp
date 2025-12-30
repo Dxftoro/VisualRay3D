@@ -137,6 +137,19 @@ private:
 		this->teapot = teapot;
 	}
 
+	void spawnLightMarker(const glm::vec3& position) {
+		entt::entity lightMarker = world.create();
+
+		vray::CompTransform transform;
+		transform.setPosition(position);
+		transform.setScale({ 0.5f, 0.5f, 0.5f });
+
+		vray::CompRenderable renderable(meshes.get("cube"), textures.get("default"));
+
+		world.emplace<vray::CompTransform>(lightMarker, transform);
+		world.emplace<vray::CompRenderable>(lightMarker, renderable);
+	}
+
 public:
 	DraftGame() : Game(vray::WindowParams("Draft Game", 860, 482)) {
 		DraftGame::setFpsLimit(70);
@@ -188,6 +201,8 @@ public:
 
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
+
+		spawnLightMarker({ 3.0f, 15.0f, 0.0f });
 	}
 	~DraftGame() {}
 

@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "renderer.h"
 #include "vertex_array.h"
@@ -104,7 +105,7 @@ namespace vray {
 	}
 
 	void Renderer::clear() {
-		glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+		glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -140,11 +141,22 @@ namespace vray {
 	}
 
 	void Renderer::flush() {
+		const glm::mat4& viewMatrix = camera->getViewMatrix();
+
 		while (!renderQueue.empty()) {
 			RenderRequest& request = renderQueue.front();
+			CompTransform* transform = request.transform;
 
-			program.setUniform(uModelMatrix, request.transform->getTransformMatrix());
-			program.setUniform(uNormalMatrix, request.transform->getNormalMatrix());
+			if (transform->isDirty()) {
+				transform->setNormalMatrix(
+					glm::mat3(
+						glm::transpose(
+							glm::inverse(viewMatrix * transform->getTransformMatrix())))
+				);
+			}
+
+			program.setUniform(uModelMatrix, transform->getTransformMatrix());
+			program.setUniform(uNormalMatrix, transform->getNormalMatrix());
 
 			VertexArray* vertexArray = request.renderable->mesh->getVertexArray();
 			
