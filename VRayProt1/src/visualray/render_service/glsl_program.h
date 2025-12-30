@@ -74,7 +74,7 @@ namespace vray {
 		unsigned int VRAYLIB getHandle() const { return handle; }
 		GlslUniform VRAYLIB getUniform(const std::string& name);
 
-		GlslUniformBuffer VRAYLIB createUnifromBuffer(const std::string& name, size_t size);
+		GlslUniformBuffer VRAYLIB createUniformBuffer(const std::string& name, size_t size);
 
 		bool VRAYLIB isLinked() const { return linked; }
 

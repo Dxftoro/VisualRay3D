@@ -5,6 +5,10 @@
 
 namespace vray {
 
+	struct VRAYLIB CompName {
+		std::string name;
+	};
+
 	struct VRAYLIB CompTransform {
 	private:
 		/* TODO: Remake as bit-mask */
@@ -87,18 +91,18 @@ namespace vray {
 		float mass;
 	};
 
-	struct CompVisualMaterial {
-		glm::vec3 ka;
-		glm::vec3 kd;
-		glm::vec3 ks;
+	struct VRAYLIB CompVisualMaterial {
+		alignas(16) glm::vec3 ka;
+		alignas(16) glm::vec3 kd;
+		alignas(16) glm::vec3 ks;
 		float shininess;
 	};
 
-	struct CompPointLight {
+	struct VRAYLIB CompPointLight {
 		glm::vec4 position;
-		glm::vec3 la;
-		glm::vec3 ld;
-		glm::vec3 ls;
+		alignas(16) glm::vec3 la;
+		alignas(16) glm::vec3 ld;
+		alignas(16) glm::vec3 ls;
 	};
 
 }

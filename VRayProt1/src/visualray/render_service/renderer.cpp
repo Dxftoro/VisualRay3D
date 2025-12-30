@@ -5,11 +5,10 @@
 
 #include "renderer.h"
 #include "vertex_array.h"
-#include "world/components.h"
+#include "renderer_callbacks.h"
 
 #include "event_service/game_events.h"
 #include "event_service/mouse_events.h"
-
 #include "input_codes.h"
 #include "input_service/input_service.h"
 
@@ -24,14 +23,18 @@ namespace vray {
 			throw std::runtime_error("Can't load OpenGL!");
 		}
 
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(rendererDebugCallback, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
 		camera = new CompCamera(90,
 			currentWindow->getWidth(),
 			currentWindow->getHeight(), 0.1f, 300.0f);
 
 		material = {
-			.ka = glm::identity<glm::vec3>(),
-			.kd = glm::identity<glm::vec3>(),
-			.ks = glm::identity<glm::vec3>(),
+			.ka = glm::vec3(1.0f),
+			.kd = glm::vec3(1.0f),
+			.ks = glm::vec3(1.0f),
 			.shininess = 64
 		};
 
@@ -53,12 +56,13 @@ namespace vray {
 			debugProgram.link();
 			debugProgram.validate();
 
-			uLight				= program.getUniform("light");
-			uMaterial			= program.getUniform("material");
 			uProjectionMatrix	= program.getUniform("projectionMatrix");
 			uViewMatrix			= program.getUniform("viewMatrix");
 			uModelMatrix		= program.getUniform("modelMatrix");
 			uNormalMatrix		= program.getUniform("normalMatrix");
+
+			//uboLight = program.createUniformBuffer("LightData", sizeof(CompPointLight));
+			//uboMaterial = program.createUniformBuffer("MaterialData", sizeof(CompVisualMaterial));
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
@@ -67,6 +71,9 @@ namespace vray {
 			VR_ENGINE_LOGERROR(exc.what());
 			std::terminate();
 		}
+
+		//uboLight.printUniformData();
+		//uboMaterial.printUniformData();
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
@@ -85,6 +92,11 @@ namespace vray {
 		glBindVertexArray(0);
 
 		debugVertexCount = 0;
+
+		VR_ENGINE_LOGWARN("Setting data to UBOs");
+		//uboLight.setData(&light, sizeof(light));
+		//uboMaterial.setData(&material, sizeof(material));
+
 	}
 
 	Renderer::~Renderer() {
@@ -101,8 +113,6 @@ namespace vray {
 			program.use();
 			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 			program.setUniform(uViewMatrix, camera->getViewMatrix());
-			program.setUniform(uLight, light);
-			program.setUniform(uLight, material);
 
 			flush();
 
@@ -121,7 +131,7 @@ namespace vray {
 
 		int errorCode;
 		if ((errorCode = glGetError())) {
-			VR_ENGINE_LOGERROR(std::to_string(errorCode));
+			//VR_ENGINE_LOGERROR(std::to_string(errorCode));
 		}
 	}
 

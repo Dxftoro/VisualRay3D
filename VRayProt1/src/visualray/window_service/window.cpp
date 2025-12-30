@@ -18,6 +18,7 @@ namespace vray {
 			VR_ENGINE_LOGERROR(description);
 		});
 
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 		window = glfwCreateWindow(	data.width, 
 									data.height,
 									data.title.c_str(), nullptr, nullptr);

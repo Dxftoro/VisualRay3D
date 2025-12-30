@@ -15,15 +15,15 @@ out vec2 TexCoord;
 
 void main() {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
-//	vec4 lightPosition = vec4(3.0, 6.0, 0.0, 1.0);
+	vec4 llightPosition = viewMatrix * vec4(3.0, 6.0, 0.0, 1.0);
 	vec3 Kd = vec3(0.1, 0.1, 0.1);
 	vec3 Ld = vec3(10.0, 10.0, 10.0);
 
 	vec3 tnorm = normalize(normalMatrix * VertexNormal);
 	vec4 eyeCoords = modelViewMatrix * vec4(VertexPosition, 1.0);
-	vec3 s = normalize(vec3(lightPosition - eyeCoords));
+	vec3 s = normalize(vec3(llightPosition - eyeCoords));
 
-	AreaColor = vec4(Ld * Kd * max(dot(s, tnorm), 0.0), 0.0); //vec4(VertexNormal, 0);
+	AreaColor = vec4(Ld * Kd * max(dot(s, tnorm), 0.0), 0.0);
 	TexCoord = VertexTexCoords;
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(VertexPosition, 1.0);
+	gl_Position = projectionMatrix * eyeCoords;
 }

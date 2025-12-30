@@ -116,12 +116,12 @@ namespace vray {
 		return GlslUniform(this, name);
 	}
 
-	GlslUniformBuffer GlslProgram::createUnifromBuffer(const std::string& name, size_t size) {
+	GlslUniformBuffer GlslProgram::createUniformBuffer(const std::string& name, size_t size) {
 		GLuint binding = lastUboBinding;
 		uboBindingTable[name] = binding;
 
 		lastUboBinding++;
-		return GlslUniformBuffer(this, name, binding, size);
+		return GlslUniformBuffer(this, name, size);
 	}
 
 	void GlslProgram::setUniform(const GlslUniform& uniform, const glm::mat2& matrix) {

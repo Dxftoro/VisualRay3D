@@ -1,4 +1,4 @@
-#version 410
+#version 430
 
 in vec4 LightIntensity;
 in vec2 TexCoord;

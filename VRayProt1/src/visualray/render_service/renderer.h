@@ -4,6 +4,7 @@
 #include "kernel.h"
 #include "event_service/event.h"
 #include "window_service/window.h"
+#include "world/components.h"
 
 #include <glm/glm.hpp>
 
@@ -19,6 +20,7 @@ namespace vray {
     struct CompCamera;
     struct CompVisualMaterial;
     struct CompPointLight;
+    class GlslUniformBuffer;
 
     class Renderer {
     private:
@@ -27,9 +29,7 @@ namespace vray {
         Window* currentWindow;
         GlslProgram program, debugProgram;
         
-        GlslUniform uLight,
-                    uMaterial,
-                    uProjectionMatrix,
+        GlslUniform uProjectionMatrix,
                     uViewMatrix, 
                     uModelMatrix,
                     uNormalMatrix;
@@ -39,6 +39,8 @@ namespace vray {
 
         CompVisualMaterial material;
         CompPointLight light;
+
+        GlslUniformBuffer uboLight, uboMaterial;
 
         bool initialCamera;
 
