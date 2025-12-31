@@ -22,7 +22,7 @@ out vec2 TexCoord;
 //};
 //
 
-vec4 position = vec4(3.0, 6.0, 0.0, 1.0);
+vec4 position = vec4(3.0, 15.0, 0.0, 1.0);
 vec3 la = vec3(0.03);
 vec3 ld = vec3(0.6);
 vec3 ls = vec3(1.0);
@@ -42,7 +42,7 @@ void main() {
 	vec4 eyeCoords = viewModelMatrix * vec4(VertexPosition, 1.0);
 	vec4 localLightPosition = viewMatrix * position;
 
-	vec3 s = normalize(vec3(position - eyeCoords));
+	vec3 s = normalize(vec3(localLightPosition - eyeCoords));
 	vec3 v = normalize(-eyeCoords.xyz);
 	vec3 r = reflect(-s, tnorm);
 
