@@ -62,7 +62,7 @@ namespace vray {
 			uModelMatrix		= program.getUniform("modelMatrix");
 			uNormalMatrix		= program.getUniform("normalMatrix");
 
-			//uboLight = program.createUniformBuffer("LightData", sizeof(CompPointLight));
+			uboLight = program.createUniformBuffer("LightData", &light, sizeof(CompPointLight));
 			//uboMaterial = program.createUniformBuffer("MaterialData", sizeof(CompVisualMaterial));
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
@@ -95,7 +95,6 @@ namespace vray {
 		debugVertexCount = 0;
 
 		VR_ENGINE_LOGWARN("Setting data to UBOs");
-		//uboLight.setData(&light, sizeof(light));
 		//uboMaterial.setData(&material, sizeof(material));
 
 	}
@@ -114,6 +113,8 @@ namespace vray {
 			program.use();
 			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 			program.setUniform(uViewMatrix, camera->getViewMatrix());
+
+			//uboLight.setData(&light, sizeof(light));
 
 			flush();
 

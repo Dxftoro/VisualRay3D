@@ -16,7 +16,7 @@ namespace vray {
 
 	public:
 		explicit GlslUniformBuffer() : handle(0), program(0), binding(0), blockIndex(0), size(0) {}
-		explicit GlslUniformBuffer(GlslProgram* program, const std::string& name, size_t size);
+		explicit GlslUniformBuffer(GlslProgram* program, const std::string& name, const void* data, size_t size);
 		~GlslUniformBuffer();
 
 		//GlslUniformBuffer(const GlslUniformBuffer& uniformBuffer) = delete;

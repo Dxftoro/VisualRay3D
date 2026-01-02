@@ -7,7 +7,7 @@
 
 namespace vray {
 
-	GlslUniformBuffer::GlslUniformBuffer(GlslProgram* _program, const std::string& _name, size_t _size)
+	GlslUniformBuffer::GlslUniformBuffer(GlslProgram* _program, const std::string& _name, const void* data, size_t _size)
 		: program(_program->getHandle()), name(_name) {
 		
 		blockIndex = glGetUniformBlockIndex(program, name.c_str());
@@ -30,10 +30,10 @@ namespace vray {
 
 		glGenBuffers(1, &handle);
 		glBindBuffer(GL_UNIFORM_BUFFER, handle);
-			glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
-			glBindBufferBase(GL_UNIFORM_BUFFER, binding, handle);
+			glBufferData(GL_UNIFORM_BUFFER, size, data, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding, handle);
 		glUniformBlockBinding(program, blockIndex, binding);
 	}
 

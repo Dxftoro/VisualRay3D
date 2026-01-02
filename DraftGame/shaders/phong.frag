@@ -2,6 +2,7 @@
 
 in vec4 LightIntensity;
 in vec2 TexCoord;
+in vec3 TempDiffuse;
 
 uniform sampler2D textureData;
 

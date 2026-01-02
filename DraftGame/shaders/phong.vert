@@ -7,13 +7,13 @@ layout (location = 2) in vec2 VertexTexCoords;
 out vec3 LightIntensity;
 out vec2 TexCoord;
 
-//layout(std140, binding = 0) uniform LightData {
-//	vec4 position;
-//	vec3 la;
-//	vec3 ld;
-//	vec3 ls;
-//};
-//
+layout(std140, binding = 0) uniform LightData {
+	vec4 position;
+	vec3 la;
+	vec3 ld;
+	vec3 ls;
+} light;
+
 //layout(std140, binding = 1) uniform MaterialData {
 //	vec3 ka;
 //	vec3 kd;
@@ -22,10 +22,10 @@ out vec2 TexCoord;
 //};
 //
 
-vec4 position = vec4(3.0, 15.0, 0.0, 1.0);
-vec3 la = vec3(0.03);
-vec3 ld = vec3(0.6);
-vec3 ls = vec3(1.0);
+//vec4 position = vec4(3.0, 15.0, 0.0, 1.0);
+//vec3 la = vec3(0.03);
+//vec3 ld = vec3(0.6);
+//vec3 ls = vec3(1.0);
 vec3 ka = vec3(0.1);
 vec3 kd = vec3(1.0);
 vec3 ks = vec3(1.0);
@@ -40,23 +40,24 @@ void main() {
 	mat4 viewModelMatrix = viewMatrix * modelMatrix;
 	vec3 tnorm = normalize(normalMatrix * VertexNormal);
 	vec4 eyeCoords = viewModelMatrix * vec4(VertexPosition, 1.0);
-	vec4 localLightPosition = viewMatrix * position;
+	vec4 localLightPosition = viewMatrix * light.position;
 
 	vec3 s = normalize(vec3(localLightPosition - eyeCoords));
 	vec3 v = normalize(-eyeCoords.xyz);
 	vec3 r = reflect(-s, tnorm);
 
-	vec3 ambient = la * ka;
+	vec3 ambient = light.la * ka;
 
 	float sDotN = max(dot(s, tnorm), 0.0);
-	vec3 diffuse = ld * kd * sDotN;
+	vec3 diffuse = light.ld * kd * sDotN;
 	
 	vec3 specular = vec3(0.0);
 	if (sDotN > 0.0) {
-		specular  = ls * ks * pow(max(dot(r, v), 0.0), sh);
+		specular  = light.ls * ks * pow(max(dot(r, v), 0.0), sh);
 	}
 
 	LightIntensity = ambient + diffuse + specular;
 	TexCoord = VertexTexCoords;
+
 	gl_Position = projectionMatrix * eyeCoords;
 }
