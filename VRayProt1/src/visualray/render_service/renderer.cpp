@@ -40,7 +40,7 @@ namespace vray {
 		};
 
 		light = {
-			.position = glm::vec4(3.0f, 6.0f, 0.0f, 1.0f),
+			.position = glm::vec4(3.0f, 15.0f, 0.0f, 1.0f),
 			.la = glm::vec3(0.03f),
 			.ld = glm::vec3(0.6),
 			.ls = glm::vec3(1.0)
@@ -63,7 +63,18 @@ namespace vray {
 			uNormalMatrix		= program.getUniform("normalMatrix");
 
 			uboLight = program.createUniformBuffer("LightData", &light, sizeof(CompPointLight));
-			//uboMaterial = program.createUniformBuffer("MaterialData", sizeof(CompVisualMaterial));
+
+			//glBindBuffer(GL_UNIFORM_BUFFER, blockHandle);
+			//	char* lightData = (char*)glMapBuffer(GL_UNIFORM_BUFFER, GL_READ_ONLY);
+			//	char* lsData = lightData
+			//		+ sizeof(glm::vec4)			// la
+			//		+ sizeof(glm::vec3) + 4 +	// ld
+			//		+ sizeof(glm::vec3) + 4;	// ls
+			//	glm::vec3* ls = (glm::vec3*)lsData;
+			//	VR_ENGINE_LOGINFO("Light la: " + glm::to_string(*ls));
+
+			//	glUnmapBuffer(GL_UNIFORM_BUFFER);
+			//glBindBuffer(GL_UNIFORM_BUFFER, blockHandle);
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
@@ -94,7 +105,7 @@ namespace vray {
 
 		debugVertexCount = 0;
 
-		VR_ENGINE_LOGWARN("Setting data to UBOs");
+		//VR_ENGINE_LOGWARN("Setting data to UBOs");
 		//uboMaterial.setData(&material, sizeof(material));
 
 	}
@@ -129,11 +140,6 @@ namespace vray {
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
 			return;
-		}
-
-		int errorCode;
-		if ((errorCode = glGetError())) {
-			//VR_ENGINE_LOGERROR(std::to_string(errorCode));
 		}
 	}
 

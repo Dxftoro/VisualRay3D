@@ -109,7 +109,7 @@ private:
 
 		world.emplace<vray::CompTransform>(cube, cubeTransform);
 		world.emplace<vray::CompRenderable>(cube,
-			vray::CompRenderable(meshes.get("cube"), textures.get("default")));
+			vray::CompRenderable(meshes.get("ershik"), textures.get("default")));
 		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
 	}
 

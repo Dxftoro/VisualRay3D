@@ -4,7 +4,7 @@ layout (location = 0) in vec3 VertexPosition;
 layout (location = 1) in vec3 VertexNormal;
 layout (location = 2) in vec2 VertexTexCoords;
 
-out vec3 LightIntensity;
+out vec4 LightIntensity;
 out vec2 TexCoord;
 
 layout(std140, binding = 0) uniform LightData {
@@ -21,7 +21,7 @@ layout(std140, binding = 0) uniform LightData {
 //	float sh;
 //};
 //
-
+//
 //vec4 position = vec4(3.0, 15.0, 0.0, 1.0);
 //vec3 la = vec3(0.03);
 //vec3 ld = vec3(0.6);
@@ -56,7 +56,7 @@ void main() {
 		specular  = light.ls * ks * pow(max(dot(r, v), 0.0), sh);
 	}
 
-	LightIntensity = ambient + diffuse + specular;
+	LightIntensity = vec4(ambient + diffuse + specular, 1.0);
 	TexCoord = VertexTexCoords;
 
 	gl_Position = projectionMatrix * eyeCoords;

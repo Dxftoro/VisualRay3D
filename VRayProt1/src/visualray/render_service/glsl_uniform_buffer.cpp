@@ -15,7 +15,8 @@ namespace vray {
 
 		glGetActiveUniformBlockiv(program, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
 		glGetActiveUniformBlockiv(program, blockIndex, GL_UNIFORM_BLOCK_BINDING, (GLint*)&binding);
-		
+
+		binding = 0;
 		VR_ENGINE_LOGINFO("UBO " + name + " binding: "
 			+ std::to_string(binding) + " index: " + std::to_string(blockIndex));
 
@@ -30,15 +31,45 @@ namespace vray {
 
 		glGenBuffers(1, &handle);
 		glBindBuffer(GL_UNIFORM_BUFFER, handle);
-			glBufferData(GL_UNIFORM_BUFFER, size, data, GL_DYNAMIC_DRAW);
+			glBufferData(GL_UNIFORM_BUFFER, _size, data, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding, handle);
 		glUniformBlockBinding(program, blockIndex, binding);
 	}
 
+	GlslUniformBuffer::GlslUniformBuffer() : handle(0), program(0), binding(0), blockIndex(0), size(0) {
+	
+	}
+s
 	GlslUniformBuffer::~GlslUniformBuffer() {
 		glDeleteBuffers(1, &handle);
+	}
+
+	GlslUniformBuffer::GlslUniformBuffer(GlslUniformBuffer&& other) noexcept
+	:	handle(other.handle),
+		binding(other.binding),
+		program(other.program),
+		blockIndex(other.blockIndex),
+		size(other.size),
+		name(other.name)
+	{
+		other.invalidate();
+	}
+
+	GlslUniformBuffer& GlslUniformBuffer::operator=(GlslUniformBuffer&& other) noexcept {
+		if (this == &other) return *this;
+
+		handle = other.handle;
+		binding = other.binding;
+		program = other.program;
+		blockIndex = other.blockIndex;
+		size = other.size;
+		name = std::move(other.name);
+
+		other.invalidate();
+
+		return *this;
 	}
 
 	void GlslUniformBuffer::setData(void* data, size_t size, size_t offset) {
@@ -47,7 +78,7 @@ namespace vray {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-    void GlslUniformBuffer::printUniformData() {
+    void GlslUniformBuffer::printUniformData() const {
         GLuint blockIndex = glGetUniformBlockIndex(program, name.c_str());
         if (blockIndex == GL_INVALID_INDEX) {
             std::cout << "Block " << name << " not found!" << std::endl;
@@ -84,5 +115,12 @@ namespace vray {
                 << ", type=" << type << std::endl;
         }
     }
+
+	void GlslUniformBuffer::invalidate() {
+		handle = 0;
+		binding = 0;
+		program = 0;
+		blockIndex = GL_INVALID_INDEX;
+	}
 
 }

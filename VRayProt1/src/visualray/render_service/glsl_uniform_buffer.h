@@ -8,19 +8,22 @@ namespace vray {
 	class GlslUniformBuffer {
 	private:
 		GLuint handle;
-		GLuint program;
 		GLuint binding;
+		GLuint program;
 		GLuint blockIndex;
 		GLint size;
 		std::string name;
 
 	public:
-		explicit GlslUniformBuffer() : handle(0), program(0), binding(0), blockIndex(0), size(0) {}
-		explicit GlslUniformBuffer(GlslProgram* program, const std::string& name, const void* data, size_t size);
+		GlslUniformBuffer();
+		GlslUniformBuffer(GlslProgram* program, const std::string& name, const void* data, size_t size);
 		~GlslUniformBuffer();
 
-		//GlslUniformBuffer(const GlslUniformBuffer& uniformBuffer) = delete;
-		//GlslUniformBuffer& operator=(const GlslUniformBuffer& unifromBuffer) = delete;
+		GlslUniformBuffer(const GlslUniformBuffer&) = delete;
+		GlslUniformBuffer& operator=(const GlslUniformBuffer&) = delete;
+
+		GlslUniformBuffer(GlslUniformBuffer&&) noexcept;
+		GlslUniformBuffer& operator=(GlslUniformBuffer&&) noexcept;
 
 		void setData(void* data, size_t size, size_t offset = 0);
 
@@ -32,7 +35,8 @@ namespace vray {
 
 		void VRAYLIB setBinding(GLuint binding) { this->binding = binding; }
 
-		void VRAYLIB printUniformData();
+		void VRAYLIB printUniformData() const;
+		void VRAYLIB invalidate();
 	};
 
 }

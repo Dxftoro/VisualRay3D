@@ -138,7 +138,6 @@ namespace vray {
 
 	void Window::onUpdate() {
 		glfwPollEvents();
-		GameUpdateEvent evt;
 	}
 
 	void Window::setVsync(bool enabled) {

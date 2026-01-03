@@ -117,10 +117,6 @@ namespace vray {
 	}
 
 	GlslUniformBuffer GlslProgram::createUniformBuffer(const std::string& name, const void* data, size_t size) {
-		GLuint binding = lastUboBinding;
-		uboBindingTable[name] = binding;
-
-		lastUboBinding++;
 		return GlslUniformBuffer(this, name, data, size);
 	}
 
