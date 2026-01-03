@@ -16,7 +16,6 @@ namespace vray {
 		glGetActiveUniformBlockiv(program, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
 		glGetActiveUniformBlockiv(program, blockIndex, GL_UNIFORM_BLOCK_BINDING, (GLint*)&binding);
 
-		binding = 0;
 		VR_ENGINE_LOGINFO("UBO " + name + " binding: "
 			+ std::to_string(binding) + " index: " + std::to_string(blockIndex));
 
@@ -41,7 +40,7 @@ namespace vray {
 	GlslUniformBuffer::GlslUniformBuffer() : handle(0), program(0), binding(0), blockIndex(0), size(0) {
 	
 	}
-s
+
 	GlslUniformBuffer::~GlslUniformBuffer() {
 		glDeleteBuffers(1, &handle);
 	}

@@ -40,7 +40,7 @@ namespace vray {
         CompVisualMaterial material;
         CompPointLight light;
 
-        GlslUniformBuffer uboLight/*, uboMaterial*/;
+        GlslUniformBuffer uboLight, uboMaterial;
 
         bool initialCamera;
 

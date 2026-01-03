@@ -33,10 +33,10 @@ namespace vray {
 			currentWindow->getHeight(), 0.1f, 300.0f);
 
 		material = {
-			.ka = glm::vec3(1.0f),
+			.ka = glm::vec3(0.1f),
 			.kd = glm::vec3(1.0f),
 			.ks = glm::vec3(1.0f),
-			.shininess = 64
+			.shininess = 32.0
 		};
 
 		light = {
@@ -62,19 +62,20 @@ namespace vray {
 			uModelMatrix		= program.getUniform("modelMatrix");
 			uNormalMatrix		= program.getUniform("normalMatrix");
 
-			uboLight = program.createUniformBuffer("LightData", &light, sizeof(CompPointLight));
+			uboLight = program.createUniformBuffer("LightData", &light, sizeof(light));
+			uboMaterial = program.createUniformBuffer("MaterialData", &material, sizeof(material));
 
-			//glBindBuffer(GL_UNIFORM_BUFFER, blockHandle);
+			//glBindBuffer(GL_UNIFORM_BUFFER, uboMaterial.getHandle());
 			//	char* lightData = (char*)glMapBuffer(GL_UNIFORM_BUFFER, GL_READ_ONLY);
-			//	char* lsData = lightData
-			//		+ sizeof(glm::vec4)			// la
-			//		+ sizeof(glm::vec3) + 4 +	// ld
-			//		+ sizeof(glm::vec3) + 4;	// ls
-			//	glm::vec3* ls = (glm::vec3*)lsData;
-			//	VR_ENGINE_LOGINFO("Light la: " + glm::to_string(*ls));
+			//	char* lsData = lightData		// ka
+			//		+ sizeof(glm::vec3) + 4 +	// kd
+			//		+ sizeof(glm::vec3) + 4 +	// ks
+			//		+ sizeof(glm::vec3);		// sh
+			//	float* ls = (float*)lsData;
+			//	VR_ENGINE_LOGINFO("Light la: " + std::to_string(*ls));
 
 			//	glUnmapBuffer(GL_UNIFORM_BUFFER);
-			//glBindBuffer(GL_UNIFORM_BUFFER, blockHandle);
+			//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");

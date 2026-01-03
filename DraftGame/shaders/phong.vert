@@ -14,23 +14,23 @@ layout(std140, binding = 0) uniform LightData {
 	vec3 ls;
 } light;
 
-//layout(std140, binding = 1) uniform MaterialData {
-//	vec3 ka;
-//	vec3 kd;
-//	vec3 ks;
-//	float sh;
-//};
-//
+layout(std140, binding = 1) uniform MaterialData {
+	vec3 ka;
+	vec3 kd;
+	vec3 ks;
+	float sh;
+} material;
+
 //
 //vec4 position = vec4(3.0, 15.0, 0.0, 1.0);
 //vec3 la = vec3(0.03);
 //vec3 ld = vec3(0.6);
 //vec3 ls = vec3(1.0);
-vec3 ka = vec3(0.1);
-vec3 kd = vec3(1.0);
-vec3 ks = vec3(1.0);
-float sh = 64;
-
+//vec3 ka = vec3(0.1);
+//vec3 kd = vec3(1.0);
+//vec3 ks = vec3(1.0);
+//float sh = 64;
+//
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
@@ -46,14 +46,14 @@ void main() {
 	vec3 v = normalize(-eyeCoords.xyz);
 	vec3 r = reflect(-s, tnorm);
 
-	vec3 ambient = light.la * ka;
+	vec3 ambient = light.la * material.ka;
 
 	float sDotN = max(dot(s, tnorm), 0.0);
-	vec3 diffuse = light.ld * kd * sDotN;
+	vec3 diffuse = light.ld * material.kd * sDotN;
 	
 	vec3 specular = vec3(0.0);
 	if (sDotN > 0.0) {
-		specular  = light.ls * ks * pow(max(dot(r, v), 0.0), sh);
+		specular  = light.ls * material.ks * pow(max(dot(r, v), 0.0), material.sh);
 	}
 
 	LightIntensity = vec4(ambient + diffuse + specular, 1.0);

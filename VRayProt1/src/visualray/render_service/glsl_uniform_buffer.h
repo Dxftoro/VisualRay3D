@@ -27,6 +27,7 @@ namespace vray {
 
 		void setData(void* data, size_t size, size_t offset = 0);
 
+		unsigned int VRAYLIB getHandle() { return handle; }
 		unsigned int VRAYLIB getProgram() { return program; }
 		unsigned int VRAYLIB getBinding() { return binding; }
 		unsigned int VRAYLIB getBlockIndex() { return blockIndex; }
