@@ -1,5 +1,7 @@
 #version 430
 
+const int VR_RENDERER_MAX_LIGHTS = 10;
+
 layout (location = 0) in vec3 VertexPosition;
 layout (location = 1) in vec3 VertexNormal;
 layout (location = 2) in vec2 VertexTexCoords;
@@ -7,6 +9,18 @@ layout (location = 2) in vec2 VertexTexCoords;
 out vec4 LightIntensity;
 out vec2 TexCoord;
 
+struct Light {
+	vec4 position;
+	vec3 la;
+	vec3 ld;
+	vec3 ls;
+};
+
+//layout(std140, binding = 2) uniform LightData {
+//	int lightCount;
+//	Light lights[VR_RENDERER_MAX_LIGHTS];
+//} lightData;
+//
 layout(std140, binding = 0) uniform LightData {
 	vec4 position;
 	vec3 la;
