@@ -50,10 +50,18 @@ uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform mat3 normalMatrix;
 
+const float distortionStrength = 30.0;
+
 void main() {
+	vec4 vertexWorldPos = modelMatrix * vec4(VertexPosition, 1.0);
+	vec4 center = light.position - vec4(0.0, 10.0, 0.0, 0.0) - vertexWorldPos;
+	float dist = length(center);
+	float strength = distortionStrength / (dist * dist + 0.001);
+	vec4 distordedPos = vertexWorldPos + center * strength;
+
 	mat4 viewModelMatrix = viewMatrix * modelMatrix;
 	vec3 tnorm = normalize(normalMatrix * VertexNormal);
-	vec4 eyeCoords = viewModelMatrix * vec4(VertexPosition, 1.0);
+	vec4 eyeCoords = viewMatrix * distordedPos;
 	vec4 localLightPosition = viewMatrix * light.position;
 
 	vec3 s = normalize(vec3(localLightPosition - eyeCoords));

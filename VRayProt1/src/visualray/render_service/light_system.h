@@ -26,8 +26,9 @@ namespace vray {
 		LightGroup lightGroup;
 
 	private:
-		static void onLightAdded(entt::registry& world, const entt::entity entt);
-		static void onLightRemoved(entt::registry& world, const entt::entity entt);
+		static void onLightAdded(entt::registry& world, const entt::entity entity);
+		static void onLightUpdated(entt::registry& world, const entt::entity entity);
+		static void onLightRemoved(entt::registry& world, const entt::entity entity);
 
 	public:
 		LightSystem(GlslProgram& program, entt::registry& world);

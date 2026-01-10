@@ -9,4 +9,16 @@ namespace vray {
 		
 	}
 
+	void LightSystem::onLightAdded(entt::registry& world, const entt::entity entity) {
+
+	}
+
+	void LightSystem::onLightUpdated(entt::registry& world, const entt::entity entity) {
+
+	}
+
+	void LightSystem::onLightRemoved(entt::registry& world, const entt::entity entity) {
+
+	}
+
 }
