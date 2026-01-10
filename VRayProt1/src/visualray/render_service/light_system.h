@@ -15,14 +15,14 @@ namespace vray {
 		struct LightBuffer {
 			int lightCount;
 			CompPointLight lights[VR_RENDERER_MAX_LIGHTS];
-		};
+		} lightBuffer;
 
 		GlslProgram& program;
 		GlslUniformBuffer lightUniformBuffer;
 		int currentLightIndex;
 
 		entt::registry& world;
-		using LightGroup = decltype(world.group<CompPointLight>());
+		using LightGroup = decltype(world.group<CompPointLight, CompPointLightIndex>());
 		LightGroup lightGroup;
 
 	private:
@@ -33,6 +33,8 @@ namespace vray {
 	public:
 		LightSystem(GlslProgram& program, entt::registry& world);
 		~LightSystem() {}
+
+		void update();
 	};
 
 }

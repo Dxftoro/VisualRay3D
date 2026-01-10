@@ -71,10 +71,16 @@ namespace vray {
 		return *this;
 	}
 
-	void GlslUniformBuffer::setData(void* data, size_t size, size_t offset) {
+	void GlslUniformBuffer::bind() {
 		glBindBuffer(GL_UNIFORM_BUFFER, handle);
-		glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
+	}
+
+	void GlslUniformBuffer::unbind() {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	void GlslUniformBuffer::setData(void* data, size_t size, size_t offset) {
+		glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 	}
 
     void GlslUniformBuffer::printUniformData() const {

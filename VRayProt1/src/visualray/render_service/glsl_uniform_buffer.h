@@ -25,6 +25,10 @@ namespace vray {
 		GlslUniformBuffer(GlslUniformBuffer&&) noexcept;
 		GlslUniformBuffer& operator=(GlslUniformBuffer&&) noexcept;
 
+		void bind();
+		void unbind();
+
+		/* Set data to the ALREADY BINDED buffer! */
 		void setData(void* data, size_t size, size_t offset = 0);
 
 		unsigned int VRAYLIB getHandle() { return handle; }

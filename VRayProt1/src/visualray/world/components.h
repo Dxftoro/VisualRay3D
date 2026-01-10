@@ -107,7 +107,7 @@ namespace vray {
 	};
 	struct VRAYLIB CompPointLightIndex {
 		int lightIndex = -1;
-		bool dirty = false;
+		bool dirty = true;
 	};
 
 }
