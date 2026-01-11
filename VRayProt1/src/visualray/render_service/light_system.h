@@ -5,21 +5,24 @@
 #include "glsl_program.h"
 #include "glsl_uniform_buffer.h"
 
-#define VR_RENDERER_MAX_LIGHTS		10
-#define VR_RENDERER_LIGHT_NOTVALID	-1
+#define VR_RENDERER_MAX_LIGHTS		16
+#define VR_RENDERER_LIGHT_NEW		-1
 
 namespace vray {
 
 	class LightSystem {
 	private:
 		struct LightBuffer {
-			int lightCount;
+			int lastLightIndex;
 			CompPointLight lights[VR_RENDERER_MAX_LIGHTS];
-		} lightBuffer;
+		};
+
+		CompPointLight* bufferedLights[VR_RENDERER_MAX_LIGHTS];
 
 		GlslProgram& program;
 		GlslUniformBuffer lightUniformBuffer;
-		int currentLightIndex;
+		
+		int lastLightIndex;
 
 		entt::registry& world;
 		using LightGroup = decltype(world.group<CompPointLight, CompPointLightIndex>());

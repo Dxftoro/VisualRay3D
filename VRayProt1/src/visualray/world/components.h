@@ -106,8 +106,9 @@ namespace vray {
 		alignas(16) glm::vec3 ls;
 	};
 	struct VRAYLIB CompPointLightIndex {
-		int lightIndex = -1;
+		int index = -1;
 		bool dirty = true;
+		bool deleted = false;
 	};
 
 }

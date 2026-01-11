@@ -17,7 +17,7 @@ struct Light {
 };
 
 //layout(std140, binding = 2) uniform LightData {
-//	int lightCount;
+//	int lastLightIndex;
 //	Light lights[VR_RENDERER_MAX_LIGHTS];
 //} lightData;
 //
