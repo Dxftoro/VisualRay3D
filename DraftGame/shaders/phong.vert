@@ -1,6 +1,6 @@
 #version 430
 
-const int VR_RENDERER_MAX_LIGHTS = 10;
+const int VR_RENDERER_MAX_LIGHTS = 16;
 
 layout (location = 0) in vec3 VertexPosition;
 layout (location = 1) in vec3 VertexNormal;

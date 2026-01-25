@@ -17,15 +17,14 @@ namespace vray {
 			CompPointLight lights[VR_RENDERER_MAX_LIGHTS];
 		};
 
-		CompPointLight* bufferedLights[VR_RENDERER_MAX_LIGHTS];
+		entt::entity bufferedEntites[VR_RENDERER_MAX_LIGHTS];
+		int lastLightIndex;
 
 		GlslProgram& program;
 		GlslUniformBuffer lightUniformBuffer;
 		
-		int lastLightIndex;
-
 		entt::registry& world;
-		using LightGroup = decltype(world.group<CompPointLight, CompPointLightIndex>());
+		using LightGroup = decltype(world.group<CompPointLightIndex>(entt::get<CompPointLight>));
 		LightGroup lightGroup;
 
 	private:
@@ -37,7 +36,9 @@ namespace vray {
 		LightSystem(GlslProgram& program, entt::registry& world);
 		~LightSystem() {}
 
+		void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
 		void update();
+
 	};
 
 }
