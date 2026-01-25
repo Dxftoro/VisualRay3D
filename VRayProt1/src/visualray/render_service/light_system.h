@@ -20,7 +20,6 @@ namespace vray {
 		entt::entity bufferedEntites[VR_RENDERER_MAX_LIGHTS];
 		int lastLightIndex;
 
-		GlslProgram& program;
 		GlslUniformBuffer lightUniformBuffer;
 		
 		entt::registry& world;
@@ -33,9 +32,10 @@ namespace vray {
 		static void onLightRemoved(entt::registry& world, const entt::entity entity);
 
 	public:
-		LightSystem(GlslProgram& program, entt::registry& world);
+		LightSystem(entt::registry& world);
 		~LightSystem() {}
 
+		void initBuffer(GlslProgram& program);
 		void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
 		void update();
 

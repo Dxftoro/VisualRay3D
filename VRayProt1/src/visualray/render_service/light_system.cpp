@@ -4,8 +4,11 @@
 
 namespace vray {
 
-	LightSystem::LightSystem(GlslProgram& _program, entt::registry& _world)
-		: bufferedEntites({ entt::null }), program(_program), lastLightIndex(0), world(_world) {
+	LightSystem::LightSystem(entt::registry& _world)
+		: bufferedEntites({ entt::null }), lastLightIndex(0), world(_world) {
+	}
+
+	void LightSystem::initBuffer(GlslProgram& program) {
 		lightUniformBuffer = program.createUniformBuffer("LightData", nullptr, sizeof(LightBuffer));
 	}
 
@@ -18,7 +21,13 @@ namespace vray {
 	}
 
 	void LightSystem::onLightRemoved(entt::registry& world, const entt::entity entity) {
-		world.get<CompPointLightIndex>(entity).deleted = true;
+		CompPointLightIndex& lightIndex = world.get<CompPointLightIndex>(entity);
+		
+		/* If it's not buffered */
+		if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
+			world.erase<CompPointLightIndex>(entity);
+		}
+		else lightIndex.deleted = true;
 	}
 
 	void LightSystem::handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex) {
@@ -48,12 +57,13 @@ namespace vray {
 		lightUniformBuffer.bind();
 
 		if (lastLightIndex) {
-			lightGroup.each([this](entt::entity entity, CompPointLightIndex& lightIndex) {
+			for (entt::entity entity : lightGroup) {
+				CompPointLightIndex& lightIndex = lightGroup.get<CompPointLightIndex>(entity);
 				handleDeleted(entity, lightIndex);
-			});
+			}
 		}
 
-		lightGroup.each([this](entt::entity entity, CompPointLight& light, CompPointLightIndex& lightIndex) {
+		lightGroup.each([this](entt::entity entity, CompPointLightIndex& lightIndex, CompPointLight& light) {
 			if (!lightIndex.dirty) return;
 			lightIndex.dirty = false;
 

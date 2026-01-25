@@ -5,6 +5,7 @@
 #include "event_service/event.h"
 #include "window_service/window.h"
 #include "world/components.h"
+#include "../thirdparty/EnTT/entt.hpp"
 
 #include <glm/glm.hpp>
 
@@ -12,11 +13,13 @@
 #include "glsl_program.h"
 #include "frustum_camera.h"
 #include "render_request.h"
+#include "light_system.h"
 
 #define VR_RENDERER_MAX_DEBUG_LINES     1000
 
 namespace vray {
 
+    /* Forward declarations */
     struct CompCamera;
     struct CompVisualMaterial;
     struct CompPointLight;
@@ -28,7 +31,7 @@ namespace vray {
         CompCamera* camera;
         Window* currentWindow;
         GlslProgram program, debugProgram;
-        
+
         GlslUniform uProjectionMatrix,
                     uViewMatrix, 
                     uModelMatrix,
@@ -41,11 +44,12 @@ namespace vray {
         CompPointLight light;
 
         GlslUniformBuffer uboLight, uboMaterial;
+        LightSystem lightSystem;
 
         bool initialCamera;
 
     public:
-        Renderer(Window* currentWindow);
+        Renderer(Window* currentWindow, entt::registry& world);
         ~Renderer();
 
         void clear();

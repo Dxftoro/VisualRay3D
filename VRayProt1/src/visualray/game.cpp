@@ -34,7 +34,7 @@ namespace vray {
 		pushOverlay(new ImGuiLayer(window.get()));
 
 		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
-		renderer = new Renderer(window.get());
+		renderer = new Renderer(window.get(), world);
 
 		physics = new Rp3dPhysics(world);
 		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);

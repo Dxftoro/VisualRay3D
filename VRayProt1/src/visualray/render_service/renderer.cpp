@@ -17,8 +17,8 @@
 
 namespace vray {
 
-	Renderer::Renderer(Window* _currentWindow)
-		: currentWindow(_currentWindow), initialCamera(true) {
+	Renderer::Renderer(Window* _currentWindow, entt::registry& world)
+		: currentWindow(_currentWindow), initialCamera(true), lightSystem(world) {
 
 		if (!gladLoadGL()) {
 			throw std::runtime_error("Can't load OpenGL!");
@@ -62,6 +62,7 @@ namespace vray {
 			uModelMatrix		= program.getUniform("modelMatrix");
 			uNormalMatrix		= program.getUniform("normalMatrix");
 
+			lightSystem.initBuffer(program);
 			uboLight = program.createUniformBuffer("LightData", &light, sizeof(light));
 			uboMaterial = program.createUniformBuffer("MaterialData", &material, sizeof(material));
 
