@@ -104,6 +104,8 @@ namespace vray {
 		alignas(16) glm::vec3 la;
 		alignas(16) glm::vec3 ld;
 		alignas(16) glm::vec3 ls;
+
+		void mergeColor(const glm::vec3& color);
 	};
 	struct VRAYLIB CompPointLightIndex {
 		int index = -1;

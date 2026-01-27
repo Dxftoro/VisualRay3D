@@ -1,11 +1,18 @@
 #include "vrpch.h"
 #include "kernel.h"
 #include "light_system.h"
+#include "logservice.h"
 
 namespace vray {
 
 	LightSystem::LightSystem(entt::registry& _world)
 		: bufferedEntites({ entt::null }), lastLightIndex(0), world(_world) {
+
+		lightGroup = world.group<CompPointLightIndex>(entt::get<CompPointLight>);
+
+		world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
+		world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
+		world.on_destroy<CompPointLight>().connect<&LightSystem::onLightRemoved>();
 	}
 
 	void LightSystem::initBuffer(GlslProgram& program) {
@@ -30,6 +37,11 @@ namespace vray {
 		else lightIndex.deleted = true;
 	}
 
+	void LightSystem::setLightData(CompPointLight& light, int index) {
+		lightUniformBuffer.setData(&light, sizeof(light),
+			offsetof(LightBuffer, lights) + index * sizeof(light));
+	}
+
 	void LightSystem::handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex) {
 		if (!lightIndex.deleted) return;
 		else if (lightIndex.index == 0) lastLightIndex--;
@@ -40,16 +52,14 @@ namespace vray {
 			auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
 				bufferedEntites[lastLightIndex - 1]);
 
-			lightUniformBuffer.setData(
-				&tailLight,
-				sizeof(CompPointLight),
-				lightIndex.index * sizeof(CompPointLight));
+			setLightData(tailLight, lightIndex.index);
 
 			tailLightIndex.index = lightIndex.index;
 			bufferedEntites[tailLightIndex.index] = bufferedEntites[lastLightIndex - 1];
 			lastLightIndex--;
 		}
 
+		lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
 		world.erase<CompPointLightIndex>(entity);
 	}
 
@@ -71,13 +81,15 @@ namespace vray {
 			if (lightIndex.index == VR_RENDERER_LIGHT_NEW && lastLightIndex <= VR_RENDERER_MAX_LIGHTS - 1) {
 				bufferedEntites[lastLightIndex] = entity;
 				lightIndex.index = lastLightIndex;
-				lightUniformBuffer.setData(&light, sizeof(light), lightIndex.index * sizeof(light));
+				
+				setLightData(light, lightIndex.index);
 				lastLightIndex++;
+				lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
 			}
 
 			/* If we need just to update current light data */
 			else {
-				lightUniformBuffer.setData(&light, sizeof(light), lightIndex.index * sizeof(light));
+				setLightData(light, lightIndex.index);
 			}
 		});
 

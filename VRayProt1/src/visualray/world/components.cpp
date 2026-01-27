@@ -80,4 +80,10 @@ namespace vray {
 		this->rotation = rotation;
 		updateMatrices();
 	}
+
+	void CompPointLight::mergeColor(const glm::vec3& color) {
+		la *= color;
+		ld *= color;
+		ls *= color;
+	}
 }

@@ -4,7 +4,7 @@
 
 class DraftGame : public vray::Game {
 private:
-	entt::entity player, teapot, plathform;
+	entt::entity player, teapot, plathform, someLight;
 	vray::CompCamera* camera;
 
 	float prevAngle, amplitude, frequency, timeAccumulator;
@@ -48,6 +48,17 @@ private:
 		if (inputService.keyPressed(VR_KEY_DOWN)) {
 			teapotPosition.x -= (moveSpeed - 1) * deltaTime();
 			teapotTransform.setPosition(teapotPosition);
+		}
+
+		if (inputService.keyPressed(VR_KEY_LEFT)) {
+			world.patch<vray::CompPointLight>(someLight, [](vray::CompPointLight& light) {
+				light.position.x += (moveSpeed - 1) * deltaTime();
+			});
+
+			vray::CompTransform& transform = world.get<vray::CompTransform>(someLight);
+			glm::vec3 position = transform.getPosition();
+			position.x += (moveSpeed - 1) * deltaTime();
+			transform.setPosition(position);
 		}
 
 		camera->setPosition(cameraPosition);
@@ -137,7 +148,7 @@ private:
 		this->teapot = teapot;
 	}
 
-	void spawnLightMarker(const glm::vec3& position) {
+	entt::entity spawnLightMarker(const glm::vec3& position, const glm::vec3& color) {
 		entt::entity lightMarker = world.create();
 
 		vray::CompTransform transform;
@@ -145,9 +156,20 @@ private:
 		transform.setScale({ 0.5f, 0.5f, 0.5f });
 
 		vray::CompRenderable renderable(meshes.get("cube"), textures.get("default"));
+		vray::CompPointLight light = {
+			.position = glm::vec4(position, 1.0f),
+			.la = glm::vec3(0.03f),
+			.ld = glm::vec3(0.6),
+			.ls = glm::vec3(1.0)
+		};
+
+		light.mergeColor(color);
 
 		world.emplace<vray::CompTransform>(lightMarker, transform);
 		world.emplace<vray::CompRenderable>(lightMarker, renderable);
+		world.emplace<vray::CompPointLight>(lightMarker, light);
+
+		return lightMarker;
 	}
 
 public:
@@ -202,7 +224,8 @@ public:
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
-		spawnLightMarker({ 3.0f, 15.0f, 0.0f });
+		someLight = spawnLightMarker({ 3.0f, 15.0f, 0.0f }, { 0.1f, 1.0f, 1.0f });
+		entt::entity light1 = spawnLightMarker({ -3.0f, 15.0f, -10.0f }, { 1.0f, 0.3f, 0.4f });
 	}
 	~DraftGame() {}
 

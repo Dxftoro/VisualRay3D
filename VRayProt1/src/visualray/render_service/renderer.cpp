@@ -63,7 +63,7 @@ namespace vray {
 			uNormalMatrix		= program.getUniform("normalMatrix");
 
 			lightSystem.initBuffer(program);
-			uboLight = program.createUniformBuffer("LightData", &light, sizeof(light));
+			//uboLight = program.createUniformBuffer("LightData", &light, sizeof(light));
 			uboMaterial = program.createUniformBuffer("MaterialData", &material, sizeof(material));
 
 			//glBindBuffer(GL_UNIFORM_BUFFER, uboMaterial.getHandle());
@@ -128,6 +128,7 @@ namespace vray {
 			program.setUniform(uViewMatrix, camera->getViewMatrix());
 
 			//uboLight.setData(&light, sizeof(light));
+			lightSystem.update();
 
 			flush();
 

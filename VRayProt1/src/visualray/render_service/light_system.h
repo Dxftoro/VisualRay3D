@@ -13,7 +13,7 @@ namespace vray {
 	class LightSystem {
 	private:
 		struct LightBuffer {
-			int lastLightIndex;
+			int lightCount;
 			CompPointLight lights[VR_RENDERER_MAX_LIGHTS];
 		};
 
@@ -39,6 +39,7 @@ namespace vray {
 		void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
 		void update();
 
+		void setLightData(CompPointLight& light, int index);
 	};
 
 }
