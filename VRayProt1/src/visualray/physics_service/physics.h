@@ -8,9 +8,14 @@ namespace vray {
 		void* data = nullptr;
 	};
 
+	//namespace glm {
+	//	struct vec3;
+	//}
+
 	class IPhysics {
 	public:
 		virtual void update(float deltaTime) = 0;
+		//virtual void raycast(const glm::vec3 start, const glm::vec3 end) = 0;
 		//virtual DebugGeometryData getDebugGeometry() const = 0;
 	};
 

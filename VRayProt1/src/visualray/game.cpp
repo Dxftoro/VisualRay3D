@@ -19,26 +19,30 @@ namespace vray {
 	float Game::_deltaTime = 1.0f;
 	int Game::fpsLimit = 30;
 
-	Game::Game(const WindowParams& windowParams) : running(false), cameraSystem(nullptr) {
+	Game::Game(const WindowParams& windowParams) : running(false) {
 		if (glfwInit() == GLFW_FALSE) {
 			VR_ENGINE_LOGERROR("Can't initialize GLFW!");
 			throw std::runtime_error("Can't initialize GLFW!");
 		}
 
-		window = std::unique_ptr<Window>(Window::create(windowParams));
-		window->setEventCallback(
+		engineContext.window = std::unique_ptr<Window>(Window::create(windowParams));
+		engineContext.window->setEventCallback(
 			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
 		);
 
-		inputService = InputService(window.get());
-		pushOverlay(new ImGuiLayer(window.get()));
+		engineContext.inputService = InputService(engineContext.window.get());
+		pushOverlay(new ImGuiLayer(engineContext.window.get()));
 
-		visibleGroup = world.group<CompTransform>(entt::get<CompRenderable>);
-		renderer = new Renderer(window.get(), world);
+		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable>);
+		
+		engineContext.renderer = new Renderer(engineContext.window.get(), gameContext.world);
+		Renderer* renderer = engineContext.renderer;
 
-		physics = new Rp3dPhysics(world);
-		physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
-		cameraSystem = CameraSystem(renderer);
+		engineContext.physics = new Rp3dPhysics(gameContext.world);
+		IPhysics* physics = engineContext.physics;
+
+		engineContext.physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
+		engineContext.cameraSystem = CameraSystem(renderer);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));
@@ -47,11 +51,11 @@ namespace vray {
 
 	Game::~Game() {
 		VR_ENGINE_LOGINFO("Clearing renderer");
-		delete renderer;
+		delete engineContext.renderer;
 		VR_ENGINE_LOGINFO("Clearing physics");
-		delete physics;
+		delete engineContext.physics;
 		VR_ENGINE_LOGINFO("Clearing physics debug system");
-		delete physicsDebugSystem;
+		delete engineContext.physicsDebugSystem;
 	}
 
 	inline void Game::run() {
@@ -69,9 +73,9 @@ namespace vray {
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
-			physics->update(_deltaTime);
+			engineContext.physics->update(_deltaTime);
 			if (frameNumber >= frameInterval) {
-				physicsDebugSystem->update(true);
+				engineContext.physicsDebugSystem->update(true);
 				frameNumber = 0;
 			}
 			else frameNumber++;
@@ -79,12 +83,12 @@ namespace vray {
 			this->update();
 			this->renderSubmit();
 
-			renderer->clear();
-			renderer->update(deltaTime());
+			engineContext.renderer->clear();
+			engineContext.renderer->update(deltaTime());
 
-			window->onUpdate();
-			layerStack.update();
-			window->swapBuffers();
+			engineContext.window->onUpdate();
+			engineContext.layerStack.update();
+			engineContext.window->swapBuffers();
 
 			std::this_thread::sleep_until(frameEnd);
 		}
@@ -94,7 +98,7 @@ namespace vray {
 
 	bool Game::onWindowClosing(WindowCloseEvent& evt) {
 		running = false;
-		window->setClosed(true);
+		engineContext.window->setClosed(true);
 		return true;
 	}
 
@@ -102,7 +106,7 @@ namespace vray {
 		visibleGroup.each([this]
 		(entt::entity entity, CompTransform& transform, CompRenderable& renderable) {
 			RenderRequest request(&renderable, &transform, 4U);
-			renderer->submit(std::move(request));
+			engineContext.renderer->submit(std::move(request));
 		});
 	}
 
@@ -113,7 +117,7 @@ namespace vray {
 		);
 
 		onEvent(evt);
-		renderer->onEvent(evt);
+		engineContext.renderer->onEvent(evt);
 	}
 
 	float Game::deltaTime() { return _deltaTime; }

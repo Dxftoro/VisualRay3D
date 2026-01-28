@@ -4,6 +4,9 @@
 
 class DraftGame : public vray::Game {
 private:
+	vray::EngineContext& engine;
+	vray::GameContext& game;
+
 	entt::entity player, teapot, plathform, someLight;
 	vray::CompCamera* camera;
 
@@ -15,11 +18,12 @@ private:
 	}
 
 	inline void handleKeys() {
+		vray::InputService& inputService = engine.inputService;
 		glm::vec3 cameraPosition = camera->getPosition();
 		static float moveSpeed = 10.0f;
 		float currentAngle = glm::radians(camera->getRotation().x);
 
-		vray::CompTransform& teapotTransform = world.get<vray::CompTransform>(teapot);
+		vray::CompTransform& teapotTransform = game.world.get<vray::CompTransform>(teapot);
 		glm::vec3 teapotPosition = teapotTransform.getPosition();
 
 		if (inputService.keyPressed(VR_KEY_W)) {
@@ -51,11 +55,11 @@ private:
 		}
 
 		if (inputService.keyPressed(VR_KEY_LEFT)) {
-			world.patch<vray::CompPointLight>(someLight, [](vray::CompPointLight& light) {
+			game.world.patch<vray::CompPointLight>(someLight, [](vray::CompPointLight& light) {
 				light.position.x += (moveSpeed - 1) * deltaTime();
 			});
 
-			vray::CompTransform& transform = world.get<vray::CompTransform>(someLight);
+			vray::CompTransform& transform = game.world.get<vray::CompTransform>(someLight);
 			glm::vec3 position = transform.getPosition();
 			position.x += (moveSpeed - 1) * deltaTime();
 			transform.setPosition(position);
@@ -66,6 +70,7 @@ private:
 
 	inline void handleRotation(vray::Event& evt) {
 		static glm::vec2 mouseBase(getWindow()->getWidth() * 0.5f, getWindow()->getHeight() * 0.5f);
+		vray::InputService& inputService = engine.inputService;
 
 		if (evt.getType() == vray::EventType::MOUSE_MOVED
 			&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED) {
@@ -91,6 +96,8 @@ private:
 	}
 
 	inline void handleMouseUnlock(vray::Event& evt) {
+		vray::InputService& inputService = engine.inputService;
+
 		if (evt.getType() == vray::KEY_PRESSED) {
 			vray::KeyPressedEvent keyEvt = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvt.getKeyCode() != VR_KEY_TAB) return;
@@ -104,7 +111,7 @@ private:
 	}
 
 	void spawnCube(const glm::vec3& position) {
-		entt::entity cube = world.create();
+		entt::entity cube = game.world.create();
 		
 		vray::CompTransform cubeTransform;
 		cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
@@ -118,14 +125,14 @@ private:
 			.mass = 12.0f
 		};
 
-		world.emplace<vray::CompTransform>(cube, cubeTransform);
-		world.emplace<vray::CompRenderable>(cube,
-			vray::CompRenderable(meshes.get("ershik"), textures.get("default")));
-		world.emplace<vray::CompHitbox>(cube, cubeHitbox);
+		game.world.emplace<vray::CompTransform>(cube, cubeTransform);
+		game.world.emplace<vray::CompRenderable>(cube,
+			vray::CompRenderable(game.meshes.get("ershik"), game.textures.get("default")));
+		game.world.emplace<vray::CompHitbox>(cube, cubeHitbox);
 	}
 
 	void spawnTeapot(const glm::vec3& position) {
-		entt::entity teapot = world.create();
+		entt::entity teapot = game.world.create();
 
 		vray::CompTransform teapotTransform;
 		teapotTransform.setPosition(position);
@@ -140,22 +147,22 @@ private:
 			.mass = 12.0f
 		};
 
-		vray::CompRenderable teapotRenderable(meshes.get("teapot"), textures.get("stone_bricks"));
-		world.emplace<vray::CompTransform>(teapot, teapotTransform);
-		world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
-		world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
+		vray::CompRenderable teapotRenderable(game.meshes.get("teapot"), game.textures.get("stone_bricks"));
+		game.world.emplace<vray::CompTransform>(teapot, teapotTransform);
+		game.world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
+		game.world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
 
 		this->teapot = teapot;
 	}
 
 	entt::entity spawnLightMarker(const glm::vec3& position, const glm::vec3& color) {
-		entt::entity lightMarker = world.create();
+		entt::entity lightMarker = game.world.create();
 
 		vray::CompTransform transform;
 		transform.setPosition(position);
 		transform.setScale({ 0.5f, 0.5f, 0.5f });
 
-		vray::CompRenderable renderable(meshes.get("cube"), textures.get("default"));
+		vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get("default"));
 		vray::CompPointLight light = {
 			.position = glm::vec4(position, 1.0f),
 			.la = glm::vec3(0.03f),
@@ -165,31 +172,37 @@ private:
 
 		light.mergeColor(color);
 
-		world.emplace<vray::CompTransform>(lightMarker, transform);
-		world.emplace<vray::CompRenderable>(lightMarker, renderable);
-		world.emplace<vray::CompPointLight>(lightMarker, light);
+		game.world.emplace<vray::CompTransform>(lightMarker, transform);
+		game.world.emplace<vray::CompRenderable>(lightMarker, renderable);
+		game.world.emplace<vray::CompPointLight>(lightMarker, light);
 
 		return lightMarker;
 	}
 
 public:
-	DraftGame() : Game(vray::WindowParams("Draft Game", 860, 482)) {
+	DraftGame()
+	:	Game(vray::WindowParams("Draft Game", 860, 482)),
+		engine(getEngineContext()),
+		game(getGameContext())
+	{
 		DraftGame::setFpsLimit(70);
+
+		vray::InputService& inputService = engine.inputService;
 		inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
 
-		vray::Mesh* teapotMesh = meshes.load("models/teapot.obj", "teapot");
-		vray::Mesh* cubeMesh = meshes.load("models/cube.obj", "cube");
-		vray::Mesh* ershikMesh = meshes.load("models/Ershik.obj", "ershik");
-		vray::Texture* stoneBricks = textures.load("textures/KAMEN.JPG", "stone_bricks");
-		vray::Texture* defaultTexture = textures.load("textures/default.png", "default");
+		vray::Mesh* teapotMesh = game.meshes.load("models/teapot.obj", "teapot");
+		vray::Mesh* cubeMesh = game.meshes.load("models/cube.obj", "cube");
+		vray::Mesh* ershikMesh = game.meshes.load("models/Ershik.obj", "ershik");
+		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
+		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 
 		prevAngle = 0.0f;
 		amplitude = 2.0f;
 		frequency = 0.5f;
 		timeAccumulator = 0.0f;
 
-		player = world.create();
-		plathform = world.create();
+		player = game.world.create();
+		plathform = game.world.create();
 
 		vray::CompTransform plathformTransform;
 		
@@ -204,15 +217,15 @@ public:
 			.mass = 10.0f
 		};
 
-		camera = &world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
+		camera = &game.world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
 			getWindow()->getWidth(),
 			getWindow()->getHeight(), 0.1f, 300.0f));
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
-		cameraSystem.setActiveCamera(camera);
+		engine.cameraSystem.setActiveCamera(camera);
 
-		world.emplace<vray::CompTransform>(plathform, plathformTransform);
-		world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
-		world.emplace<vray::CompRenderable>(plathform, vray::CompRenderable(cubeMesh, defaultTexture));
+		game.world.emplace<vray::CompTransform>(plathform, plathformTransform);
+		game.world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
+		game.world.emplace<vray::CompRenderable>(plathform, vray::CompRenderable(cubeMesh, defaultTexture));
 
 		for (int i = 0; i < 15; i++) {
 			spawnCube({

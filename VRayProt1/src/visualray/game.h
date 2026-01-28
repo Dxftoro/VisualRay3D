@@ -16,6 +16,30 @@
 
 namespace vray {
 
+	struct VRAYLIB EngineContext {
+		std::unique_ptr<Window> window;
+		LayerStack layerStack;
+		Renderer* renderer;
+		IPhysics* physics;
+		IPhysicsDebugSystem* physicsDebugSystem;
+		CameraSystem cameraSystem;
+		InputService inputService;
+
+		EngineContext(const EngineContext&) = delete;
+		EngineContext& operator=(const EngineContext&) = delete;
+		EngineContext() : cameraSystem(nullptr) {}
+	};
+
+	struct VRAYLIB GameContext {
+		entt::registry world;
+		ResourceManager<Mesh> meshes;
+		ResourceManager<Texture> textures;
+
+		GameContext(const GameContext&) = delete;
+		GameContext& operator=(const GameContext&) = delete;
+		GameContext() = default;
+	};
+
 	class VRAYLIB Game {
 	private:
 		static float begTime;
@@ -24,29 +48,17 @@ namespace vray {
 		static int fpsLimit;
 		bool running;
 
-		std::unique_ptr<Window> window;
-		LayerStack layerStack;
-		Renderer* renderer;
-		IPhysics* physics;
-		IPhysicsDebugSystem* physicsDebugSystem;
+		EngineContext engineContext;
+		GameContext gameContext;
 
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void renderSubmit();
 		void onEventInternal(Event& evt);
 
-	public:
-		entt::registry world;
-	private:
-		using VisibleGroup = decltype(world.group<CompTransform>(entt::get<CompRenderable>));
+		using VisibleGroup = decltype(gameContext.world.group<CompTransform>(entt::get<CompRenderable>));
 		VisibleGroup visibleGroup;
 
 	public:
-		CameraSystem cameraSystem;
-		InputService inputService;
-
-		ResourceManager<Mesh> meshes;
-		ResourceManager<Texture> textures;
-
 		Game(const WindowParams& windowParams);
 		~Game();
 
@@ -55,13 +67,15 @@ namespace vray {
 		virtual void update() = 0;
 		virtual void onEvent(Event& evt) = 0;
 
-		Window* getWindow() const { return window.get(); }
+		Window* getWindow() const { return engineContext.window.get(); }
+		EngineContext& getEngineContext() { return engineContext; }
+		GameContext& getGameContext() { return gameContext; }
 
-		inline void pushLayer(Layer* layer) { layerStack.pushLayer(layer); }
-		inline void pushOverlay(Layer* overlay) { layerStack.pushOverlay(overlay); }
+		inline void pushLayer(Layer* layer) { engineContext.layerStack.pushLayer(layer); }
+		inline void pushOverlay(Layer* overlay) { engineContext.layerStack.pushOverlay(overlay); }
 
-		inline void popLayer(Layer* layer) { layerStack.popLayer(); }
-		inline void popOverlay(Layer* overlay) { layerStack.popOverlay(); }
+		inline void popLayer(Layer* layer) { engineContext.layerStack.popLayer(); }
+		inline void popOverlay(Layer* overlay) { engineContext.layerStack.popOverlay(); }
 
 		static float deltaTime();
 		static float getFpsLimit() { return fpsLimit; };
