@@ -6,6 +6,14 @@
 
 namespace vray {
 
+	rp3d::decimal RaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
+		lastRaycastResult = RaycastResult();
+		lastRaycastResult->hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
+		lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
+		lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
+		return -1;
+	}
+
 	BodyTableIterator Rp3dPhysics::createPhysicsBody(entt::entity entity) {
 		CompHitbox& hitbox = dynamicGroup.get<CompHitbox>(entity);
 		CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
@@ -16,6 +24,7 @@ namespace vray {
 		};
 
 		rp3d::RigidBody* rigidBody = physicsWorld->createRigidBody(rp3dTransform);
+		rigidBody->setUserData((void*)(uintptr_t)entity);
 
 		switch (hitbox.physType) {
 		case CompHitbox::PhysType::STATIC:
@@ -55,7 +64,7 @@ namespace vray {
 		}
 
 		rigidBody->setIsDebugEnabled(true);
-		BodyTableIterator it = bodyTable.emplace(entity, BodySyncData{ rigidBody, false }).first;
+		BodyTableIterator it = bodyTable.emplace(entity, BodySyncData{ rigidBody, entity }).first;
 		VR_ENGINE_LOGINFO("Hitbox created for entity " + std::to_string((uint32_t)entity));
 		return it;
 	}
@@ -111,12 +120,24 @@ namespace vray {
 
 			auto it = bodyTable.find(entity);
 			BodySyncData& bodySyncData = it->second;
-			const rp3d::Transform & rp3dTransform = bodySyncData.body->getTransform();
+			const rp3d::Transform& rp3dTransform = bodySyncData.body->getTransform();
 
 			transform.setPosition(vec3ToGlm(rp3dTransform.getPosition()));
 			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
 			transform.setSync(true);
 		});
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& end) {
+		RaycastCallback callback;
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
+		return callback.getLastResult();
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& dir, float range) {
+		RaycastCallback callback;
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(start + (dir * range)) }, &callback);
+		return std::nullopt;
 	}
 
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {

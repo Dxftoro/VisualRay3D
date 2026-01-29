@@ -10,10 +10,21 @@ namespace vray {
 
 	struct BodySyncData {
 		rp3d::RigidBody* body;
-		bool synchronized;
+		entt::entity entity;
 	};
 
 	using BodyTableIterator = std::unordered_map<entt::entity, BodySyncData>::iterator;
+
+	class RaycastCallback : public rp3d::RaycastCallback {
+	private:
+		std::optional<RaycastResult> lastRaycastResult;
+
+	public:
+		RaycastCallback() : lastRaycastResult(std::nullopt) {}
+
+		virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) override;
+		std::optional<RaycastResult>& getLastResult() { return lastRaycastResult; }
+	};
 
 	class Rp3dPhysics : public IPhysics {
 	private:
@@ -29,17 +40,20 @@ namespace vray {
 		//void onEntityAdded(entt::registry& world, entt::entity entity);
 		BodyTableIterator createPhysicsBody(entt::entity entity);
 
-		static rp3d::Vector3 glmToVec3(const glm::vec3& vec);
-		static rp3d::Quaternion glmToQuat(const glm::quat& quat);
-		static glm::vec3 vec3ToGlm(const rp3d::Vector3& vec);
-		static glm::quat quatToGlm(const rp3d::Quaternion& quat);
-
 	public:
 		Rp3dPhysics(entt::registry& world);
 
 		virtual void update(float deltaTime) override;
+		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& end) override;
+		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& dir, float range) override;
+
 		rp3d::DebugRenderer& getDebugRenderer() const;
 		rp3d::PhysicsWorld* getPhysicsWorld() const;
+
+		static rp3d::Vector3 glmToVec3(const glm::vec3& vec);
+		static rp3d::Quaternion glmToQuat(const glm::quat& quat);
+		static glm::vec3 vec3ToGlm(const rp3d::Vector3& vec);
+		static glm::quat quatToGlm(const rp3d::Quaternion& quat);
 	};
 
 }
