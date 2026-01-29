@@ -83,6 +83,8 @@ namespace vray {
 		const glm::vec3& getPosition() const { return position; }
 		const glm::vec3& getRotation() const { return rotation; }
 
+		void calculateFront(glm::vec3& inFront);
+
 		bool isActive() const { return active; }
 	};
 
