@@ -184,7 +184,11 @@ namespace vray {
 		switch (evt.getType()) {
 		case EventType::WINDOW_RESIZE: {
 			WindowResizeEvent& resizeEvt = dynamic_cast<WindowResizeEvent&>(evt);
-			glViewport(0, 0, resizeEvt.getWidth(), resizeEvt.getHeight());
+			int width = resizeEvt.getWidth();
+			int height = resizeEvt.getHeight();
+
+			camera->setProjectionBorders(width, height);
+			glViewport(0, 0, width, height);
 			resizeEvt.dump();
 			break;
 		}

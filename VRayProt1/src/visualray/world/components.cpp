@@ -51,14 +51,15 @@ namespace vray {
 		this->normalMatrix = normalMatrix;
 	}
 
-	CompCamera::CompCamera(float fov, float width, float height, float near, float far)
-		: projectionMatrix(glm::perspectiveFov(glm::radians(fov), width, height, near, far)),
-		position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false) {
+	CompCamera::CompCamera(float _fov, float width, float height, float _near, float _far)
+		:	fov(_fov), near(_near), far(_far),
+			projectionMatrix(glm::perspectiveFov(glm::radians(_fov), width, height, _near, _far)),
+			position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false) {
 
 		viewMatrix = glm::lookAt(position, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
-	void CompCamera::updateMatrices() {
+	void CompCamera::updateView() {
 		glm::vec3 front;
 		front.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
 		front.y = sin(glm::radians(rotation.y));
@@ -70,15 +71,19 @@ namespace vray {
 
 	void CompCamera::setViewMatrix(const glm::mat4& viewMatrix) {
 		this->viewMatrix = viewMatrix;
-		updateMatrices();
+		updateView();
 	}
 	void CompCamera::setPosition(const glm::vec3& position) {
 		this->position = position;
-		updateMatrices();
+		updateView();
 	}
 	void CompCamera::setRotation(const glm::vec3& rotation) {
 		this->rotation = rotation;
-		updateMatrices();
+		updateView();
+	}
+
+	void CompCamera::setProjectionBorders(float width, float height) {
+		projectionMatrix = glm::perspectiveFov(glm::radians(fov), width, height, near, far);
 	}
 
 	void CompPointLight::mergeColor(const glm::vec3& color) {

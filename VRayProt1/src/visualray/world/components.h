@@ -64,8 +64,9 @@ namespace vray {
 
 		/* Camera body data */
 		glm::vec3 position, rotation;
+		float fov, near, far;
 
-		void updateMatrices();
+		void updateView();
 
 	public:
 		CompCamera(float fov, float width, float height, float near, float far);
@@ -75,6 +76,7 @@ namespace vray {
 		void setProjectionMatrix(const glm::mat4& projectionMatrix) { this->projectionMatrix = projectionMatrix; }
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
+		void setProjectionBorders(float width, float height);
 
 		const glm::mat4& getViewMatrix() const { return viewMatrix; }
 		const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }

@@ -60,7 +60,8 @@ namespace vray {
         void onEvent(Event& evt);
 
         void setCamera(CompCamera* camera);
-        CompCamera*& getCamera() { return camera; }
+        CompCamera* getCamera() const { return camera; }
+        Window* getCurrentWindow() const { return currentWindow; }
 
         void updateDebugPrimitives(const std::vector<float>& vertexData,
             const std::vector<int>& elements);

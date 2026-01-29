@@ -217,9 +217,8 @@ public:
 			.mass = 10.0f
 		};
 
-		camera = &game.world.emplace<vray::CompCamera>(player, vray::CompCamera(90.0f,
-			getWindow()->getWidth(),
-			getWindow()->getHeight(), 0.1f, 300.0f));
+		camera = &game.world.emplace<vray::CompCamera>(player,
+			engine.cameraSystem.createCamera(90.0f, 0.1f, 300.0f));
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
 		engine.cameraSystem.setActiveCamera(camera);
 
