@@ -137,7 +137,7 @@ namespace vray {
 	std::optional<RaycastResult> Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& dir, float range) {
 		RaycastCallback callback;
 		physicsWorld->raycast({ glmToVec3(start), glmToVec3(start + (dir * range)) }, &callback);
-		return std::nullopt;
+		return callback.getLastResult();
 	}
 
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {

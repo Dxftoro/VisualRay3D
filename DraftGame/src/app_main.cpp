@@ -110,6 +110,24 @@ private:
 		}
 	}
 
+	inline void handleRaycast(vray::Event& evt) {
+		vray::InputService& inputService = engine.inputService;
+		
+		if (evt.getType() == vray::MOUSE_CLICK) {
+			vray::MouseClickEvent& mouseEvent = dynamic_cast<vray::MouseClickEvent&>(evt);
+			if (mouseEvent.getMouseButtonCode() != VR_MOUSE_BUTTON_1) return;
+
+			glm::vec3 cameraFront;
+			camera->calculateFront(cameraFront);
+
+			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
+			if (!result) return;
+			
+			VR_LOGINFO(std::to_string((uint32_t)result->hitEntity));
+			engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+		}
+	}
+
 	void spawnCube(const glm::vec3& position) {
 		entt::entity cube = game.world.create();
 		
@@ -254,6 +272,7 @@ public:
 	inline void onEvent(vray::Event& evt) { 
 		handleRotation(evt);
 		handleMouseUnlock(evt);
+		handleRaycast(evt);
 	}
 };
 
