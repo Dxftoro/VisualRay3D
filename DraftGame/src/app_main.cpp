@@ -10,6 +10,7 @@ private:
 	entt::entity player, teapot, plathform, someLight;
 	vray::CompCamera* camera;
 
+	bool onGround;
 	float prevAngle, amplitude, frequency, timeAccumulator;
 	
 	inline void moveRotated(glm::vec3& cameraPosition, const float angle, const float moveSpeed) {
@@ -66,6 +67,46 @@ private:
 		}
 
 		camera->setPosition(cameraPosition);
+	}
+
+	inline void handleKeysGrounded() {
+		vray::InputService& inputService = engine.inputService;
+		vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
+		glm::vec3 position = transform.getPosition();
+
+		static float moveSpeed = 10.0f;
+		float currentAngle = glm::radians(camera->getRotation().x);
+		
+		glm::vec3 velocity(0.0f);
+		if (inputService.keyPressed(VR_KEY_W)) {
+			moveRotated(velocity, currentAngle, moveSpeed);
+		}
+		if (inputService.keyPressed(VR_KEY_S)) {
+			moveRotated(velocity, currentAngle + glm::pi<float>(), moveSpeed);
+		}
+		if (inputService.keyPressed(VR_KEY_A)) {
+			moveRotated(velocity, currentAngle - glm::pi<float>() / 2, moveSpeed);
+		}
+		if (inputService.keyPressed(VR_KEY_D)) {
+			moveRotated(velocity, currentAngle + glm::pi<float>() / 2, moveSpeed);
+		}
+
+		if (inputService.keyPressed(VR_KEY_SPACE) && onGround) {
+			velocity.y += moveSpeed * deltaTime();
+		}
+		if (!onGround) {
+			velocity.y -= 9.8f * deltaTime();
+		}
+
+		position += velocity;
+		transform.setPosition(position);
+		camera->setPosition(position + glm::vec3(0.0f, 4.0f, 0.0f));
+	}
+
+	inline void detectGround() {
+		const glm::vec3& position = game.world.get<vray::CompTransform>(player).getPosition();
+		auto result = engine.physics->raycast(position + glm::vec3(0.0f, 2.0f, 0.0f), position);
+		onGround = (result != std::nullopt);
 	}
 
 	inline void handleRotation(vray::Event& evt) {
@@ -219,6 +260,7 @@ public:
 		frequency = 0.5f;
 		timeAccumulator = 0.0f;
 
+		onGround = true;
 		player = game.world.create();
 		plathform = game.world.create();
 
@@ -235,6 +277,10 @@ public:
 			.mass = 10.0f
 		};
 
+		vray::CompTransform playerTransform;
+		playerTransform.setPosition({0.0f, 40.0f, 0.0f});
+
+		game.world.emplace<vray::CompTransform>(player, playerTransform);
 		camera = &game.world.emplace<vray::CompCamera>(player,
 			engine.cameraSystem.createCamera(90.0f, 0.1f, 300.0f));
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
@@ -260,7 +306,8 @@ public:
 	~DraftGame() {}
 
 	inline void update() override {
-		handleKeys();
+		detectGround();
+		handleKeysGrounded();
 
 		//vray::CompTransform& transform = world.get<vray::CompTransform>(teapot);
 
