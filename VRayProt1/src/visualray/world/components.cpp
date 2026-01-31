@@ -61,12 +61,7 @@ namespace vray {
 
 	void CompCamera::updateView() {
 		glm::vec3 front;
-		//front.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
-		//front.y = sin(glm::radians(rotation.y));
-		//front.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
-		//front = glm::normalize(front);
 		calculateFront(front);
-
 		viewMatrix = glm::lookAt(position, position + front, glm::vec3(0.0f, 1.0f, 0.0f)); // !!!
 	}
 
