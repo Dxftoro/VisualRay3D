@@ -19,13 +19,9 @@ struct PlayerController {
 
 	void calculateDirections(vray::CompCamera* camera) {
 		float yaw = glm::radians(camera->getRotation().x);
-		assert(!std::isnan(yaw) || "Yaw is nan!");
 
 		forward = glm::vec3(cos(yaw), 0.0f, sin(yaw)); // !!!
 		right = glm::vec3(-sin(yaw), 0.0f, cos(yaw));
-
-		assert(!std::isnan(forward.x) && !std::isnan(forward.z));
-		assert(!std::isnan(right.x) && !std::isnan(right.z));
 	}
 
 	void accelerate(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
@@ -37,12 +33,10 @@ struct PlayerController {
 		float accelSpeed = acceleration * wishSpeed * deltaTime;
 		if (accelSpeed > addSpeed) accelSpeed = addSpeed;
 
-		assert(!std::isnan(accelSpeed) || "accelSpeed is nan!");
 		velocity += wishDir * accelSpeed;
 	}
 
 	void accelerateAir(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
-		//wishSpeed = std::min(glm::length(wishDir), 1.07f);
 		float currentSpeed = glm::dot(velocity, wishDir);
 		float addSpeed = wishSpeed - currentSpeed;
 
@@ -51,7 +45,6 @@ struct PlayerController {
 		float accelSpeed = airAcceleration * wishSpeed * deltaTime;
 		if (accelSpeed > addSpeed) accelSpeed = addSpeed;
 		
-		assert(!std::isnan(accelSpeed) || "accelSpeed is nan!");
 		velocity += wishDir * accelSpeed;
 	}
 
@@ -73,6 +66,15 @@ struct PlayerController {
 		velocity *= newSpeed;
 	}
 
+	inline void jump() {
+		verticalVelocity = jumpPower;
+		onGround = false;
+	}
+
+	inline void fall(float deltaTime) {
+		verticalVelocity -= gravity * deltaTime;
+	}
+
 };
 
 class DraftGame : public vray::Game {
@@ -91,7 +93,7 @@ private:
 		position.z += sin(angle) * moveSpeed * deltaTime();
 	}
 
-	inline void handleKeys() {
+	/*inline void handleKeys() {
 		vray::InputService& inputService = engine.inputService;
 		glm::vec3 cameraPosition = camera->getPosition();
 		static float moveSpeed = 10.0f;
@@ -140,7 +142,7 @@ private:
 		}
 
 		camera->setPosition(cameraPosition);
-	}
+	}*/
 
 	inline void handleKeysGrounded() {
 		vray::InputService& inputService = engine.inputService;
@@ -178,14 +180,11 @@ private:
 		if (pc.onGround) pc.accelerate(wishDir, wishSpeed, deltaTime());
 		else pc.accelerateAir(wishDir, wishSpeed, deltaTime());
 
-		static float verticalVelocity = 0.0f;
-
 		if (inputService.keyPressed(VR_KEY_SPACE) && pc.onGround) {
-			pc.verticalVelocity = pc.jumpPower;
-			pc.onGround = false;
+			pc.jump();
 		}
 		if (!pc.onGround) {
-			pc.verticalVelocity -= pc.gravity * deltaTime();
+			pc.fall(deltaTime());
 		}
 		else pc.verticalVelocity = 0.0f;
 
@@ -201,11 +200,6 @@ private:
 		auto result = engine.physics->raycast(position + glm::vec3(0.0f, 2.0f, 0.0f), position);
 		pc.onGround = (result != std::nullopt);
 	}
-
-	//inline void returnPlayerToCenter() {
-	//	vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
-	//	transform.setPosition({ 0.0f, 20.0f, 0.0f });
-	//}
 
 	inline void handleRotation(vray::Event& evt) {
 		static glm::vec2 mouseBase(getWindow()->getWidth() * 0.5f, getWindow()->getHeight() * 0.5f);

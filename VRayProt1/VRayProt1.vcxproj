@@ -13,6 +13,8 @@
   <ItemGroup>
     <ClCompile Include="src\visualray\game.cpp" />
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
+    <ClCompile Include="src\visualray\layer_service\debugger.cpp" />
+    <ClCompile Include="src\visualray\layer_service\fps_counter.cpp" />
     <ClCompile Include="src\visualray\layer_service\imgui_layer.cpp" />
     <ClCompile Include="src\visualray\layer_service\layer_stack.cpp" />
     <ClCompile Include="src\visualray\logger.cpp" />
@@ -59,6 +61,8 @@
     <ClInclude Include="src\visualray\input_codes.h" />
     <ClInclude Include="src\visualray\input_service\input_service.h" />
     <ClInclude Include="src\visualray\kernel.h" />
+    <ClInclude Include="src\visualray\layer_service\debugger.h" />
+    <ClInclude Include="src\visualray\layer_service\fps_counter.h" />
     <ClInclude Include="src\visualray\layer_service\imgui_layer.h" />
     <ClInclude Include="src\visualray\layer_service\layer_stack.h" />
     <ClInclude Include="src\visualray\logger.h" />
@@ -177,6 +181,9 @@
     <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
       <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\visualray\layer_service\debugger.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

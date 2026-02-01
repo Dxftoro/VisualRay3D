@@ -79,7 +79,7 @@ namespace vray {
 		ImGui::End();
 
 		//else {
-		//	ImGui::ShowDemoWindow();
+			ImGui::ShowDemoWindow();
 		//}
 
 		ImGui::Render();

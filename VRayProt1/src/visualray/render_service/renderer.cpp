@@ -24,9 +24,9 @@ namespace vray {
 			throw std::runtime_error("Can't load OpenGL!");
 		}
 
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(rendererDebugCallback, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+		//glEnable(GL_DEBUG_OUTPUT);
+		//glDebugMessageCallback(rendererDebugCallback, nullptr);
+		//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
 		camera = new CompCamera(90,
 			currentWindow->getWidth(),
@@ -157,6 +157,7 @@ namespace vray {
 			RenderRequest& request = renderQueue.front();
 			CompTransform* transform = request.transform;
 
+			/* FIXME: normal matrix recalculates only if model matrix is changed, but the view updates too */
 			if (transform->isDirty()) {
 				transform->setNormalMatrix(
 					glm::mat3(

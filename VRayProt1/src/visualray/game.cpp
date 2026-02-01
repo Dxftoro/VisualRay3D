@@ -6,6 +6,7 @@
 
 #include "event_service/game_events.h"
 #include "layer_service/imgui_layer.h"
+#include "layer_service/debugger.h"
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
@@ -31,7 +32,8 @@ namespace vray {
 		);
 
 		engineContext.inputService = InputService(engineContext.window.get());
-		pushOverlay(new ImGuiLayer(engineContext.window.get()));
+		engineContext.debugger = new Debugger(engineContext.window.get());
+		//pushOverlay(new ImGuiLayer(engineContext.window.get()));
 
 		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable>);
 		
@@ -56,6 +58,8 @@ namespace vray {
 		delete engineContext.physics;
 		VR_ENGINE_LOGINFO("Clearing physics debug system");
 		delete engineContext.physicsDebugSystem;
+		VR_ENGINE_LOGINFO("Clearing debugger");
+		delete engineContext.debugger;
 	}
 
 	inline void Game::run() {
@@ -87,7 +91,8 @@ namespace vray {
 			engineContext.renderer->update(deltaTime());
 
 			engineContext.window->onUpdate();
-			engineContext.layerStack.update();
+			//engineContext.layerStack.update();
+			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
 
 			std::this_thread::sleep_until(frameEnd);

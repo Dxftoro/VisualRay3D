@@ -16,9 +16,12 @@
 
 namespace vray {
 
+	class Debugger;
+
 	struct VRAYLIB EngineContext {
 		std::unique_ptr<Window> window;
-		LayerStack layerStack;
+		//LayerStack layerStack;
+		Debugger* debugger;
 		Renderer* renderer;
 		IPhysics* physics;
 		IPhysicsDebugSystem* physicsDebugSystem;
@@ -71,11 +74,11 @@ namespace vray {
 		EngineContext& getEngineContext() { return engineContext; }
 		GameContext& getGameContext() { return gameContext; }
 
-		inline void pushLayer(Layer* layer) { engineContext.layerStack.pushLayer(layer); }
-		inline void pushOverlay(Layer* overlay) { engineContext.layerStack.pushOverlay(overlay); }
+		//inline void pushLayer(Layer* layer) { engineContext.layerStack.pushLayer(layer); }
+		//inline void pushOverlay(Layer* overlay) { engineContext.layerStack.pushOverlay(overlay); }
 
-		inline void popLayer(Layer* layer) { engineContext.layerStack.popLayer(); }
-		inline void popOverlay(Layer* overlay) { engineContext.layerStack.popOverlay(); }
+		//inline void popLayer(Layer* layer) { engineContext.layerStack.popLayer(); }
+		//inline void popOverlay(Layer* overlay) { engineContext.layerStack.popOverlay(); }
 
 		static float deltaTime();
 		static float getFpsLimit() { return fpsLimit; };
