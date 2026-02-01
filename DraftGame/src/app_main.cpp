@@ -5,16 +5,17 @@
 struct PlayerController {
 	glm::vec3 velocity = glm::vec3(0.0f);
 	glm::vec3 forward = glm::vec3(0.0f), right = glm::vec3(0.0f);
+	float verticalVelocity = 0.0f;
 
 	bool onGround = true;
 
-	float maxSpeed = 10.0f;
-	float acceleration = 2.0f;
-	float airAcceleration = 0.5f;
-	float friction = 0.5f;
-	float stopSpeed = 3.0f;
-	float jumpForce = 6.0f;
-	float gravity = 16.8f;
+	float maxSpeed = 11.4f;
+	float acceleration = 10.0f;
+	float airAcceleration = 0.3f;
+	float friction = 3.0f;
+	float stopSpeed = 1.57f;
+	float jumpPower = 9.64f;
+	float gravity = 28.6f;
 
 	void calculateDirections(vray::CompCamera* camera) {
 		float yaw = glm::radians(camera->getRotation().x);
@@ -41,6 +42,7 @@ struct PlayerController {
 	}
 
 	void accelerateAir(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
+		//wishSpeed = std::min(glm::length(wishDir), 1.07f);
 		float currentSpeed = glm::dot(velocity, wishDir);
 		float addSpeed = wishSpeed - currentSpeed;
 
@@ -79,7 +81,7 @@ private:
 	vray::GameContext& game;
 	PlayerController pc;
 
-	entt::entity player, teapot, plathform, someLight;
+	entt::entity player, teapot, someLight;
 	vray::CompCamera* camera;
 
 	float prevAngle, amplitude, frequency, timeAccumulator;
@@ -144,7 +146,11 @@ private:
 		vray::InputService& inputService = engine.inputService;
 		vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
 		
-		if (inputService.keyPressed(VR_KEY_R)) transform.setPosition({ 0.0f, 20.0f, 0.0f });
+		if (inputService.keyPressed(VR_KEY_R)) {
+			pc.velocity = glm::vec3(0.0f);
+			pc.verticalVelocity = 0.0f;
+			transform.setPosition({ 0.0f, 20.0f, 0.0f });
+		}
 		
 		glm::vec3 position = transform.getPosition();
 
@@ -175,15 +181,15 @@ private:
 		static float verticalVelocity = 0.0f;
 
 		if (inputService.keyPressed(VR_KEY_SPACE) && pc.onGround) {
-			verticalVelocity = pc.jumpForce;
+			pc.verticalVelocity = pc.jumpPower;
 			pc.onGround = false;
 		}
 		if (!pc.onGround) {
-			verticalVelocity -= pc.gravity * deltaTime();
+			pc.verticalVelocity -= pc.gravity * deltaTime();
 		}
-		else verticalVelocity = 0.0f;
+		else pc.verticalVelocity = 0.0f;
 
-		pc.velocity.y = verticalVelocity * deltaTime();
+		pc.velocity.y = pc.verticalVelocity * deltaTime();
 		position += pc.velocity;
 
 		transform.setPosition(position);
@@ -305,16 +311,66 @@ private:
 		this->teapot = teapot;
 	}
 
-	//void spawnPlatformGrid(const glm::vec3& center, float cellSize, int size) {
-	//	int cellCount = size * size;
-	//	glm::vec3 cellPosition = {
-	//		center.x - (cellSize)
-	//	};
+	void spawnPlatform(const glm::vec3& position, float size) {
+		entt::entity platform = game.world.create();
 
-	//	for (int i = 0; i < cellCount; i++) {
+		vray::CompTransform transform;
+		//transform.setPosition({ 0.0f, 5.0f, 0.0f });
+		transform.setPosition(position);
+		transform.setScale({ size, 1.0f, size });
 
-	//	}
-	//}
+		vray::CompHitbox hitbox {
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::STATIC,
+			.size = transform.getScale(),
+			.radius = 10,
+			.mass = 10.0f
+		};
+
+		game.world.emplace<vray::CompTransform>(platform, transform);
+		game.world.emplace<vray::CompHitbox>(platform, hitbox);
+		game.world.emplace<vray::CompRenderable>(platform,
+			vray::CompRenderable(game.meshes.get("cube"), game.textures.get("default")));
+	}
+
+	void spawnPlatformGrid(const glm::vec3& center, float _cellSize, int size) {
+		int cellCount = size * size;
+		float cellSize = _cellSize + 2.0f;
+
+		const glm::vec3 cellStartPosition = {
+			center.x - (cellSize * (size / 2)) + cellSize * 0.5,
+			center.y,
+			center.z - (cellSize * (size / 2)) + cellSize * 0.5
+		};
+
+		VR_LOGINFO(std::to_string(cellStartPosition.x) + ", " + std::to_string(cellStartPosition.z));
+
+		glm::vec3 cellPosition = cellStartPosition;
+		spawnPlatform(cellPosition, size);
+
+		for (int i = 0; i <= cellCount - 1; i++) {			
+			if (i > 0 && (i + 1) % size == 0) {
+				VR_LOGINFO(std::to_string(i));
+				cellPosition.x = cellStartPosition.x;
+				cellPosition.z += cellSize;
+			}
+			else cellPosition.x += cellSize;
+
+			spawnPlatform(cellPosition, size);
+		}
+	}
+
+	void spawnPlatformLine(const glm::vec3& start, float _cellSize, int size) {
+		int cellCount = size * size;
+		float cellSize = _cellSize + 2.0f;
+
+		glm::vec3 cellPosition = start;
+
+		for (int i = 0; i < cellCount; i++) {
+			spawnPlatform(cellPosition, size);
+			cellPosition.x += cellSize;
+		}
+	}
 
 	entt::entity spawnLightMarker(const glm::vec3& position, const glm::vec3& color) {
 		entt::entity lightMarker = game.world.create();
@@ -364,12 +420,11 @@ public:
 
 		pc.onGround = true;
 		player = game.world.create();
-		plathform = game.world.create();
 
 		vray::CompTransform plathformTransform;
 		
 		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
-		plathformTransform.setScale({ 20.0f, 1.0f, 20.0f });
+		plathformTransform.setScale({ 10.0f, 1.0f, 10.0f });
 
 		vray::CompHitbox plathformHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
@@ -388,10 +443,6 @@ public:
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
 		engine.cameraSystem.setActiveCamera(camera);
 
-		game.world.emplace<vray::CompTransform>(plathform, plathformTransform);
-		game.world.emplace<vray::CompHitbox>(plathform, plathformHitbox);
-		game.world.emplace<vray::CompRenderable>(plathform, vray::CompRenderable(cubeMesh, defaultTexture));
-
 		//for (int i = 0; i < 15; i++) {
 		//	spawnCube({
 		//		vray::frand(-5.0f, 5.0f),
@@ -402,6 +453,7 @@ public:
 		//spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		//VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
+		spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		someLight = spawnLightMarker({ 3.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		//entt::entity light1 = spawnLightMarker({ -3.0f, 15.0f, -10.0f }, { 1.0f, 0.3f, 0.4f });
 	}
@@ -418,10 +470,13 @@ public:
 		//	amplitude * glm::sin(timeAccumulator * frequency)});
 	}
 
-	inline void onEvent(vray::Event& evt) { 
+	inline void onEvent(vray::Event& evt) {
 		handleRotation(evt);
 		handleMouseUnlock(evt);
 		handleRaycast(evt);
+
+		const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
+		//VR_LOGINFO(std::to_string(playerPos.x) + ", " + std::to_string(playerPos.z));
 	}
 };
 
