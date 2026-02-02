@@ -189,6 +189,7 @@ private:
 		}
 		else pc.verticalVelocity = 0.0f;
 
+		playerSpeed = glm::length(pc.velocity);
 		pc.velocity.y = pc.verticalVelocity * deltaTime();
 		position += pc.velocity;
 
@@ -413,6 +414,7 @@ public:
 		playerSpeed = 0.0f;
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
+		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
 		vray::CompTransform plathformTransform;
 		
 		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
@@ -442,7 +444,7 @@ public:
 		//		vray::frand(-5.0f, 5.0f)});
 		//}
 
-		//spawnTeapot({ 0.0f, 20.0f, 0.0f });
+		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		//VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
 		spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);

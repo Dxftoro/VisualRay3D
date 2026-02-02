@@ -157,8 +157,7 @@ namespace vray {
 			RenderRequest& request = renderQueue.front();
 			CompTransform* transform = request.transform;
 
-			/* FIXME: normal matrix recalculates only if model matrix is changed, but the view updates too */
-			if (transform->isDirty()) {
+			if (camera->isViewDirty() || transform->isDirty()) {
 				transform->setNormalMatrix(
 					glm::mat3(
 						glm::transpose(
@@ -179,6 +178,8 @@ namespace vray {
 
 			renderQueue.pop();
 		}
+
+		camera->setViewDirty(false);
 	}
 
 	void Renderer::onEvent(Event& evt) {

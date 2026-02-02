@@ -67,19 +67,23 @@ namespace vray {
 
 	void CompCamera::setViewMatrix(const glm::mat4& viewMatrix) {
 		this->viewMatrix = viewMatrix;
-		updateView();
 	}
 	void CompCamera::setPosition(const glm::vec3& position) {
 		this->position = position;
-		updateView();
+		this->viewDirty = true;
 	}
 	void CompCamera::setRotation(const glm::vec3& rotation) {
 		this->rotation = rotation;
-		updateView();
+		this->viewDirty = true;
 	}
 
 	void CompCamera::setProjectionBorders(float width, float height) {
 		projectionMatrix = glm::perspectiveFov(glm::radians(fov), width, height, near, far);
+	}
+
+	const glm::mat4& CompCamera::getViewMatrix() {
+		updateView();
+		return viewMatrix;
 	}
 
 	void CompCamera::calculateFront(glm::vec3& front) {

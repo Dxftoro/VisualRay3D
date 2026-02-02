@@ -57,7 +57,7 @@ namespace vray {
 
 	struct VRAYLIB CompCamera {
 	private:
-		bool active;
+		bool active, viewDirty;
 
 		/* Observing data */
 		glm::mat4 viewMatrix, projectionMatrix;
@@ -77,8 +77,9 @@ namespace vray {
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
 		void setProjectionBorders(float width, float height);
+		void setViewDirty(bool viewDirty) { this->viewDirty = viewDirty; }
 
-		const glm::mat4& getViewMatrix() const { return viewMatrix; }
+		const glm::mat4& getViewMatrix();
 		const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }
 		const glm::vec3& getPosition() const { return position; }
 		const glm::vec3& getRotation() const { return rotation; }
@@ -86,6 +87,7 @@ namespace vray {
 		void calculateFront(glm::vec3& inFront);
 
 		bool isActive() const { return active; }
+		bool isViewDirty() const { return viewDirty; }
 	};
 
 	struct VRAYLIB CompHitbox {
