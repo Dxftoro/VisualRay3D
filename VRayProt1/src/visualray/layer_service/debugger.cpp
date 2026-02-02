@@ -15,6 +15,33 @@
 
 namespace vray {
 
+	template<>
+	void DebugDisplay<int>::display(const std::string& name, const int* data) {
+		ImGui::Text(name.c_str(), *data);
+	}
+
+	template<>
+	void DebugDisplay<float>::display(const std::string& name, const float* data) {
+		ImGui::Text(name.c_str(), *data);
+
+	}
+
+	template<>
+	void VRAYLIB DebugDisplay<double>::display(const std::string& name, const double* data) {
+		ImGui::Text(name.c_str(), *data);
+
+	}
+
+	template<>
+	void DebugDisplay<bool>::display(const std::string& name, const bool* data) {
+		ImGui::Text(name.c_str(), *data);
+	}
+
+	template<>
+	void DebugDisplay<glm::vec3>::display(const std::string& name, const glm::vec3* data) {
+		ImGui::Text(name.c_str(), data->x, data->y, data->z);
+	}
+
 	Debugger::Debugger(Window* _window) : window(_window), time(glfwGetTime()), open(true) {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -51,14 +78,14 @@ namespace vray {
 		io.DeltaTime = (float)(newTime - time);
 		time = newTime;
 
-		ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
+		//ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
+		//ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
 
 		ImGui::Begin("Debug", &open);
 		ImGui::Text("FPS: %d", fpsCounter.getFps());
 
 		for (auto& it : varTable) {
-			ImGui::Text(it.first.c_str(), *(int*)it.second);
+			it.second.display(it.first.c_str(), it.second.data);
 		}
 
 		ImGui::End();

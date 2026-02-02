@@ -471,9 +471,4 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="src\visualray\layer_service\debugger.inl">
-      <Filter>Файлы заголовков</Filter>
-    </None>
-  </ItemGroup>
 </Project>

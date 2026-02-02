@@ -7,11 +7,44 @@ namespace vray {
 
 	class Window;
 
+	template <typename T>
+	class VRAYLIB DebugDisplay {
+	public:
+		static void display(const std::string& name, const T* data);
+	};
+
+	class DebugTypeRegistry {
+	private:
+		template <typename T>
+		struct TypeInfo {
+			using DisplayFunc = void(*)(const std::string&, const T*);
+			static constexpr DisplayFunc display = &DebugDisplay<T>::display;
+		};
+
+	public:
+		template <typename T>
+		static auto getDisplayFunc() { return TypeInfo<T>::display; }
+	};
+
+	struct DebugType {
+		const void* data;
+		void (*display)(const std::string&, const void*);
+
+		DebugType() : data(nullptr), display(nullptr) {}
+
+		template <typename T>
+		DebugType(const T* _data) : data(_data) {
+			display = [](const std::string& name, const void* ptr) {
+				DebugDisplay<T>::display(name, (const T*)ptr);
+			};
+		}
+	};
+
 	class VRAYLIB Debugger {
 	private:
 		Window* window;
 		FpsCounter fpsCounter;
-		std::unordered_map<std::string, void*> varTable;
+		std::unordered_map<std::string, DebugType> varTable;
 		float time;
 		bool open;
 
@@ -20,10 +53,10 @@ namespace vray {
 		~Debugger();
 
 		template <typename T>
-		T* getVariable(const std::string& name);
+		const T* getVariable(const std::string& name) const;
 
 		template <typename T> 
-		void addVariable(const std::string& name, T* value);
+		void addVariable(const std::string& name, const T* value);
 		void removeVariable(const std::string& name);
 
 		void update();
@@ -31,5 +64,17 @@ namespace vray {
 
 		bool isOpen() const { return open; }
 	};
+
+	template <typename T>
+	const T* Debugger::getVariable(const std::string& name) const {
+		auto it = varTable.find(name);
+		if (it != varTable.end()) return (T*)varTable[name];
+		else return nullptr;
+	}
+
+	template <typename T>
+	void Debugger::addVariable(const std::string& name, const T* value) {
+		varTable[name] = DebugType(value);
+	}
 
 }

@@ -182,9 +182,6 @@
       <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="src\visualray\layer_service\debugger.inl" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

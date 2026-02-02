@@ -1,6 +1,7 @@
 #include <visualray.h>
 #include <visualray/event_service/keyboard_events.h>
 #include <visualray/layer_service/imgui_layer.h>
+#include <visualray/layer_service/debugger.h>
 
 struct PlayerController {
 	glm::vec3 velocity = glm::vec3(0.0f);
@@ -86,7 +87,7 @@ private:
 	entt::entity player, teapot, someLight;
 	vray::CompCamera* camera;
 
-	float prevAngle, amplitude, frequency, timeAccumulator;
+	float playerSpeed;
 	
 	inline void moveRotated(glm::vec3& position, const float angle, const float moveSpeed) {
 		position.x += cos(angle) * moveSpeed * deltaTime();
@@ -407,14 +408,11 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 
-		prevAngle = 0.0f;
-		amplitude = 2.0f;
-		frequency = 0.5f;
-		timeAccumulator = 0.0f;
-
 		pc.onGround = true;
 		player = game.world.create();
+		playerSpeed = 0.0f;
 
+		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		vray::CompTransform plathformTransform;
 		
 		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
