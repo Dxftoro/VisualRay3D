@@ -189,6 +189,8 @@ namespace vray {
 			int width = resizeEvt.getWidth();
 			int height = resizeEvt.getHeight();
 
+			if (!width || !height) return;
+
 			camera->setProjectionBorders(width, height);
 			glViewport(0, 0, width, height);
 			resizeEvt.dump();
