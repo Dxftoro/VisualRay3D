@@ -5,6 +5,8 @@
 #include "logservice.h"
 #include <GLFW/glfw3.h>
 
+#define VR_GLFW_WINDOW (GLFWwindow*)activeWindow->getHandlerPtr()
+
 namespace vray {
 
 	InputService::~InputService() {
@@ -13,22 +15,22 @@ namespace vray {
 	}
 
 	bool InputService::keyPressed(const int key) {
-		return glfwGetKey((GLFWwindow*)activeWindow->getHandlerPtr(), key);
+		return glfwGetKey(VR_GLFW_WINDOW, key);
 	}
 
 	bool InputService::mouseButtonPressed(const int mouseButton) {
-		return glfwGetMouseButton((GLFWwindow*)activeWindow->getHandlerPtr(), mouseButton);
+		return glfwGetMouseButton(VR_GLFW_WINDOW, mouseButton);
 	}
 
 	double InputService::getMouseX() {
 		double x, y;
-		glfwGetCursorPos((GLFWwindow*)activeWindow->getHandlerPtr(), &x, &y);
+		glfwGetCursorPos(VR_GLFW_WINDOW, &x, &y);
 		return x;
 	}
 
 	double InputService::getMouseY() {
 		double x, y;
-		glfwGetCursorPos((GLFWwindow*)activeWindow->getHandlerPtr(), &x, &y);
+		glfwGetCursorPos(VR_GLFW_WINDOW, &x, &y);
 		return y;
 	}
 
@@ -38,19 +40,32 @@ namespace vray {
 
 	void InputService::setMouseOnCenter() {
 		glfwSetCursorPos(
-			(GLFWwindow*)activeWindow->getHandlerPtr(),
+			VR_GLFW_WINDOW,
 			activeWindow->getWidth() / 2, activeWindow->getHeight() / 2
 		);
 	}
 
 	void InputService::setCursorMode(CursorMode mode) {
-		glfwSetInputMode((GLFWwindow*)activeWindow->getHandlerPtr(),
-			GLFW_CURSOR, (int)mode);
+		glfwSetInputMode(VR_GLFW_WINDOW, GLFW_CURSOR, (int)mode);
 		currentCursorMode = mode;
 	}
 
-	InputService::CursorMode InputService::getCursorMode() {
+	void InputService::setRawMouseInputEnabled(bool enabled) {
+		if (glfwRawMouseMotionSupported()) {
+			glfwSetInputMode(VR_GLFW_WINDOW, GLFW_RAW_MOUSE_MOTION, enabled ? GLFW_TRUE : GLFW_FALSE);
+			rawMouseInputEnabled = enabled;
+		}
+		else {
+			VR_ENGINE_LOGERROR("Raw mouse input is not supported by this platform!");
+		}
+	}
+
+	InputService::CursorMode InputService::getCursorMode() const {
 		return currentCursorMode;
+	}
+
+	bool InputService::isRawMouseInputEnabled() const {
+		return (glfwGetInputMode(VR_GLFW_WINDOW, GLFW_RAW_MOUSE_MOTION) == GLFW_TRUE);
 	}
 
 }

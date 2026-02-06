@@ -53,13 +53,19 @@ namespace vray {
 	private:
 		Window* activeWindow;
 		CursorMode currentCursorMode;
+		bool rawMouseInputEnabled;
 
 	public:
 		InputService()
-		:	activeWindow(nullptr), currentCursorMode(CursorMode::NORMAL) {}
+		:	activeWindow(nullptr),
+			currentCursorMode(CursorMode::NORMAL),
+			rawMouseInputEnabled(false) {}
+
 		InputService(Window* _activeWindow)
 		:	activeWindow(_activeWindow),
-			currentCursorMode(CursorMode::NORMAL) {}
+			currentCursorMode(CursorMode::NORMAL),
+			rawMouseInputEnabled(false) {}
+
 		~InputService();
 
 		bool keyPressed(const int key);
@@ -69,9 +75,12 @@ namespace vray {
 
 		void setMousePosition(double x, double y);
 		void setMouseOnCenter();
+		void setRawMouseInputEnabled(bool enabled);
 
 		void setCursorMode(CursorMode mode);
-		CursorMode getCursorMode();
+		CursorMode getCursorMode() const;
+
+		bool isRawMouseInputEnabled() const; 
 	};
 
 }

@@ -11,8 +11,8 @@ struct PlayerController {
 	bool onGround = true;
 
 	float maxSpeed = 11.4f;
-	float acceleration = 10.0f;
-	float airAcceleration = 0.3f;
+	float acceleration = 8.0f;
+	float airAcceleration = 1.0f;
 	float friction = 3.0f;
 	float stopSpeed = 1.57f;
 	float jumpPower = 9.64f;
@@ -37,7 +37,9 @@ struct PlayerController {
 		velocity += wishDir * accelSpeed;
 	}
 
-	void accelerateAir(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
+	void airAccelerate(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
+		if (wishSpeed > 0.3f) wishSpeed = 0.3f;
+
 		float currentSpeed = glm::dot(velocity, wishDir);
 		float addSpeed = wishSpeed - currentSpeed;
 
@@ -64,7 +66,8 @@ struct PlayerController {
 		}
 
 		float newSpeed = std::max(speed - drop, 0.0f) / speed;
-		velocity *= newSpeed;
+		velocity.x *= newSpeed;
+		velocity.z *= newSpeed;
 	}
 
 	inline void jump() {
@@ -164,22 +167,26 @@ private:
 		if (inputService.keyPressed(VR_KEY_D)) sideMove += 1.0f;
 
 		pc.calculateDirections(camera);
-		glm::vec3 wishVel = (pc.forward * forwardMove) + (pc.right * sideMove);
+		glm::vec3 wishVel = (pc.forward * forwardMove) + (pc.right * sideMove); wishVel.y = 0.0f;
 		glm::vec3 wishDir = glm::vec3(0.0f);
 		float wishSpeed = glm::length(wishVel);
-
-		if (wishSpeed > 0.0001f) {
-			wishDir = glm::normalize(wishVel);
-		}
 		
 		if (wishSpeed > pc.maxSpeed) {
 			wishVel *= pc.maxSpeed / wishSpeed;
 			wishSpeed = pc.maxSpeed;
 		}
 
+		if (wishSpeed > 0.0001f) {
+			wishDir = glm::normalize(wishVel);
+		}
+
 		pc.frict(deltaTime());
-		if (pc.onGround) pc.accelerate(wishDir, wishSpeed, deltaTime());
-		else pc.accelerateAir(wishDir, wishSpeed, deltaTime());
+		if (pc.onGround) {
+			pc.accelerate(wishDir, wishSpeed, deltaTime());
+		}
+		else {
+			pc.airAccelerate(wishDir, wishSpeed, deltaTime());
+		}
 
 		if (inputService.keyPressed(VR_KEY_SPACE) && pc.onGround) {
 			pc.jump();
@@ -254,6 +261,10 @@ private:
 
 			glm::vec3 cameraFront;
 			camera->calculateFront(cameraFront);
+
+			glm::vec3 start = camera->getPosition() + glm::vec3(0.0, -1.0f, 0.0f);
+			engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
+			engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
 
 			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
 			if (!result) return;
@@ -402,6 +413,7 @@ public:
 
 		vray::InputService& inputService = engine.inputService;
 		inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
+		inputService.setRawMouseInputEnabled(true);
 
 		vray::Mesh* teapotMesh = game.meshes.load("models/teapot.obj", "teapot");
 		vray::Mesh* cubeMesh = game.meshes.load("models/cube.obj", "cube");
@@ -415,6 +427,9 @@ public:
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
+		engine.debugger->addVariable("Forward: (%.3f, %.3f, %.3f)", &pc.forward);
+		engine.debugger->addVariable("Right: (%.3f, %.3f, %.3f)", &pc.right);
+
 		vray::CompTransform plathformTransform;
 		
 		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
@@ -447,8 +462,9 @@ public:
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		//VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
 
-		spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
-		someLight = spawnLightMarker({ 3.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
+		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
+		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
+		someLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		//entt::entity light1 = spawnLightMarker({ -3.0f, 15.0f, -10.0f }, { 1.0f, 0.3f, 0.4f });
 	}
 	~DraftGame() {}
