@@ -1,6 +1,7 @@
 #pragma once
 #include "kernel.h"
 #include <type_traits>
+#include <cassert>
 
 namespace vray {
 
@@ -52,14 +53,12 @@ namespace vray {
 		GlslFlexibleBuffer(GlslFlexibleBuffer&&) noexcept = delete;
 		GlslFlexibleBuffer& operator=(const GlslFlexibleBuffer&) = delete;
 
-		void increaseCapacity(size_t size);
-		void decreaseCapacity(size_t size);
-
 	public:
-		static constexpr size_t defaultExtent = 10;
+		static constexpr size_t defaultExtent = 30;
 
 		explicit GlslFlexibleBuffer(GlslUsage usage = GlslUsage::DYNAMIC_DRAW);
-		explicit GlslFlexibleBuffer(size_t initialSize, GlslUsage usage = GlslUsage::DYNAMIC_DRAW);
+		explicit GlslFlexibleBuffer(size_t size, GlslUsage usage = GlslUsage::DYNAMIC_DRAW, 
+									size_t extent = GlslFlexibleBuffer::defaultExtent);
 		~GlslFlexibleBuffer();
 
 		size_t getCapacity() const { return capacity; }
@@ -69,13 +68,14 @@ namespace vray {
 
 		inline size_t size() const { return getSize(); }
 
-		void setExtent(size_t extent) { this->extent = extent; }
 		void setUsage(GlslUsage usage) { this->usage = usage; }
 
 		void set(size_t index, const DataType& data);
 		DataType get(size_t index) const;
 		void push(const DataType& data);
 		void pop();
+
+		bool isEmpty() const { return (_size == 0); }
 	};
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
@@ -85,9 +85,11 @@ namespace vray {
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
-	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(size_t size_, GlslUsage usage) 
-		: _size(size_), extent(defaultExtent) {
-		capacity = _size > 0 ? _size : defaultExtent;
+	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(size_t size_, GlslUsage usage, size_t _extent) 
+		: _size(size_), extent(_extent) {
+		capacity = _size > 0
+					? extent * ((_size / extent) + (_size % extent))
+					: defaultExtent;
 		GlslBufferController::init(handle, BufferType, nullptr, capacity, usage);
 	}
 
@@ -110,22 +112,24 @@ namespace vray {
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	void GlslFlexibleBuffer<BufferType, DataType>::push(const DataType& data) {
-
+		if (_size >= capacity) {
+			capacity += extent;
+			GlslBufferController::resize(handle, BufferType, capacity, usage);
+		}
+		GlslBufferController::setSubData(handle, BufferType, &data, sizeof(DataType) * _size, sizeof(DataType));
+		_size++;
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	void GlslFlexibleBuffer<BufferType, DataType>::pop() {
+		assert(!isEmpty() || "Buffer is empty!");
 
-	}
+		if (_size - 1 <= capacity - extent) {
+			capacity -= extent;
+			GlslBufferController::resize(handle, BufferType, capacity, usage);
+		}
 
-	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
-	void GlslFlexibleBuffer<BufferType, DataType>::increaseCapacity(size_t size) {
-
-	}
-
-	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
-	void GlslFlexibleBuffer<BufferType, DataType>::decreaseCapacity(size_t size) {
-
+		_size--;
 	}
 
 }
