@@ -469,6 +469,8 @@ public:
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		someLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		entt::entity light1 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+
+		VR_LOGIMPORTANT("It's very important!");
 	}
 	~DraftGame() {}
 

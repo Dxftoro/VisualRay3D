@@ -18,7 +18,7 @@ namespace vray {
 		delete gameLogger;
 	}
 
-	inline Logger* vray::LogService::getGameLogger() { return gameLogger; }
-	inline Logger* vray::LogService::getEngineLogger() { return engineLogger; }
+	Logger* vray::LogService::getGameLogger() { return gameLogger; }
+	Logger* vray::LogService::getEngineLogger() { return engineLogger; }
 
 }

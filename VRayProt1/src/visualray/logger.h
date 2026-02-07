@@ -11,6 +11,7 @@
 #define VR_LOGGER_COLOR_RED					"\033[1;31m"
 #define VR_LOGGER_COLOR_GREEN				"\033[0;32m"
 #define VR_LOGGER_COLOR_YELLOW				"\033[0;33m"
+#define VR_LOGGER_COLOR_BLUE				"\033[1;34m"
 #define VR_LOGGER_COLOR_WHITE				"\033[0;37m"
 #define VR_LOGGER_COLOR_RESET				"\033[0m\n"
 
@@ -31,6 +32,7 @@ namespace vray {
 		inline void VRAYLIB logInfo(const std::string& message) const;
 		inline void VRAYLIB logWarn(const std::string& message) const;
 		inline void VRAYLIB logError(const std::string& message) const;
+		inline void VRAYLIB logImportant(const std::string& message) const;
 	};
 
 }
