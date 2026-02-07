@@ -26,6 +26,7 @@
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp" />
+    <ClCompile Include="src\visualray\render_service\billboard_system.cpp" />
     <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
     <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
@@ -77,8 +78,10 @@
     <ClInclude Include="src\visualray\physics_service\rp3d_debug_system.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_logger.h" />
     <ClInclude Include="src\visualray\physics_service\rp3d_physics.h" />
+    <ClInclude Include="src\visualray\render_service\billboard_system.h" />
     <ClInclude Include="src\visualray\render_service\buffer_layout.h" />
     <ClInclude Include="src\visualray\render_service\frustum_camera.h" />
+    <ClInclude Include="src\visualray\render_service\glsl_flexible_buffer.h" />
     <ClInclude Include="src\visualray\render_service\glsl_program.h" />
     <ClInclude Include="src\visualray\render_service\glsl_uniform_buffer.h" />
     <ClInclude Include="src\visualray\render_service\light_system.h" />

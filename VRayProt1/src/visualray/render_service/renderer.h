@@ -12,8 +12,8 @@
 //#include "vertex_array.h"
 #include "glsl_program.h"
 #include "frustum_camera.h"
-#include "render_request.h"
 #include "light_system.h"
+#include "billboard_system.h"
 
 #define VR_RENDERER_MAX_DEBUG_LINES     1000
 
@@ -23,6 +23,7 @@ namespace vray {
     struct CompCamera;
     struct CompVisualMaterial;
     struct CompPointLight;
+    class RenderRequest;
     class GlslUniformBuffer;
 
     class Renderer {
@@ -45,6 +46,7 @@ namespace vray {
 
         GlslUniformBuffer uboLight, uboMaterial;
         LightSystem lightSystem;
+
 
         bool initialCamera;
 

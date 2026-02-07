@@ -119,4 +119,9 @@ namespace vray {
 		bool deleted = false;
 	};
 
+	struct VRAYLIB CompBillboard {
+		glm::vec3 position;
+		Texture* texture;
+	};
+
 }

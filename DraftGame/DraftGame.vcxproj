@@ -95,6 +95,9 @@
     <ClCompile Include="src\app_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\billboard.frag" />
+    <None Include="shaders\billboard.geom" />
+    <None Include="shaders\billboard.vert" />
     <None Include="shaders\debug.frag" />
     <None Include="shaders\debug.vert" />
     <None Include="shaders\distortion.vert" />

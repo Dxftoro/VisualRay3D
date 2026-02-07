@@ -40,6 +40,8 @@ namespace vray {
 
 		void bind() const;
 		void unbind() const;
+
+		unsigned int getHandle() const { return handle; }
 	};
 
 }
