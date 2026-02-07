@@ -31,7 +31,7 @@ namespace vray {
 		static void bind(const GLuint handle, GLenum type);
 		static void unbind(GLenum type);
 
-		static void setSubData(GLuint handle, GLenum type, const void* data, size_t size, GlslUsage usage);
+		static void setSubData(GLuint handle, GLenum type, const void* data, size_t size, size_t offset);
 	};
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
