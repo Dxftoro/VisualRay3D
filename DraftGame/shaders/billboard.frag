@@ -9,5 +9,5 @@ void main() {
 
 	if (gl_FragColor.r == 0
 	&&	gl_FragColor.g == 0 
-	&&	gl_FragColor.b == 0) discard;
+	&&	gl_FragColor.b == 0) {discard;}
 }

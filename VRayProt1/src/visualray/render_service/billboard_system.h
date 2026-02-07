@@ -13,7 +13,7 @@ namespace vray {
 		CompCamera* camera;
 		Texture* texture;
 
-		GlslUniform uCameraPosition, uProjectionMatrix;
+		GlslUniform uCameraPosition, uProjectionMatrix, uViewMatrix;
 		GLuint vao, vbo;
 		bool first;
 
@@ -23,6 +23,7 @@ namespace vray {
 
 	public:
 		BillboardSystem(entt::registry& world);
+		~BillboardSystem();
 
 		void init(CompCamera* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }

@@ -467,7 +467,7 @@ public:
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		someLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		//entt::entity light1 = spawnLightMarker({ -3.0f, 15.0f, -10.0f }, { 1.0f, 0.3f, 0.4f });
+		//entt::entity light1 = spawnLightMarker({ -10.0, 10.0, 0.0 }, { 1.0f, 0.4f, 0.4f });
 	}
 	~DraftGame() {}
 

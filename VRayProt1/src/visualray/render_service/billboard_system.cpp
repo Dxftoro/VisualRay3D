@@ -13,6 +13,11 @@ namespace vray {
 		billboardGroup = world.group<CompBillboard>();
 	}
 
+	BillboardSystem::~BillboardSystem() {
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+	}
+
 	void BillboardSystem::init(CompCamera* camera) {
 		this->camera = camera;
 
@@ -24,8 +29,9 @@ namespace vray {
 
 		uCameraPosition = program.getUniform("uCameraPosition");
 		uProjectionMatrix = program.getUniform("uProjectionMatrix");
+		uViewMatrix = program.getUniform("uViewMatrix");
 
-		glm::vec3 position = {-4.0, 4.0, 0.0};
+		glm::vec3 position = { -10.0, 10.0, 0.0 };
 
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
@@ -36,8 +42,7 @@ namespace vray {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(position), &position, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(position), (const void*)0);
-		glDisableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(position), (const void*)0);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -49,6 +54,7 @@ namespace vray {
 		//VR_ENGINE_LOGINFO(glm::to_string(camera->getPosition()));
 		program.setUniform(uCameraPosition, camera->getPosition());
 		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
+		program.setUniform(uViewMatrix, camera->getViewMatrix());
 
 		if (first) {
 			program.printActiveUniforms();
