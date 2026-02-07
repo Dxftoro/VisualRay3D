@@ -420,6 +420,7 @@ public:
 		vray::Mesh* ershikMesh = game.meshes.load("models/Ershik.obj", "ershik");
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
+		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
 
 		pc.onGround = true;
 		player = game.world.create();
@@ -452,7 +453,7 @@ public:
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
 		engine.cameraSystem.setActiveCamera(camera);
 
-		engine.renderer->setTestTexture(stoneBricks);
+		engine.renderer->setTestTexture(ozuTexture);
 
 		//for (int i = 0; i < 15; i++) {
 		//	spawnCube({
@@ -467,7 +468,7 @@ public:
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		someLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		//entt::entity light1 = spawnLightMarker({ -10.0, 10.0, 0.0 }, { 1.0f, 0.4f, 0.4f });
+		entt::entity light1 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 

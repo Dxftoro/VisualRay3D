@@ -121,6 +121,9 @@ namespace vray {
 
 	struct VRAYLIB CompBillboard {
 		glm::vec3 position;
+		int index = -1;
+		bool dirty = true;
+		bool deleted = false;
 		Texture* texture;
 	};
 

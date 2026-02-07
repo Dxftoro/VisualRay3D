@@ -18,6 +18,10 @@ namespace vray {
 		glDeleteBuffers(1, &vbo);
 	}
 
+	void onBillboardAdded(entt::registry& world, const entt::entity entity) {}
+	void onBillboardUpdated(entt::registry& world, const entt::entity entity) {}
+	void onBillboardRemoved(entt::registry& world, const entt::entity entity) {}
+
 	void BillboardSystem::init(CompCamera* camera) {
 		this->camera = camera;
 

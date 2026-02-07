@@ -21,6 +21,11 @@ namespace vray {
 		using BillboardGroup = decltype(world.group<CompBillboard>());
 		BillboardGroup billboardGroup;
 
+	private:
+		static void onBillboardAdded(entt::registry& world, const entt::entity entity);
+		static void onBillboardUpdated(entt::registry& world, const entt::entity entity);
+		static void onBillboardRemoved(entt::registry& world, const entt::entity entity);
+
 	public:
 		BillboardSystem(entt::registry& world);
 		~BillboardSystem();
