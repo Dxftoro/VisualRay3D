@@ -41,9 +41,15 @@ namespace vray {
 		glBindBuffer(type, 0);
 	}
 
-	void GlslBufferController::setSubData(GLuint handle, GLenum type, const void* data, size_t size, size_t offset) {
+	void GlslBufferController::setSubData(GLuint handle, GLenum type, const void* data, size_t offset, size_t size) {
 		glBindBuffer(type, handle);
 			glBufferSubData(type, offset, size, data);
+		glBindBuffer(type, 0);
+	}
+
+	void GlslBufferController::getSubData(GLuint handle, GLenum type, void* data, size_t offset, size_t size) {
+		glBindBuffer(type, handle);
+			glGetBufferSubData(type, offset, size, data);
 		glBindBuffer(type, 0);
 	}
 
