@@ -1,8 +1,8 @@
-#version 410
+#version 430
 
 in vec2 TexCoords;
 
-uniform sampler3D uTextureData;
+uniform sampler2D uTextureData;
 
 void main() {
 	gl_FragColor = texture2D(uTextureData, TexCoords);

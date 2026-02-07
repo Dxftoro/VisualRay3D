@@ -7,7 +7,6 @@
 #include "renderer.h"
 #include "vertex_array.h"
 #include "renderer_callbacks.h"
-#include "render_request.h"
 
 #include "event_service/game_events.h"
 #include "event_service/mouse_events.h"
@@ -19,15 +18,15 @@
 namespace vray {
 
 	Renderer::Renderer(Window* _currentWindow, entt::registry& world)
-		: currentWindow(_currentWindow), initialCamera(true), lightSystem(world) {
+		: currentWindow(_currentWindow), initialCamera(true), lightSystem(world), billboardSystem(world) {
 
 		if (!gladLoadGL()) {
 			throw std::runtime_error("Can't load OpenGL!");
 		}
 
-		//glEnable(GL_DEBUG_OUTPUT);
-		//glDebugMessageCallback(rendererDebugCallback, nullptr);
-		//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(rendererDebugCallback, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
 		camera = new CompCamera(90,
 			currentWindow->getWidth(),
@@ -80,6 +79,8 @@ namespace vray {
 
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
+
+			billboardSystem.init(camera);
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -137,6 +138,8 @@ namespace vray {
 
 			glBindVertexArray(debugVao);
 			glDrawArrays(GL_LINES, 0, debugVertexCount);
+
+			billboardSystem.update();
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
@@ -204,6 +207,7 @@ namespace vray {
 			initialCamera = false;
 		}
 		this->camera = camera;
+		billboardSystem.setCamera(camera);
 	}
 
 	void Renderer::updateDebugPrimitives(const std::vector<float>& vertexData,

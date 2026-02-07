@@ -15,6 +15,7 @@ namespace vray {
 
 		GlslUniform uCameraPosition, uProjectionMatrix;
 		GLuint vao, vbo;
+		bool first;
 
 		entt::registry& world;
 		using BillboardGroup = decltype(world.group<CompBillboard>());
@@ -25,6 +26,7 @@ namespace vray {
 
 		void init(CompCamera* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }
+		void setCamera(CompCamera* camera) { this->camera = camera; }
 		void update();
 	};
 

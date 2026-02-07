@@ -1,26 +1,29 @@
 #include "vrpch.h"
 #include "billboard_system.h"
+#include "logservice.h"
 
 #include <glad/glad.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 namespace vray {
 
 	BillboardSystem::BillboardSystem(entt::registry& _world)
-		: world(_world), camera(nullptr), texture(nullptr), vao(0), vbo(0) {
+		: world(_world), camera(nullptr), texture(nullptr), vao(0), vbo(0), first(true) {
 		billboardGroup = world.group<CompBillboard>();
 	}
 
 	void BillboardSystem::init(CompCamera* camera) {
 		this->camera = camera;
 
-		program.compileShader("billboard.vert", ShaderType::VERTEX);
-		program.compileShader("billboard.geom", ShaderType::GEOMETRY);
-		program.compileShader("billboard.frag", ShaderType::FRAGMENT);
+		program.compileShader("shaders\\billboard.vert", ShaderType::VERTEX);
+		program.compileShader("shaders\\billboard.geom", ShaderType::GEOMETRY);
+		program.compileShader("shaders\\billboard.frag", ShaderType::FRAGMENT);
 		program.link();
 		program.validate();
 
-		program.getUniform("uCameraPosition");
-		program.getUniform("uProjectionMatrix");
+		uCameraPosition = program.getUniform("uCameraPosition");
+		uProjectionMatrix = program.getUniform("uProjectionMatrix");
 
 		glm::vec3 position = {-4.0, 4.0, 0.0};
 
@@ -43,8 +46,14 @@ namespace vray {
 	void BillboardSystem::update() {
 		program.use();
 
+		//VR_ENGINE_LOGINFO(glm::to_string(camera->getPosition()));
 		program.setUniform(uCameraPosition, camera->getPosition());
 		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
+
+		if (first) {
+			program.printActiveUniforms();
+			first = false;
+		}
 
 		texture->bind();
 

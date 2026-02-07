@@ -11,7 +11,7 @@
 
 //#include "vertex_array.h"
 #include "glsl_program.h"
-#include "frustum_camera.h"
+#include "render_request.h"
 #include "light_system.h"
 #include "billboard_system.h"
 
@@ -23,7 +23,6 @@ namespace vray {
     struct CompCamera;
     struct CompVisualMaterial;
     struct CompPointLight;
-    class RenderRequest;
     class GlslUniformBuffer;
 
     class Renderer {
@@ -46,7 +45,7 @@ namespace vray {
 
         GlslUniformBuffer uboLight, uboMaterial;
         LightSystem lightSystem;
-
+        BillboardSystem billboardSystem;
 
         bool initialCamera;
 
@@ -62,6 +61,7 @@ namespace vray {
         void onEvent(Event& evt);
 
         void setCamera(CompCamera* camera);
+        void setTestTexture(Texture* texture) { billboardSystem.setTexture(texture); }
         CompCamera* getCamera() const { return camera; }
         Window* getCurrentWindow() const { return currentWindow; }
 

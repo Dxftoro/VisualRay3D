@@ -452,6 +452,8 @@ public:
 		camera->setPosition({ 0.0f, 30.0f, 0.0f });
 		engine.cameraSystem.setActiveCamera(camera);
 
+		engine.renderer->setTestTexture(stoneBricks);
+
 		//for (int i = 0; i < 15; i++) {
 		//	spawnCube({
 		//		vray::frand(-5.0f, 5.0f),
