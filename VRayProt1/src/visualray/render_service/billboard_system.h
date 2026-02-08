@@ -34,6 +34,8 @@ namespace vray {
 		void setTexture(Texture* texture) { this->texture = texture; }
 		void setCamera(CompCamera* camera) { this->camera = camera; }
 		void update();
+
+		void testFlexibleBuffer() const;
 	};
 
 }

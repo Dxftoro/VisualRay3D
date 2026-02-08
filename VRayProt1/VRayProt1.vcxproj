@@ -29,6 +29,7 @@
     <ClCompile Include="src\visualray\render_service\billboard_system.cpp" />
     <ClCompile Include="src\visualray\render_service\buffer_layout.cpp" />
     <ClCompile Include="src\visualray\render_service\frustum_camera.cpp" />
+    <ClCompile Include="src\visualray\render_service\glsl_flexible_buffer.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_uniform_buffer.cpp" />
     <ClCompile Include="src\visualray\render_service\light_system.cpp" />

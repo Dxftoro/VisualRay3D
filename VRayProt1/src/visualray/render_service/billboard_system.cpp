@@ -76,4 +76,8 @@ namespace vray {
 		program.unuse();
 	}
 
+	void BillboardSystem::testFlexibleBuffer() const {
+
+	}
+
 }
