@@ -6,6 +6,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
+#include "glsl_flexible_buffer.h"
+
 namespace vray {
 
 	BillboardSystem::BillboardSystem(entt::registry& _world)
@@ -77,7 +79,42 @@ namespace vray {
 	}
 
 	void BillboardSystem::testFlexibleBuffer() const {
+		struct Data {
+			int field1;
+			int field2;
+			float field3;
+			Data() = default;
+		};
 
+		GlslFlexibleBuffer<GL_UNIFORM_BUFFER, Data> buffer;
+		
+		size_t capacity = buffer.getCapacity();
+		for (int i = 0; i <= capacity * 3; i++) {
+			//VR_ENGINE_LOGIMPORTANT("Index is: " + std::to_string(i));
+			buffer.push({});
+		}
+
+		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
+		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+
+		size_t newCapacity = buffer.getCapacity();
+		for (int i = 0; i < capacity * 2 + 2; i++) {
+			VR_ENGINE_LOGIMPORTANT("Going to pop index: " + std::to_string(buffer.size() - 1));
+			buffer.pop();
+		}
+
+		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
+		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+
+		while (!buffer.isEmpty()) {
+			buffer.pop();
+		}
+
+		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
+		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+
+		/* Will throw an exception! */
+		buffer.pop();
 	}
 
 }

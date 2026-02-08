@@ -24,6 +24,8 @@ namespace vray {
 			: std::runtime_error(text) {}
 
 		static void forceThrowFromLog(GLuint shaderId, ExceptionType type);
+		static void throwOnAssert(bool condition, const char* message)
+			{ if (condition == false) throw GlslException(message); }
 	};
 
 	enum class ShaderType : unsigned int {

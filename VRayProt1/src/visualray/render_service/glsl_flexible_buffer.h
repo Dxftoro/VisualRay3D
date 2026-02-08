@@ -86,7 +86,8 @@ namespace vray {
 		: usage(_usage), capacity(defaultExtent), extent(defaultExtent), _size(0) {
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
-		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		//GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		VR_ENGINE_LOGIMPORTANT(std::format("Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
@@ -98,12 +99,13 @@ namespace vray {
 					: defaultExtent;
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
-		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		//GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		VR_ENGINE_LOGIMPORTANT(std::format("Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	GlslFlexibleBuffer<BufferType, DataType>::~GlslFlexibleBuffer() {
-		GlslBufferController::free(handle);
+		GlslBufferController::free(handle); // !!!
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
@@ -122,22 +124,25 @@ namespace vray {
 	void GlslFlexibleBuffer<BufferType, DataType>::push(const DataType& data) {
 		if (_size >= capacity) {
 			capacity += extent;
-			GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
+			VR_ENGINE_LOGIMPORTANT(std::format("Resizing up: size: {0} capacity: {1}, capacity (bytes): {2}", _size, capacity, bytes(capacity)));
+			//GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
 		}
-		GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
+		//GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
 		_size++;
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	void GlslFlexibleBuffer<BufferType, DataType>::pop() {
-		assert(!isEmpty() || "Buffer is empty!");
+		if (isEmpty()) throw std::runtime_error("Buffer is empty!");
 
+		size_t halfCapacity = (capacity / extent / 2) * extent;
 		if (capacity > extent
 			/*	If an element count is less than a half of capacity aligned to the specific extent size,
 				it will be the second condition to resize our buffer */
-			&& _size - 1 <= (capacity / extent / 2) * extent) {
-			capacity -= extent;
-			GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
+			&& _size <= halfCapacity) {
+			capacity -= halfCapacity;
+			VR_ENGINE_LOGIMPORTANT(std::format("Resizing down: size: {0} capacity: {1}, capacity (bytes): {2}", _size, capacity, bytes(capacity)));
+			//GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
 		}
 
 		_size--;

@@ -24,9 +24,9 @@ namespace vray {
 			throw std::runtime_error("Can't load OpenGL!");
 		}
 
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(rendererDebugCallback, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+		//glEnable(GL_DEBUG_OUTPUT);
+		//glDebugMessageCallback(rendererDebugCallback, nullptr);
+		//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
 		camera = new CompCamera(90,
 			currentWindow->getWidth(),
@@ -110,7 +110,7 @@ namespace vray {
 
 		//VR_ENGINE_LOGWARN("Setting data to UBOs");
 		//uboMaterial.setData(&material, sizeof(material));
-
+		billboardSystem.testFlexibleBuffer();
 	}
 
 	Renderer::~Renderer() {
