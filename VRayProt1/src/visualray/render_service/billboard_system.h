@@ -36,6 +36,7 @@ namespace vray {
 		void update();
 
 		void testFlexibleBuffer() const;
+		void testFlexibleBuffer2() const;
 	};
 
 }

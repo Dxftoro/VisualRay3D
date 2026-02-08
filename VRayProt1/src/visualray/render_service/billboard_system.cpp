@@ -86,7 +86,7 @@ namespace vray {
 			Data() = default;
 		};
 
-		GlslFlexibleBuffer<GL_UNIFORM_BUFFER, Data> buffer;
+		GlslFlexibleBuffer<GL_ARRAY_BUFFER, Data> buffer(GlslUsage::STREAM_DRAW);
 		
 		size_t capacity = buffer.getCapacity();
 		for (int i = 0; i <= capacity * 3; i++) {
@@ -99,22 +99,19 @@ namespace vray {
 
 		size_t newCapacity = buffer.getCapacity();
 		for (int i = 0; i < capacity * 2 + 2; i++) {
-			VR_ENGINE_LOGIMPORTANT("Going to pop index: " + std::to_string(buffer.size() - 1));
+			//VR_ENGINE_LOGIMPORTANT("Going to pop index: " + std::to_string(buffer.size() - 1));
 			buffer.pop();
 		}
 
 		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
 		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
 
-		while (!buffer.isEmpty()) {
-			buffer.pop();
-		}
+		//while (!buffer.isEmpty()) {
+		//	buffer.pop();
+		//}
 
-		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
-		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
-
-		/* Will throw an exception! */
-		buffer.pop();
+		//VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
+		//VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
 	}
 
 }

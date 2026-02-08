@@ -13,20 +13,22 @@ namespace vray {
 		glBindBuffer(type, 0);
 	}
 
-	void GlslBufferController::resize(GLuint& handle, GLenum type, size_t size, GlslUsage usage) {
+	void GlslBufferController::resize(GLuint& handle, size_t oldSize, size_t newSize, GlslUsage usage) {
 		GLuint newBuffer;
 		glGenBuffers(1, &newBuffer);
 		glBindBuffer(GL_COPY_READ_BUFFER, handle);
 		glBindBuffer(GL_COPY_WRITE_BUFFER, newBuffer);
 
-		glBufferData(GL_COPY_WRITE_BUFFER, size, nullptr, (GLenum)usage);
+		glBufferData(GL_COPY_WRITE_BUFFER, newSize, nullptr, (GLenum)usage);
 
 		if (handle) {
-			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, size);
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, std::min(oldSize, newSize));
 			glDeleteBuffers(1, &handle);
 		}
 
 		handle = newBuffer;
+		glBindBuffer(GL_COPY_READ_BUFFER, 0);
+		glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
 	}
 
 	void GlslBufferController::free(GLuint& handle) {

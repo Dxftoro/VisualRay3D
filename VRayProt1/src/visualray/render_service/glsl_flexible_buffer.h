@@ -26,7 +26,7 @@ namespace vray {
 
 	private:
 		static void init(GLuint& handle, GLenum type, const void* data, size_t size, GlslUsage usage);
-		static void resize(GLuint& handle, GLenum type, size_t size, GlslUsage usage);
+		static void resize(GLuint& handle, size_t oldSize, size_t newSize, GlslUsage usage);
 		static void free(GLuint& handle);
 
 		static void bind(const GLuint handle, GLenum type);
@@ -86,21 +86,21 @@ namespace vray {
 		: usage(_usage), capacity(defaultExtent), extent(defaultExtent), _size(0) {
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
-		//GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
-		VR_ENGINE_LOGIMPORTANT(std::format("Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
+		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		VR_ENGINE_LOGIMPORTANT(std::format("A - Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
-	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(size_t size_, GlslUsage usage, size_t _extent) 
-		: _size(size_), extent(_extent) {
+	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(size_t size_, GlslUsage _usage, size_t _extent) 
+		: _size(size_), usage(_usage), extent(_extent) {
 		
 		capacity = _size > 0
-					? extent * ((_size / extent) + (_size % extent))
+					? extent * (_size / extent + 1)
 					: defaultExtent;
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
-		//GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
-		VR_ENGINE_LOGIMPORTANT(std::format("Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
+		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
+		VR_ENGINE_LOGIMPORTANT(std::format("B - Buffer created! Capacity: {0}, bytes: {1}", capacity, bytes(capacity)));
 	}
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
@@ -123,11 +123,16 @@ namespace vray {
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	void GlslFlexibleBuffer<BufferType, DataType>::push(const DataType& data) {
 		if (_size >= capacity) {
+			size_t oldCapacity = capacity;
 			capacity += extent;
+			
 			VR_ENGINE_LOGIMPORTANT(std::format("Resizing up: size: {0} capacity: {1}, capacity (bytes): {2}", _size, capacity, bytes(capacity)));
-			//GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
+			std::cout << "usage: " << STR((GLenum)usage) << std::endl;
+			std::cout << "target usage: " << STR((GLenum)GlslUsage::DYNAMIC_DRAW) << std::endl;
+			
+			GlslBufferController::resize(handle, bytes(oldCapacity), bytes(capacity), usage);
 		}
-		//GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
+		GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
 		_size++;
 	}
 
@@ -140,9 +145,13 @@ namespace vray {
 			/*	If an element count is less than a half of capacity aligned to the specific extent size,
 				it will be the second condition to resize our buffer */
 			&& _size <= halfCapacity) {
+			
+			size_t oldCapacity = capacity;
 			capacity -= halfCapacity;
+
 			VR_ENGINE_LOGIMPORTANT(std::format("Resizing down: size: {0} capacity: {1}, capacity (bytes): {2}", _size, capacity, bytes(capacity)));
-			//GlslBufferController::resize(handle, BufferType, bytes(capacity), usage);
+			
+			GlslBufferController::resize(handle, bytes(oldCapacity), bytes(capacity), usage);
 		}
 
 		_size--;
