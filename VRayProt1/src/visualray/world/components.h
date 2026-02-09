@@ -120,11 +120,15 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompBillboard {
-		glm::vec3 position;
-		int index = -1;
+		glm::vec3 position = glm::vec3(0.0f);
+		float size = 1.0f;
+		alignas(8) Texture* texture = nullptr;
 		bool dirty = true;
+	};
+
+	struct VRAYLIB CompBillboardIndex {
+		size_t index = SIZE_MAX;
 		bool deleted = false;
-		Texture* texture;
 	};
 
 }

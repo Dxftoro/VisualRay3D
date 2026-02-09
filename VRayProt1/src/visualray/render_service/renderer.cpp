@@ -110,7 +110,6 @@ namespace vray {
 
 		//VR_ENGINE_LOGWARN("Setting data to UBOs");
 		//uboMaterial.setData(&material, sizeof(material));
-		billboardSystem.testFlexibleBuffer();
 	}
 
 	Renderer::~Renderer() {

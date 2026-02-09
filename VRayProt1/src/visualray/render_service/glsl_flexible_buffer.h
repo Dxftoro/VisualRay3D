@@ -38,7 +38,7 @@ namespace vray {
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
 	class GlslFlexibleBuffer {
-	private:
+	protected:
 		size_t
 			/* The max capacity of the buffer until it needs to resize */
 			capacity, 
@@ -50,7 +50,6 @@ namespace vray {
 		GlslUsage usage;
 
 		GlslFlexibleBuffer(const GlslFlexibleBuffer&) = delete;
-		GlslFlexibleBuffer(GlslFlexibleBuffer&&) noexcept = delete;
 		GlslFlexibleBuffer& operator=(const GlslFlexibleBuffer&) = delete;
 
 		static size_t bytes(size_t count) { return sizeof(DataType) * count; }
@@ -59,7 +58,8 @@ namespace vray {
 		static constexpr size_t defaultExtent	= 30;
 		static constexpr size_t multiplier		= 2;
 
-		explicit GlslFlexibleBuffer(GlslUsage usage = GlslUsage::DYNAMIC_DRAW);
+		explicit GlslFlexibleBuffer(GlslUsage usage = GlslUsage::DYNAMIC_DRAW,
+									size_t extent = GlslFlexibleBuffer::defaultExtent);
 		explicit GlslFlexibleBuffer(size_t size, GlslUsage usage = GlslUsage::DYNAMIC_DRAW, 
 									size_t extent = GlslFlexibleBuffer::defaultExtent);
 		~GlslFlexibleBuffer();
@@ -78,12 +78,15 @@ namespace vray {
 		void push(const DataType& data);
 		void pop();
 
+		void bind() { GlslBufferController::bind(handle, BufferType); }
+		void ubind() { GlslBufferController::unbind(BufferType); }
+
 		bool isEmpty() const { return (_size == 0); }
 	};
 
 	template <GLenum BufferType, typename DataType> requires GlslTrivial<DataType>
-	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(GlslUsage _usage) 
-		: usage(_usage), capacity(defaultExtent), extent(defaultExtent), _size(0) {
+	GlslFlexibleBuffer<BufferType, DataType>::GlslFlexibleBuffer(GlslUsage _usage, size_t extent)
+		: usage(_usage), capacity(extent), extent(extent), _size(0) {
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
 		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
@@ -96,7 +99,7 @@ namespace vray {
 		
 		capacity = _size > 0
 					? extent * (_size / extent + 1)
-					: defaultExtent;
+					: extent;
 		assert((capacity && extent) || "Capacity and extent cannot be 0!");
 
 		GlslBufferController::init(handle, BufferType, nullptr, bytes(capacity), usage);
@@ -132,6 +135,7 @@ namespace vray {
 			
 			GlslBufferController::resize(handle, bytes(oldCapacity), bytes(capacity), usage);
 		}
+
 		GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
 		_size++;
 	}

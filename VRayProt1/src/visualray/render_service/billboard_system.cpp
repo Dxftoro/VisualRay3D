@@ -6,23 +6,34 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
-#include "glsl_flexible_buffer.h"
-
 namespace vray {
 
+	float BillboardSystem::vertexData[] = {
+		-0.5f, 0.5f, 0.0f,		0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		0.0f, 1.0f,
+		0.5f, 0.5f, 0.0f,		1.0f, 0.0f,
+		0.5f, -0.5f, 0.0f,		1.0f, 1.0f
+	};
+
 	BillboardSystem::BillboardSystem(entt::registry& _world)
-		: world(_world), camera(nullptr), texture(nullptr), vao(0), vbo(0), first(true) {
-		billboardGroup = world.group<CompBillboard>();
+		: world(_world), camera(nullptr), texture(nullptr) {
+
+		billboardGroup = BillboardGroup();
 	}
 
 	BillboardSystem::~BillboardSystem() {
-		glDeleteVertexArrays(1, &vao);
-		glDeleteBuffers(1, &vbo);
+		for (auto& it : batchTable) {
+			glDeleteVertexArrays(1, &it.second.vao);
+		}
 	}
 
-	void onBillboardAdded(entt::registry& world, const entt::entity entity) {}
-	void onBillboardUpdated(entt::registry& world, const entt::entity entity) {}
-	void onBillboardRemoved(entt::registry& world, const entt::entity entity) {}
+	void onBillboardAdded(entt::registry& world, const entt::entity entity) {
+		world.emplace<CompBillboardIndex>(entity).index = VR_RENDERER_BILLBOARD_NEW;
+	}
+
+	void onBillboardRemoved(entt::registry& world, const entt::entity entity) {
+		world.emplace<CompBillboardIndex>(entity).deleted = true;
+	}
 
 	void BillboardSystem::init(CompCamera* camera) {
 		this->camera = camera;
@@ -37,81 +48,65 @@ namespace vray {
 		uProjectionMatrix = program.getUniform("uProjectionMatrix");
 		uViewMatrix = program.getUniform("uViewMatrix");
 
-		glm::vec3 position = { -10.0, 10.0, 0.0 };
-
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
-
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-		glBufferData(GL_ARRAY_BUFFER, sizeof(position), &position, GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(position), (const void*)0);
-
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//glm::vec3 position = { -10.0, 10.0, 0.0 };
 	}
 
 	void BillboardSystem::update() {
 		program.use();
-
-		//VR_ENGINE_LOGINFO(glm::to_string(camera->getPosition()));
 		program.setUniform(uCameraPosition, camera->getPosition());
 		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 		program.setUniform(uViewMatrix, camera->getViewMatrix());
 
-		if (first) {
-			program.printActiveUniforms();
-			first = false;
+		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboard& billboard) {
+			auto it = batchTable.find(billboard.texture);
+			if (it == batchTable.end()) it = createBatch(billboard.texture);
+
+			if (billboard.dirty) return;
+			billboard.dirty = false;
+
+			if (billboardIndex.index == VR_RENDERER_BILLBOARD_NEW) {
+				billboardIndex.index = it->second.vbo.size();
+				it->second.vbo.push(billboard);
+			}
+			else {
+				it->second.vbo.set(billboardIndex.index, billboard);
+			}
+		});
+
+		for (auto& it : batchTable) {
+			it.first->bind();
+				glBindVertexArray(it.second.vao);
+				glDrawArrays(GL_POINTS, 0, it.second.vbo.size());
+				glBindVertexArray(0);
+			it.first->bind();
 		}
-
-		texture->bind();
-
-		glBindVertexArray(vao);
-		glDrawArrays(GL_POINTS, 0, 1);
-		glBindVertexArray(0);
-
-		texture->unbind();
 
 		program.unuse();
 	}
 
-	void BillboardSystem::testFlexibleBuffer() const {
-		struct Data {
-			int field1;
-			int field2;
-			float field3;
-			Data() = default;
-		};
+	BatchTableIterator BillboardSystem::createBatch(Texture* texture) {
+		assert(batchTable.find(texture) != batchTable.end() || "Batch already exists!");
+		BatchTableIterator it = batchTable.emplace(texture, 0, BillboardVbo()).first;
 
-		GlslFlexibleBuffer<GL_ARRAY_BUFFER, Data> buffer(GlslUsage::STREAM_DRAW);
-		
-		size_t capacity = buffer.getCapacity();
-		for (int i = 0; i <= capacity * 3; i++) {
-			//VR_ENGINE_LOGIMPORTANT("Index is: " + std::to_string(i));
-			buffer.push({});
-		}
+		glGenVertexArrays(1, &it->second.vao);
+		glBindVertexArray(it->second.vao);
 
-		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
-		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+		it->second.vbo.bind();
 
-		size_t newCapacity = buffer.getCapacity();
-		for (int i = 0; i < capacity * 2 + 2; i++) {
-			//VR_ENGINE_LOGIMPORTANT("Going to pop index: " + std::to_string(buffer.size() - 1));
-			buffer.pop();
-		}
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(CompBillboard),
+			(const void*)offsetof(CompBillboard, position));
 
-		VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
-		VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(CompBillboard),
+			(const void*)offsetof(CompBillboard, size));
 
-		//while (!buffer.isEmpty()) {
-		//	buffer.pop();
-		//}
+		it->second.vbo.ubind();
 
-		//VR_ENGINE_LOGIMPORTANT("Buffer size is: " + std::to_string(buffer.size()));
-		//VR_ENGINE_LOGIMPORTANT("Buffer capacity is: " + std::to_string(buffer.getCapacity()));
+		glBindVertexArray(0);
+
+		VR_ENGINE_LOGINFO("Batch created! Capacity: " + STR(it->second.vbo.getCapacity()));
+		return it;
 	}
 
 }
