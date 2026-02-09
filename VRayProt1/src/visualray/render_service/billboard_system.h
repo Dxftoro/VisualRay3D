@@ -35,9 +35,6 @@ namespace vray {
 		GlslProgram program;
 		GlslUniform uCameraPosition, uProjectionMatrix, uViewMatrix;
 		
-		//GLuint vao;
-		//GlslFlexibleBuffer<0x8892, CompBillboard> billboardVbo;
-
 		std::unordered_map<Texture*, BillboardBatch> batchTable;
 
 		entt::registry& world;

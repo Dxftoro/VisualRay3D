@@ -19,6 +19,8 @@ namespace vray {
 		: world(_world), camera(nullptr), texture(nullptr) {
 
 		billboardGroup = BillboardGroup();
+		world.on_construct<CompPointLight>().connect<&BillboardSystem::onBillboardAdded>();
+		world.on_destroy<CompPointLight>().connect<&BillboardSystem::onBillboardRemoved>();
 	}
 
 	BillboardSystem::~BillboardSystem() {
@@ -86,7 +88,7 @@ namespace vray {
 
 	BatchTableIterator BillboardSystem::createBatch(Texture* texture) {
 		assert(batchTable.find(texture) != batchTable.end() || "Batch already exists!");
-		BatchTableIterator it = batchTable.emplace(texture, 0, BillboardVbo()).first;
+		BatchTableIterator it = batchTable.try_emplace(texture).first;
 
 		glGenVertexArrays(1, &it->second.vao);
 		glBindVertexArray(it->second.vao);

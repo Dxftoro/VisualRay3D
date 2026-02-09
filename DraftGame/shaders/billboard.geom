@@ -4,6 +4,7 @@ layout (points) in;
 layout (triangle_strip) out;
 layout (max_vertices = 4) out;
 
+in float vSize[];
 out vec2 TexCoords;
 
 uniform mat4 uProjectionMatrix;
@@ -18,7 +19,7 @@ void main() {
 	vec3 up = normalize(cross(right, toPoint));
 	
 	mat4 projectionView = uProjectionMatrix * uViewMatrix;
-	float size = 3.0;
+	float size =  vSize[0]; //3.0;
 
 	gl_Position = projectionView * vec4(current - (right - up) * size, 1.0);
 	TexCoords = vec2(0.0, 0.0);

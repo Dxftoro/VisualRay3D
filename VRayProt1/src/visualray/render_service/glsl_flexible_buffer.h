@@ -1,5 +1,7 @@
 #pragma once
 #include "kernel.h"
+#include "logservice.h"
+
 #include <type_traits>
 #include <cassert>
 
