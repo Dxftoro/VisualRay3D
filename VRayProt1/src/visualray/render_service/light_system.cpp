@@ -10,9 +10,9 @@ namespace vray {
 
 		lightGroup = world.group<CompPointLightIndex>(entt::get<CompPointLight>);
 
-		//world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
-		//world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
-		//world.on_destroy<CompPointLight>().connect<&LightSystem::onLightRemoved>(this);
+		world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
+		world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
+		world.on_destroy<CompPointLight>().connect<&LightSystem::onLightRemoved>(this);
 	}
 
 	void LightSystem::initBuffer(GlslProgram& program) {
@@ -28,43 +28,47 @@ namespace vray {
 	}
 
 	void LightSystem::onLightRemoved(entt::registry& world, const entt::entity entity) {
-		//VR_LOGIMPORTANT("onLightRemoved called!");
+		VR_LOGIMPORTANT("onLightRemoved called!");
 
-		//CompPointLightIndex& lightIndex = world.get<CompPointLightIndex>(entity);
-		//VR_LOGIMPORTANT("onLightRemoved ended!");
+		CompPointLightIndex& lightIndex = world.get<CompPointLightIndex>(entity);
+		VR_LOGIMPORTANT("onLightRemoved ended!");
 
-		///* If it's not buffered */
-		//if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
-		//	world.erase<CompPointLightIndex>(entity);
-		//	VR_LOGIMPORTANT("Component delted (not buffered)!");
-		//	return;
-		//}
-		////else lightIndex.deleted = true;
+		/* If it's not buffered */
+		if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
+			world.erase<CompPointLightIndex>(entity);
+			VR_LOGIMPORTANT("Component delted (not buffered)!");
+			return;
+		}
+		//else lightIndex.deleted = true;
 
-		//if (lightIndex.index == 0) {
-		//	VR_LOGIMPORTANT("handleDelted called on light index = 0!");
-		//	lastLightIndex--;
-		//}
+		lightUniformBuffer.bind();
 
-		///*	Removing lights that marked as deleted by moving the last buffer element
-		//	to recently deleted element place */
-		//else if (lightIndex.index > 0 && lightIndex.index <= lastLightIndex - 1) {
-		//	VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
+		if (lightIndex.index == 0) {
+			VR_LOGIMPORTANT("handleDelted called on light index = 0!");
+			lastLightIndex--;
+		}
 
-		//	auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
-		//		bufferedEntites[lastLightIndex - 1]);
+		/*	Removing lights that marked as deleted by moving the last buffer element
+			to recently deleted element place */
+		else if (lightIndex.index > 0 && lightIndex.index <= lastLightIndex - 1) {
+			VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
 
-		//	setLightData(tailLight, lightIndex.index);
+			auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
+				bufferedEntites[lastLightIndex - 1]);
 
-		//	tailLightIndex.index = lightIndex.index;
-		//	bufferedEntites[tailLightIndex.index] = bufferedEntites[lastLightIndex - 1];
-		//	lastLightIndex--;
-		//}
+			setLightData(tailLight, lightIndex.index);
 
-		//lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
-		//world.erase<CompPointLightIndex>(entity);
+			tailLightIndex.index = lightIndex.index;
+			bufferedEntites[tailLightIndex.index] = bufferedEntites[lastLightIndex - 1];
+			lastLightIndex--;
+		}
 
-		//VR_LOGIMPORTANT("Component delted!");
+		lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
+		world.erase<CompPointLightIndex>(entity);
+
+		lightUniformBuffer.unbind();
+
+		VR_LOGIMPORTANT("Component delted!");
 	}
 
 	void LightSystem::setLightData(CompPointLight& light, int index) {
