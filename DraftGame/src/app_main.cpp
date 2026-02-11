@@ -280,14 +280,12 @@ private:
 			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvent.getKeyCode() == VR_KEY_F) {
 				VR_LOGIMPORTANT("Going to destroy the light!");
-				//game.world.destroy(yellowLight);
-				game.world.erase<vray::CompPointLight>(yellowLight);
+				game.world.destroy(yellowLight);
 				VR_LOGIMPORTANT("Entity destroyed!");
 			}
 			else if (keyEvent.getKeyCode() == VR_KEY_G) {
 				VR_LOGIMPORTANT("Going to destroy the light!");
-				//game.world.destroy(blueLight);
-				game.world.erase<vray::CompPointLight>(blueLight);
+				game.world.destroy(blueLight);
 				VR_LOGIMPORTANT("Entity destroyed!");
 			}
 		}

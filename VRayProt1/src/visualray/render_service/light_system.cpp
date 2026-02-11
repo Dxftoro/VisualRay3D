@@ -36,9 +36,6 @@ namespace vray {
 	}
 
 	void LightSystem::onLightRemoved(entt::registry& world, const entt::entity entity) {
-		//CompPointLight* light = world.try_get<CompPointLight>(entity);
-		//CompPointLightIndex* lightIndex = world.try_get<CompPointLightIndex>(entity);
-
 		VR_LOGIMPORTANT("onLightRemoved called!");
 
 		CompPointLightIndex& lightIndex = world.get<CompPointLightIndex>(entity);
@@ -88,45 +85,8 @@ namespace vray {
 			offsetof(LightBuffer, lights) + index * sizeof(light));
 	}
 
-	//void LightSystem::handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex) {
-	//	//if (!lightIndex.deleted) return;
-	//	if (lightIndex.index == 0) {
-	//		VR_LOGIMPORTANT("handleDelted called on light index = 0!");
-	//		lastLightIndex--;
-	//	}
-
-	//	/*	Removing lights that marked as deleted by moving the last buffer element
-	//		to recently deleted element place */
-	//	else if (lightIndex.index > 0 && lightIndex.index <= lastLightIndex - 1) {
-	//		VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
-
-	//		auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
-	//			bufferedEntites[lastLightIndex - 1]);
-
-	//		setLightData(tailLight, lightIndex.index);
-
-	//		tailLightIndex.index = lightIndex.index;
-	//		bufferedEntites[tailLightIndex.index] = bufferedEntites[lastLightIndex - 1];
-	//		lastLightIndex--;
-	//	}
-
-	//	lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
-	//	world.erase<CompPointLightIndex>(entity);
-	//	
-	//	VR_LOGIMPORTANT("Component delted!");
-	//}
-
 	void LightSystem::update() {
 		lightUniformBuffer.bind();
-
-		//if (lastLightIndex) {
-		//	//VR_LOGIMPORTANT("Looking for deleted lights...");
-		//	for (entt::entity entity : lightGroup) {
-		//		CompPointLightIndex& lightIndex = lightGroup.get<CompPointLightIndex>(entity);
-		//		VR_LOGINFO("Going to call handleDelted!");
-		//		handleDeleted(entity, lightIndex);
-		//	}
-		//}
 
 		lightGroup.each([this](entt::entity entity, CompPointLightIndex& lightIndex, CompPointLightData& light) {
 			if (!lightIndex.dirty) return;

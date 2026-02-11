@@ -152,9 +152,8 @@ namespace vray {
 
 			if (camera->isViewDirty() || transform->isDirty()) {
 				transform->setNormalMatrix(
-					glm::mat3(
-						glm::transpose(
-							glm::inverse(viewMatrix * transform->getTransformMatrix())))
+					glm::transpose(
+						glm::inverse(glm::mat3(viewMatrix * transform->getTransformMatrix())))
 				);
 			}
 
