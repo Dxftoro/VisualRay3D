@@ -47,6 +47,7 @@ namespace vray {
 		/* If it's not buffered */
 		if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
 			world.erase<CompPointLightIndex>(entity);
+			world.erase<CompPointLightData>(entity);
 			VR_LOGIMPORTANT("Component deleted (not buffered)!");
 			return;
 		}
