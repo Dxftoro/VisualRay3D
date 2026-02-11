@@ -87,7 +87,7 @@ private:
 	vray::GameContext& game;
 	PlayerController pc;
 
-	entt::entity player, teapot, someLight;
+	entt::entity player, teapot, yellowLight, blueLight;
 	vray::CompCamera* camera;
 
 	float playerSpeed;
@@ -278,12 +278,18 @@ private:
 		
 		if (evt.getType() == vray::KEY_PRESSED) {
 			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
-			if (keyEvent.getKeyCode() != VR_KEY_F) return;
-
-			VR_LOGIMPORTANT("Going to destroy the light!");
-			game.world.destroy(someLight);
-			//game.world.erase<vray::CompPointLight>(someLight);
-			VR_LOGIMPORTANT("Entity destroyed!");
+			if (keyEvent.getKeyCode() == VR_KEY_F) {
+				VR_LOGIMPORTANT("Going to destroy the light!");
+				//game.world.destroy(yellowLight);
+				game.world.erase<vray::CompPointLight>(yellowLight);
+				VR_LOGIMPORTANT("Entity destroyed!");
+			}
+			else if (keyEvent.getKeyCode() == VR_KEY_G) {
+				VR_LOGIMPORTANT("Going to destroy the light!");
+				//game.world.destroy(blueLight);
+				game.world.erase<vray::CompPointLight>(blueLight);
+				VR_LOGIMPORTANT("Entity destroyed!");
+			}
 		}
 	}
 
@@ -481,8 +487,8 @@ public:
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
-		entt::entity light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		someLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+		blueLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
+		yellowLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 

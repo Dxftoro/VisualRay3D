@@ -8,11 +8,11 @@ namespace vray {
 	LightSystem::LightSystem(entt::registry& _world)
 		: bufferedEntites({ entt::null }), lastLightIndex(0), world(_world) {
 
-		lightGroup = world.group<CompPointLightIndex>(entt::get<CompPointLight>);
+		lightGroup = LightGroup();
 
 		world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
 		world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
-		world.on_destroy<CompPointLightIndex>().connect<&LightSystem::onLightRemoved>(this);
+		world.on_destroy<CompPointLight>().connect<&LightSystem::onLightRemoved>(this);
 	}
 
 	void LightSystem::initBuffer(GlslProgram& program) {
@@ -20,6 +20,14 @@ namespace vray {
 	}
 
 	void LightSystem::onLightAdded(entt::registry& world, const entt::entity entity) {
+		vray::CompPointLightData light = {
+			.position = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
+			.la = glm::vec3(0.03f),
+			.ld = glm::vec3(0.6),
+			.ls = glm::vec3(1.0)
+		};
+
+		world.emplace<CompPointLightData>(entity, light);
 		world.emplace<CompPointLightIndex>(entity).index = VR_RENDERER_LIGHT_NEW;
 	}
 
@@ -55,7 +63,7 @@ namespace vray {
 		else if (lightIndex.index >= 0 && lightIndex.index <= lastLightIndex - 1) {
 			VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
 
-			auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
+			auto [tailLight, tailLightIndex] = world.get<CompPointLightData, CompPointLightIndex>(
 				bufferedEntites[lastLightIndex - 1]);
 
 			setLightData(tailLight, lightIndex.index);
@@ -73,7 +81,7 @@ namespace vray {
 		VR_LOGIMPORTANT("Component deleted!");
 	}
 
-	void LightSystem::setLightData(CompPointLight& light, int index) {
+	void LightSystem::setLightData(CompPointLightData& light, int index) {
 		lightUniformBuffer.setData(&light, sizeof(light),
 			offsetof(LightBuffer, lights) + index * sizeof(light));
 	}
@@ -119,7 +127,7 @@ namespace vray {
 		//}
 
 		//VR_LOGINFO("Going to iterate over lightGroup!");
-		lightGroup.each([this](entt::entity entity, CompPointLightIndex& lightIndex, CompPointLight& light) {
+		lightGroup.each([this](entt::entity entity, CompPointLightData& light, CompPointLightIndex& lightIndex) {
 			if (!lightIndex.dirty) return;
 			lightIndex.dirty = false;
 
