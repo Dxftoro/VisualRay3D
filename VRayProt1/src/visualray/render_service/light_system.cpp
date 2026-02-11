@@ -12,7 +12,7 @@ namespace vray {
 
 		world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
 		world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
-		world.on_destroy<CompPointLight>().connect<&LightSystem::onLightRemoved>(this);
+		world.on_destroy<CompPointLightIndex>().connect<&LightSystem::onLightRemoved>(this);
 	}
 
 	void LightSystem::initBuffer(GlslProgram& program) {
@@ -28,6 +28,9 @@ namespace vray {
 	}
 
 	void LightSystem::onLightRemoved(entt::registry& world, const entt::entity entity) {
+		//CompPointLight* light = world.try_get<CompPointLight>(entity);
+		//CompPointLightIndex* lightIndex = world.try_get<CompPointLightIndex>(entity);
+
 		VR_LOGIMPORTANT("onLightRemoved called!");
 
 		CompPointLightIndex& lightIndex = world.get<CompPointLightIndex>(entity);
@@ -35,22 +38,21 @@ namespace vray {
 
 		/* If it's not buffered */
 		if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
-			world.erase<CompPointLightIndex>(entity);
-			VR_LOGIMPORTANT("Component delted (not buffered)!");
+			//world.erase<CompPointLightIndex>(entity);
+			VR_LOGIMPORTANT("Component deleted (not buffered)!");
 			return;
 		}
-		//else lightIndex.deleted = true;
 
 		lightUniformBuffer.bind();
 
-		if (lightIndex.index == 0) {
+		if (lightIndex.index == 0 && lastLightIndex == 1) {
 			VR_LOGIMPORTANT("handleDelted called on light index = 0!");
 			lastLightIndex--;
 		}
 
 		/*	Removing lights that marked as deleted by moving the last buffer element
 			to recently deleted element place */
-		else if (lightIndex.index > 0 && lightIndex.index <= lastLightIndex - 1) {
+		else if (lightIndex.index >= 0 && lightIndex.index <= lastLightIndex - 1) {
 			VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
 
 			auto [tailLight, tailLightIndex] = world.get<CompPointLight, CompPointLightIndex>(
@@ -64,11 +66,11 @@ namespace vray {
 		}
 
 		lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
-		world.erase<CompPointLightIndex>(entity);
+		//world.erase<CompPointLightIndex>(entity);
 
 		lightUniformBuffer.unbind();
 
-		VR_LOGIMPORTANT("Component delted!");
+		VR_LOGIMPORTANT("Component deleted!");
 	}
 
 	void LightSystem::setLightData(CompPointLight& light, int index) {

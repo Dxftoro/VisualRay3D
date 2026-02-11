@@ -274,15 +274,15 @@ private:
 	}
 
 	inline void handleLightDeletion(vray::Event& evt) {
-		if (!game.world.valid(someLight)) VR_LOGIMPORTANT("someLight is invalid!");
+		//if (!game.world.valid(someLight)) VR_LOGIMPORTANT("someLight is invalid!");
 		
 		if (evt.getType() == vray::KEY_PRESSED) {
 			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvent.getKeyCode() != VR_KEY_F) return;
 
 			VR_LOGIMPORTANT("Going to destroy the light!");
-			//game.world.destroy(someLight);
-			game.world.erase<vray::CompPointLight>(someLight);
+			game.world.destroy(someLight);
+			//game.world.erase<vray::CompPointLight>(someLight);
 			VR_LOGIMPORTANT("Entity destroyed!");
 		}
 	}
@@ -481,8 +481,8 @@ public:
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
-		someLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		entt::entity light1 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+		entt::entity light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
+		someLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 
