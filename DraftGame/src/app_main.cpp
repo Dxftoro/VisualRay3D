@@ -263,13 +263,27 @@ private:
 			camera->calculateFront(cameraFront);
 
 			glm::vec3 start = camera->getPosition() + glm::vec3(0.0, -1.0f, 0.0f);
-			engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
-			engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
+			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
+			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
 
 			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
 			if (!result) return;
 			
 			engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+		}
+	}
+
+	inline void handleLightDeletion(vray::Event& evt) {
+		if (!game.world.valid(someLight)) VR_LOGIMPORTANT("someLight is invalid!");
+		
+		if (evt.getType() == vray::KEY_PRESSED) {
+			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
+			if (keyEvent.getKeyCode() != VR_KEY_F) return;
+
+			VR_LOGIMPORTANT("Going to destroy the light!");
+			//game.world.destroy(someLight);
+			game.world.erase<vray::CompPointLight>(someLight);
+			VR_LOGIMPORTANT("Entity destroyed!");
 		}
 	}
 
@@ -487,6 +501,7 @@ public:
 		handleRotation(evt);
 		handleMouseUnlock(evt);
 		handleRaycast(evt);
+		handleLightDeletion(evt);
 
 		const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
 		//VR_LOGINFO(std::to_string(playerPos.x) + ", " + std::to_string(playerPos.z));

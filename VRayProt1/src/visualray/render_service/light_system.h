@@ -29,14 +29,14 @@ namespace vray {
 	private:
 		static void onLightAdded(entt::registry& world, const entt::entity entity);
 		static void onLightUpdated(entt::registry& world, const entt::entity entity);
-		static void onLightRemoved(entt::registry& world, const entt::entity entity);
+		void onLightRemoved(entt::registry& world, const entt::entity entity);
 
 	public:
 		LightSystem(entt::registry& world);
 		~LightSystem() {}
 
 		void initBuffer(GlslProgram& program);
-		void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
+		//void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
 		void update();
 
 		void setLightData(CompPointLight& light, int index);

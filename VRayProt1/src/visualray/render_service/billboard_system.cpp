@@ -8,19 +8,22 @@
 
 namespace vray {
 
-	float BillboardSystem::vertexData[] = {
-		-0.5f, 0.5f, 0.0f,		0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,		0.0f, 1.0f,
-		0.5f, 0.5f, 0.0f,		1.0f, 0.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 1.0f
-	};
+	void BillboardVbo::remove(size_t index) {}
+	void BillboardVbo::add(entt::entity entity, const CompBillboard& billboard) {}
+
+	//float BillboardSystem::vertexData[] = {
+	//	-0.5f, 0.5f, 0.0f,		0.0f, 0.0f,
+	//	-0.5f, -0.5f, 0.0f,		0.0f, 1.0f,
+	//	0.5f, 0.5f, 0.0f,		1.0f, 0.0f,
+	//	0.5f, -0.5f, 0.0f,		1.0f, 1.0f
+	//};
 
 	BillboardSystem::BillboardSystem(entt::registry& _world)
-		: world(_world), camera(nullptr), texture(nullptr) {
+		: world(_world), camera(nullptr), texture(nullptr), lastExisting(entt::null), somethingDeleted(false) {
 
 		billboardGroup = BillboardGroup();
-		world.on_construct<CompPointLight>().connect<&BillboardSystem::onBillboardAdded>();
-		world.on_destroy<CompPointLight>().connect<&BillboardSystem::onBillboardRemoved>();
+		world.on_construct<CompBillboard>().connect<&BillboardSystem::onBillboardAdded>();
+		world.on_destroy<CompBillboard>().connect<&BillboardSystem::onBillboardRemoved>();
 	}
 
 	BillboardSystem::~BillboardSystem() {
@@ -29,11 +32,11 @@ namespace vray {
 		}
 	}
 
-	void onBillboardAdded(entt::registry& world, const entt::entity entity) {
+	void BillboardSystem::onBillboardAdded(entt::registry& world, const entt::entity entity) {
 		world.emplace<CompBillboardIndex>(entity).index = VR_RENDERER_BILLBOARD_NEW;
 	}
 
-	void onBillboardRemoved(entt::registry& world, const entt::entity entity) {
+	void BillboardSystem::onBillboardRemoved(entt::registry& world, const entt::entity entity) {
 		world.emplace<CompBillboardIndex>(entity).deleted = true;
 	}
 
@@ -53,11 +56,22 @@ namespace vray {
 		//glm::vec3 position = { -10.0, 10.0, 0.0 };
 	}
 
+	void BillboardSystem::handleDeleted(entt::entity entity, CompBillboardIndex& billboardIndex) {
+
+	}
+
 	void BillboardSystem::update() {
 		program.use();
 		program.setUniform(uCameraPosition, camera->getPosition());
 		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 		program.setUniform(uViewMatrix, camera->getViewMatrix());
+
+		/* Or any else value that indicates that we need to handle deleted billboards */
+		if (somethingDeleted) {
+			for (entt::entity entity : billboardGroup) {
+
+			}
+		}
 
 		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboard& billboard) {
 			auto it = batchTable.find(billboard.texture);
@@ -71,7 +85,7 @@ namespace vray {
 				it->second.vbo.push(billboard);
 			}
 			else {
-				it->second.vbo.set(billboardIndex.index, billboard);
+				it->second.vbo.set(billboardIndex.index, billboard); // !!!
 			}
 		});
 
@@ -80,7 +94,7 @@ namespace vray {
 				glBindVertexArray(it.second.vao);
 				glDrawArrays(GL_POINTS, 0, it.second.vbo.size());
 				glBindVertexArray(0);
-			it.first->bind();
+			it.first->unbind();
 		}
 
 		program.unuse();
