@@ -35,7 +35,7 @@ namespace vray {
 	}
 
 	void InputService::setMousePosition(double x, double y) {
-		glfwSetCursorPos((GLFWwindow*)activeWindow, x, y);
+		glfwSetCursorPos(VR_GLFW_WINDOW, x, y);
 	}
 
 	void InputService::setMouseOnCenter() {
