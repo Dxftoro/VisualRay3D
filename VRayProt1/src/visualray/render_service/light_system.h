@@ -23,7 +23,7 @@ namespace vray {
 		GlslUniformBuffer lightUniformBuffer;
 		
 		entt::registry& world;
-		using LightGroup = decltype(world.group<CompPointLightData, CompPointLightIndex>());
+		using LightGroup = decltype(world.group<CompPointLightIndex>(entt::get<CompPointLightData>));
 		LightGroup lightGroup;
 
 	private:

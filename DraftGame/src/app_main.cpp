@@ -407,18 +407,16 @@ private:
 		transform.setScale({ 0.5f, 0.5f, 0.5f });
 
 		vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get("default"));
-		vray::CompPointLight light = {
-			.position = glm::vec4(position, 1.0f),
-			.la = glm::vec3(0.03f),
-			.ld = glm::vec3(0.6),
-			.ls = glm::vec3(1.0)
-		};
-
-		light.mergeColor(color);
+		
+		game.world.emplace<vray::CompPointLight>(lightMarker);
+		
+		vray::CompPointLightData& lightData = game.world.get<vray::CompPointLightData>(lightMarker);
+		lightData.position = glm::vec4(position, 1.0f);
+		lightData.mergeColor(color);
 
 		game.world.emplace<vray::CompTransform>(lightMarker, transform);
 		game.world.emplace<vray::CompRenderable>(lightMarker, renderable);
-		game.world.emplace<vray::CompPointLight>(lightMarker, light);
+		//game.world.emplace<vray::CompPointLight>(lightMarker, light);
 
 		return lightMarker;
 	}

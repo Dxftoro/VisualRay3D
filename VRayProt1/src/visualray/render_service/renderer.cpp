@@ -39,13 +39,6 @@ namespace vray {
 			.shininess = 32.0
 		};
 
-		light = {
-			.position = glm::vec4(3.0f, 15.0f, 0.0f, 1.0f),
-			.la = glm::vec3(0.03f),
-			.ld = glm::vec3(0.6),
-			.ls = glm::vec3(1.0)
-		};
-
 		try {
 			program.compileShader("shaders\\phong.vert", ShaderType::VERTEX);
 			program.compileShader("shaders\\phong.frag", ShaderType::FRAGMENT);

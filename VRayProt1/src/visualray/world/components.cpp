@@ -93,7 +93,7 @@ namespace vray {
 		front = glm::normalize(front);
 	}
 
-	void CompPointLight::mergeColor(const glm::vec3& color) {
+	void CompPointLightData::mergeColor(const glm::vec3& color) {
 		la *= color;
 		ld *= color;
 		ls *= color;

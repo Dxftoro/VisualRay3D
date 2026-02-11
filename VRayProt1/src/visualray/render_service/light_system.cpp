@@ -8,7 +8,7 @@ namespace vray {
 	LightSystem::LightSystem(entt::registry& _world)
 		: bufferedEntites({ entt::null }), lastLightIndex(0), world(_world) {
 
-		lightGroup = LightGroup();
+		lightGroup = world.group<CompPointLightIndex>(entt::get<CompPointLightData>);
 
 		world.on_construct<CompPointLight>().connect<&LightSystem::onLightAdded>();
 		world.on_update<CompPointLight>().connect<&LightSystem::onLightUpdated>();
@@ -46,7 +46,7 @@ namespace vray {
 
 		/* If it's not buffered */
 		if (lightIndex.index == VR_RENDERER_LIGHT_NEW) {
-			//world.erase<CompPointLightIndex>(entity);
+			world.erase<CompPointLightIndex>(entity);
 			VR_LOGIMPORTANT("Component deleted (not buffered)!");
 			return;
 		}
@@ -74,7 +74,8 @@ namespace vray {
 		}
 
 		lightUniformBuffer.setData(&lastLightIndex, sizeof(lastLightIndex));
-		//world.erase<CompPointLightIndex>(entity);
+		world.erase<CompPointLightIndex>(entity);
+		world.erase<CompPointLightData>(entity);
 
 		lightUniformBuffer.unbind();
 
@@ -126,8 +127,7 @@ namespace vray {
 		//	}
 		//}
 
-		//VR_LOGINFO("Going to iterate over lightGroup!");
-		lightGroup.each([this](entt::entity entity, CompPointLightData& light, CompPointLightIndex& lightIndex) {
+		lightGroup.each([this](entt::entity entity, CompPointLightIndex& lightIndex, CompPointLightData& light) {
 			if (!lightIndex.dirty) return;
 			lightIndex.dirty = false;
 
