@@ -12,17 +12,17 @@
 
 namespace vray {
 
-	using BillboardVboType = GlslFlexibleBuffer<0x8892, CompBillboard>;
+	using BillboardVboType = GlslFlexibleBuffer<0x8892, CompBillboardData>;
 
 	class BillboardVbo : public BillboardVboType {
 	private:
-		//entt::entity lastAdded;
+		CompBillboardData cache;
 
 	public:
 		BillboardVbo() : BillboardVboType(GlslUsage::STREAM_DRAW, VR_RENDERER_BILLBOARD_EXTENT) {}
 
 		void remove(size_t index);
-		void add(entt::entity entity, const CompBillboard& billboard);
+		void add(entt::entity entity, const CompBillboardData& billboard);
 	};
 
 	struct BillboardBatch {
@@ -44,7 +44,7 @@ namespace vray {
 		std::unordered_map<Texture*, BillboardBatch> batchTable;
 
 		entt::registry& world;
-		using BillboardGroup = decltype(world.group<CompBillboardIndex>(entt::get<CompBillboard>));
+		using BillboardGroup = decltype(world.group<CompBillboardIndex>(entt::get<CompBillboardData>));
 		BillboardGroup billboardGroup;
 
 		entt::entity lastExisting;
@@ -63,7 +63,6 @@ namespace vray {
 		void init(CompCamera* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }
 		void setCamera(CompCamera* camera) { this->camera = camera; }
-		void handleDeleted(entt::entity entity, CompBillboardIndex& billboardIndex);
 		void update();
 		
 		BatchTableIterator createBatch(Texture* texture);

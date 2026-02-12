@@ -8,8 +8,27 @@
 
 namespace vray {
 
-	void BillboardVbo::remove(size_t index) {}
-	void BillboardVbo::add(entt::entity entity, const CompBillboard& billboard) {}
+	void BillboardVbo::remove(size_t index) {
+		if (!index && size() == 1) {
+			pop();
+			return;
+		}
+
+		if (index == size() - 1) {
+			pop();
+			cache = get(size() - 1);
+		}
+		else if (index >= 0 && index < size() - 1) {
+			set(index, cache);
+			pop();
+			cache = get(size() - 1);
+		}
+	}
+
+	void BillboardVbo::add(entt::entity entity, const CompBillboardData& billboard) {
+		push(billboard);
+		cache = billboard;
+	}
 
 	//float BillboardSystem::vertexData[] = {
 	//	-0.5f, 0.5f, 0.0f,		0.0f, 0.0f,
@@ -37,7 +56,7 @@ namespace vray {
 	}
 
 	void BillboardSystem::onBillboardRemoved(entt::registry& world, const entt::entity entity) {
-		world.emplace<CompBillboardIndex>(entity).deleted = true;
+		auto [billboard, bilboardIndex] = world.get<CompBillboardData, CompBillboardIndex>(entity);
 	}
 
 	void BillboardSystem::init(CompCamera* camera) {
@@ -56,29 +75,18 @@ namespace vray {
 		//glm::vec3 position = { -10.0, 10.0, 0.0 };
 	}
 
-	void BillboardSystem::handleDeleted(entt::entity entity, CompBillboardIndex& billboardIndex) {
-
-	}
-
 	void BillboardSystem::update() {
 		program.use();
 		program.setUniform(uCameraPosition, camera->getPosition());
 		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
 		program.setUniform(uViewMatrix, camera->getViewMatrix());
 
-		/* Or any else value that indicates that we need to handle deleted billboards */
-		if (somethingDeleted) {
-			for (entt::entity entity : billboardGroup) {
+		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboardData& billboard) {
+			auto it = batchTable.find(billboard.getTexture());
+			if (it == batchTable.end()) it = createBatch(billboard.getTexture());
 
-			}
-		}
-
-		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboard& billboard) {
-			auto it = batchTable.find(billboard.texture);
-			if (it == batchTable.end()) it = createBatch(billboard.texture);
-
-			if (billboard.dirty) return;
-			billboard.dirty = false;
+			if (billboard.isDirty()) return;
+			billboard.setDirty(false);
 
 			if (billboardIndex.index == VR_RENDERER_BILLBOARD_NEW) {
 				billboardIndex.index = it->second.vbo.size();
@@ -110,12 +118,12 @@ namespace vray {
 		it->second.vbo.bind();
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(CompBillboard),
-			(const void*)offsetof(CompBillboard, position));
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(CompBillboardData),
+			(const void*)CompBillboardData::getOffsetOfPosition());
 
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(CompBillboard),
-			(const void*)offsetof(CompBillboard, size));
+		glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(CompBillboardData),
+			(const void*)CompBillboardData::getOffsetOfSize());
 
 		it->second.vbo.ubind();
 

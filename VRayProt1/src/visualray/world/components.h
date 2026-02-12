@@ -122,11 +122,36 @@ namespace vray {
 		bool deleted = false;
 	};
 
-	struct VRAYLIB CompBillboard {
-		glm::vec3 position = glm::vec3(0.0f);
+	struct VRAYLIB CompBillboard {};
+
+	struct VRAYLIB CompBillboardData {
+	private:
+		glm::vec3 position;
 		float size = 1.0f;
 		alignas(8) Texture* texture = nullptr;
-		bool dirty = true;
+		bool dirty = true, textureChanged = false;
+
+	public:
+		CompBillboardData() : position(1.0f), size(1.0f), texture(nullptr),
+			dirty(true), textureChanged(false) {}
+
+		const glm::vec3& getPosition() const { return position; }
+		float getSize() const { return size; }
+		Texture* getTexture() const { return texture; }
+		bool isDirty() const { return dirty; }
+
+		static constexpr size_t getOffsetOfPosition() { return offsetof(CompBillboardData, position); }
+		static constexpr size_t getOffsetOfSize() { return offsetof(CompBillboardData, size); }
+
+		void setPosition(const glm::vec3& position);
+		void setSize(float size);
+		void setTexture(Texture* texture);
+
+		/* !!! Setting by this will DEFINITELY break an internal billboard rendering system !!! */
+		void setDirty(bool dirty) { this->dirty = dirty; }
+
+		/* !!! Setting by this will DEFINITELY break an internal billboard rendering system !!! */
+		void setTextureChanged(bool textureChanged) { this->textureChanged = textureChanged; }
 	};
 
 	struct VRAYLIB CompBillboardIndex {

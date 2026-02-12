@@ -98,4 +98,20 @@ namespace vray {
 		ld *= color;
 		ls *= color;
 	}
+
+	void CompBillboardData::setPosition(const glm::vec3& position) {
+		this->position = position;
+		dirty = true;
+	}
+
+	void CompBillboardData::setSize(float size) {
+		this->size = size;
+		dirty = true;
+	}
+
+	void CompBillboardData::setTexture(Texture* texture) {
+		this->texture = texture;
+		textureChanged = true;
+	}
+
 }
