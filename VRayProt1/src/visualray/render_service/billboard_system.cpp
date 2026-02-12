@@ -25,9 +25,14 @@ namespace vray {
 		}
 	}
 
-	void BillboardVbo::add(entt::entity entity, const CompBillboardData& billboard) {
+	void BillboardVbo::add(const CompBillboardData& billboard) {
 		push(billboard);
 		cache = billboard;
+	}
+
+	void BillboardVbo::update(size_t index, const CompBillboardData& billboard) {
+		set(index, billboard);
+		if (index == size() - 1) cache = billboard;
 	}
 
 	//float BillboardSystem::vertexData[] = {
@@ -42,7 +47,7 @@ namespace vray {
 
 		billboardGroup = BillboardGroup();
 		world.on_construct<CompBillboard>().connect<&BillboardSystem::onBillboardAdded>();
-		world.on_destroy<CompBillboard>().connect<&BillboardSystem::onBillboardRemoved>();
+		world.on_destroy<CompBillboard>().connect<&BillboardSystem::onBillboardRemoved>(this);
 	}
 
 	BillboardSystem::~BillboardSystem() {
@@ -56,7 +61,10 @@ namespace vray {
 	}
 
 	void BillboardSystem::onBillboardRemoved(entt::registry& world, const entt::entity entity) {
-		auto [billboard, bilboardIndex] = world.get<CompBillboardData, CompBillboardIndex>(entity);
+		auto [billboard, billboardIndex] = world.get<CompBillboardData, CompBillboardIndex>(entity);
+		batchTable[billboard.getTexture()].vbo.remove(billboardIndex.index);
+		world.erase<CompBillboardIndex>(entity);
+		world.erase<CompBillboardData>(entity);
 	}
 
 	void BillboardSystem::init(CompCamera* camera) {
@@ -88,13 +96,15 @@ namespace vray {
 			if (billboard.isDirty()) return;
 			billboard.setDirty(false);
 
+			it->second.vbo.bind();
 			if (billboardIndex.index == VR_RENDERER_BILLBOARD_NEW) {
 				billboardIndex.index = it->second.vbo.size();
-				it->second.vbo.push(billboard);
+				it->second.vbo.add(billboard);
 			}
 			else {
-				it->second.vbo.set(billboardIndex.index, billboard); // !!!
+				it->second.vbo.update(billboardIndex.index, billboard); // !!!
 			}
+			it->second.vbo.ubind();
 		});
 
 		for (auto& it : batchTable) {

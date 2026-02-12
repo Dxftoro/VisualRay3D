@@ -127,9 +127,9 @@ namespace vray {
 	struct VRAYLIB CompBillboardData {
 	private:
 		glm::vec3 position;
-		float size = 1.0f;
-		alignas(8) Texture* texture = nullptr;
-		bool dirty = true, textureChanged = false;
+		float size;
+		Texture* texture;
+		bool dirty, textureChanged;
 
 	public:
 		CompBillboardData() : position(1.0f), size(1.0f), texture(nullptr),

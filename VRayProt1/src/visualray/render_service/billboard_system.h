@@ -16,13 +16,16 @@ namespace vray {
 
 	class BillboardVbo : public BillboardVboType {
 	private:
+		/*	The chache helps to reduce the count of driver calls
+			which copy/move some data to the GPU memory. */
 		CompBillboardData cache;
 
 	public:
 		BillboardVbo() : BillboardVboType(GlslUsage::STREAM_DRAW, VR_RENDERER_BILLBOARD_EXTENT) {}
 
 		void remove(size_t index);
-		void add(entt::entity entity, const CompBillboardData& billboard);
+		void add(const CompBillboardData& billboard);
+		void update(size_t index, const CompBillboardData& billboard);
 	};
 
 	struct BillboardBatch {
@@ -54,7 +57,7 @@ namespace vray {
 		//static float vertexData[];
 
 		static void onBillboardAdded(entt::registry& world, const entt::entity entity);
-		static void onBillboardRemoved(entt::registry& world, const entt::entity entity);
+		void onBillboardRemoved(entt::registry& world, const entt::entity entity);
 
 	public:
 		BillboardSystem(entt::registry& world);
