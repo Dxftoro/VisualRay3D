@@ -269,7 +269,9 @@ private:
 			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
 			if (!result) return;
 			
-			engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+			//engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+			glm::vec3 billboardPosition = result->hitPoint + result->hitNormal * 2.0f;
+			spawnBillboard(billboardPosition, 1.0f);
 		}
 	}
 
@@ -497,8 +499,6 @@ public:
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		blueLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		yellowLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
-
-		spawnBillboard({ -10.0, 10.0, 0.0 }, 1.0f);
 	}
 	~DraftGame() {}
 
