@@ -45,7 +45,7 @@ namespace vray {
 	BillboardSystem::BillboardSystem(entt::registry& _world)
 		: world(_world), camera(nullptr), texture(nullptr), lastExisting(entt::null), somethingDeleted(false) {
 
-		billboardGroup = BillboardGroup();
+		billboardGroup = world.group<CompBillboardIndex>(entt::get<CompBillboardData>);
 		world.on_construct<CompBillboard>().connect<&BillboardSystem::onBillboardAdded>();
 		world.on_destroy<CompBillboard>().connect<&BillboardSystem::onBillboardRemoved>(this);
 	}
@@ -57,6 +57,7 @@ namespace vray {
 	}
 
 	void BillboardSystem::onBillboardAdded(entt::registry& world, const entt::entity entity) {
+		world.emplace<CompBillboardData>(entity);
 		world.emplace<CompBillboardIndex>(entity).index = VR_RENDERER_BILLBOARD_NEW;
 	}
 
@@ -93,11 +94,12 @@ namespace vray {
 			auto it = batchTable.find(billboard.getTexture());
 			if (it == batchTable.end()) it = createBatch(billboard.getTexture());
 
-			if (billboard.isDirty()) return;
+			if (!billboard.isDirty()) return;
 			billboard.setDirty(false);
 
 			it->second.vbo.bind();
 			if (billboardIndex.index == VR_RENDERER_BILLBOARD_NEW) {
+				VR_ENGINE_LOGIMPORTANT("New billboard detected!");
 				billboardIndex.index = it->second.vbo.size();
 				it->second.vbo.add(billboard);
 			}

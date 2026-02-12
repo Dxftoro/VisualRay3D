@@ -419,6 +419,18 @@ private:
 		return lightMarker;
 	}
 
+	entt::entity spawnBillboard(const glm::vec3& position, float size) {
+		entt::entity billboard = game.world.create();
+		game.world.emplace<vray::CompBillboard>(billboard);
+
+		vray::CompBillboardData& data = game.world.get<vray::CompBillboardData>(billboard);
+		data.setTexture(game.textures.get("ozu"));
+		data.setPosition(position);
+		data.setSize(size);
+
+		return billboard;
+	}
+
 public:
 	DraftGame()
 	:	Game(vray::WindowParams("Draft Game", 860, 482)),
@@ -485,6 +497,8 @@ public:
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
 		blueLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		yellowLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+
+		spawnBillboard({ -10.0, 10.0, 0.0 }, 1.0f);
 	}
 	~DraftGame() {}
 
