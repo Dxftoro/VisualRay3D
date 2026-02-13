@@ -11,7 +11,11 @@
 #define VR_RENDERER_BILLBOARD_NEW		SIZE_MAX
 
 namespace vray {
+	/*	FIXME: GlslFlexibleBuffer resizing copies it's data to the HOST memory
+		which makes a recently spawned billboards to not render at all!
 
+		PSOL: replace GlslFlexibleBuffer with a coil buffer
+	*/
 	using BillboardVboType = GlslFlexibleBuffer<0x8892, CompBillboardData>;
 
 	class BillboardVbo : public BillboardVboType {
@@ -21,7 +25,7 @@ namespace vray {
 		CompBillboardData cache;
 
 	public:
-		BillboardVbo() : BillboardVboType(GlslUsage::STREAM_DRAW, VR_RENDERER_BILLBOARD_EXTENT) {}
+		BillboardVbo() : BillboardVboType(GlslUsage::DYNAMIC_DRAW, VR_RENDERER_BILLBOARD_EXTENT) {}
 
 		void remove(size_t index);
 		void add(const CompBillboardData& billboard);

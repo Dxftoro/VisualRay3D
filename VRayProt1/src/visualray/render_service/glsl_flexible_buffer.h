@@ -135,7 +135,10 @@ namespace vray {
 			std::cout << "usage: " << STR((GLenum)usage) << std::endl;
 			std::cout << "target usage: " << STR((GLenum)GlslUsage::DYNAMIC_DRAW) << std::endl;
 			
+			VR_ENGINE_LOGIMPORTANT("Old handle id: " + STR(handle));
 			GlslBufferController::resize(handle, bytes(oldCapacity), bytes(capacity), usage);
+			VR_ENGINE_LOGIMPORTANT("New handle id: " + STR(handle));
+			bind();
 		}
 
 		GlslBufferController::setSubData(handle, BufferType, &data, bytes(_size), sizeof(DataType));
