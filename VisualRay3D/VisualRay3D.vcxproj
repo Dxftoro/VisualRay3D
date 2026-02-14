@@ -182,6 +182,9 @@
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
       <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\thirdparty\GLFW\GLFW.vcxproj">
+      <Project>{6e624436-019a-4b70-b718-e99dc564a1e1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
       <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
     </ProjectReference>

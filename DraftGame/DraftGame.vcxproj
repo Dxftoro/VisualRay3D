@@ -59,12 +59,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)VRayProt1\src\visualray;$(SolutionDir)VRayProt1\src;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)\thirdparty\GLM</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)VisualRay3D\src\visualray;$(SolutionDir)VisualRay3D\src;$(SolutionDir)GLFW-prebuilt\;$(SolutionDir)\thirdparty\GLM</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)GLFW-prebuilt\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -76,7 +77,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)VRayProt1\src;$(SolutionDir)GLFW-prebuilt\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)VisualRay3D\src;$(SolutionDir)GLFW-prebuilt\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,7 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VRayProt1\VRayProt1.vcxproj">
+    <ProjectReference Include="..\VisualRay3D\VisualRay3D.vcxproj">
       <Project>{82cbe796-1937-41cc-b3f0-7a85de81f8cf}</Project>
     </ProjectReference>
   </ItemGroup>
