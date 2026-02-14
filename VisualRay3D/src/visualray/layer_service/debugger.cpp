@@ -52,6 +52,7 @@ namespace vray {
 		ImGui_ImplOpenGL3_Init();
 
 		fpsCounter.start(window);
+		//console.setup();
 	}
 
 	Debugger::~Debugger() {
@@ -60,6 +61,7 @@ namespace vray {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+		VR_ENGINE_LOGINFO("ImGui context destroyed!");
 	}
 
 	void Debugger::removeVariable(const std::string& name) {
@@ -81,14 +83,16 @@ namespace vray {
 		//ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
 		//ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
 
-		ImGui::Begin("Debug", &open);
-		ImGui::Text("FPS: %d", fpsCounter.getFps());
+		//ImGui::Begin("Debug", &open);
+		//ImGui::Text("FPS: %d", fpsCounter.getFps());
 
-		for (auto& it : varTable) {
-			it.second.display(it.first.c_str(), it.second.data);
-		}
+		//for (auto& it : varTable) {
+		//	it.second.display(it.first.c_str(), it.second.data);
+		//}
 
-		ImGui::End();
+		//ImGui::End();
+
+		console.update();
 
 		//else {
 			//ImGui::ShowDemoWindow();

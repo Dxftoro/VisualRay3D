@@ -2,6 +2,7 @@
 #include "kernel.h"
 
 #include "fps_counter.h"
+#include "console.h"
 
 namespace vray {
 
@@ -44,6 +45,7 @@ namespace vray {
 	private:
 		Window* window;
 		FpsCounter fpsCounter;
+		Console console;
 		std::unordered_map<std::string, DebugType> varTable;
 		float time;
 		bool open;

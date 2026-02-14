@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\visualray\game.cpp" />
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
+    <ClCompile Include="src\visualray\layer_service\console.cpp" />
     <ClCompile Include="src\visualray\layer_service\debugger.cpp" />
     <ClCompile Include="src\visualray\layer_service\fps_counter.cpp" />
     <ClCompile Include="src\visualray\logger.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="src\visualray\input_codes.h" />
     <ClInclude Include="src\visualray\input_service\input_service.h" />
     <ClInclude Include="src\visualray\kernel.h" />
+    <ClInclude Include="src\visualray\layer_service\console.h" />
     <ClInclude Include="src\visualray\layer_service\debugger.h" />
     <ClInclude Include="src\visualray\layer_service\fps_counter.h" />
     <ClInclude Include="src\visualray\logger.h" />
@@ -177,9 +179,6 @@
     </ProjectReference>
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
       <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\thirdparty\GLFW\GLFW.vcxproj">
-      <Project>{6e624436-019a-4b70-b718-e99dc564a1e1}</Project>
     </ProjectReference>
     <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
       <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>

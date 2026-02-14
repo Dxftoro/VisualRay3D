@@ -434,7 +434,7 @@ private:
 
 public:
 	DraftGame()
-	:	Game(vray::WindowParams("Draft Game", 860, 482)),
+	:	Game(vray::WindowParams("Draft Game", 1290, 723)),
 		engine(getEngineContext()),
 		game(getGameContext())
 	{
