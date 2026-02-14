@@ -65,6 +65,8 @@ namespace vray {
 		void setOpen(bool open) { this->open = open; }
 
 		bool isOpen() const { return open; }
+
+		Console* getConsole() { return &console; }
 	};
 
 	template <typename T>

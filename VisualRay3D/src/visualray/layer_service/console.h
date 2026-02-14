@@ -6,18 +6,29 @@
 
 namespace vray {
 
+	struct VRAYLIB ConsoleCommand {
+		using CommandCallback = std::function<void(const std::vector<std::string>&)>;
+		CommandCallback callback;
+		std::string description;
+	};
+
 	class VRAYLIB Console {
 	private:
+		std::unordered_map<std::string, ConsoleCommand> commands;
 		std::vector<std::string> messages;
 		std::string inputBuffer;
-		alignas(8) bool initialized;
+		bool initialized, opened;
 
 	public:
 		Console();
 
-		inline void setup();
+		void setup();
 		void update();
-		void addMessage(const std::string& message) { messages.push_back(message); }
+		void write(const std::string& message) { messages.push_back("~ " + message); }
+		void tokenize(const std::string& message, std::vector<std::string>& outArgs);
+		void execute(const std::string& message);
+		void open();
+		void close();
 	};
 
 }

@@ -18,6 +18,7 @@ namespace vray {
 	}
 
 	void Console::update() {
+		if (!opened) return;
 		if (!initialized) {
 			setup();
 			initialized = true;
@@ -46,7 +47,7 @@ namespace vray {
 			ImGuiInputTextFlags_EnterReturnsTrue)) {
 
 			if (inputBuffer[0]) {
-				addMessage(inputBuffer);
+				execute(inputBuffer);
 				inputBuffer[0] = '\0';
 			    reclaimFocus = true;
 			}
@@ -58,6 +59,46 @@ namespace vray {
 		if (reclaimFocus) ImGui::SetKeyboardFocusHere();
 
 		ImGui::End();
+	}
+
+	void Console::tokenize(const std::string& message, std::vector<std::string>& args) {
+		std::string arg;
+		for (char c : message) {
+			if (c == ' ' || c == '\t' || c == '\0') {
+				args.push_back(arg);
+				arg.clear();
+				continue;
+			}
+
+			arg += c;
+		}
+
+		if (!arg.empty()) args.push_back(arg);
+	}
+
+	void Console::execute(const std::string& message) {
+		write(message);
+
+		std::vector<std::string> args;
+		tokenize(message, args);
+
+		if (args.empty()) return;
+
+		auto it = commands.find(args[0]);
+		if (it != commands.end()) {
+			it->second.callback(args);
+		}
+		else {
+			write("Unknown command: " + args[0]);
+		}
+	}
+
+	void Console::open() {
+		opened = true;
+	}
+
+	void Console::close() {
+		opened = false;
 	}
 
 }
