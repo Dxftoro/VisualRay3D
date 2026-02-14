@@ -2,6 +2,8 @@
 #include "kernel.h"
 #include "vrpch.h"
 
+#define VR_CONSOLE_INPUT_BUFFER_SIZE	512
+
 namespace vray {
 
 	class VRAYLIB Console {
@@ -11,10 +13,11 @@ namespace vray {
 		alignas(8) bool initialized;
 
 	public:
-		Console() : initialized(false) {}
+		Console();
 
 		inline void setup();
 		void update();
+		void addMessage(const std::string& message) { messages.push_back(message); }
 	};
 
 }

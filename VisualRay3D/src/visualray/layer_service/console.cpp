@@ -7,9 +7,9 @@
 
 namespace vray {
 
-	//Console::Console() : initialized(false) {
-	//	// Â console.cpp (â DLL)
-	//}
+	Console::Console() : initialized(false) {
+		inputBuffer.resize(VR_CONSOLE_INPUT_BUFFER_SIZE);
+	}
 
 	void Console::setup() {
 		ImVec2 windowSize = ImGui::GetMainViewport()->Size;
@@ -23,18 +23,41 @@ namespace vray {
 			initialized = true;
 		}
 
+		ImGui::Begin("Console");
 		float footerHeight = ImGui::GetFrameHeightWithSpacing() * 2;
 		bool reclaimFocus = false;
+
+		ImGui::PushItemWidth(-1);
+
+		if (ImGui::BeginChild("Scrolling", ImVec2(0, -footerHeight), false,
+		  ImGuiWindowFlags_HorizontalScrollbar)) {
+
+			for (std::string& message : messages) {
+				ImGui::TextUnformatted(message.c_str());
+			}
+		}
+		ImGui::EndChild();
+
+		ImGui::Separator();
+
+		if (ImGui::InputText("##commandInput",
+			&inputBuffer[0],
+			(VR_CONSOLE_INPUT_BUFFER_SIZE),
+			ImGuiInputTextFlags_EnterReturnsTrue)) {
+
+			if (inputBuffer[0]) {
+				addMessage(inputBuffer);
+				inputBuffer[0] = '\0';
+			    reclaimFocus = true;
+			}
 		
-		//ImGui::PushItemWidth(-1);
+		}
 
-		ImGui::Begin("Console");
+		ImGui::PopItemWidth();
 
-
+		if (reclaimFocus) ImGui::SetKeyboardFocusHere();
 
 		ImGui::End();
-
-		//ImGui::PopItemWidth();
 	}
 
 }
