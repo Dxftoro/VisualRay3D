@@ -9,6 +9,19 @@ namespace vray {
 
 	Console::Console() : initialized(false), opened(false) {
 		inputBuffer.resize(VR_CONSOLE_INPUT_BUFFER_SIZE);
+
+		addCommand("help", [this](const std::vector<std::string>& args) {
+			write("List of available commands:");
+			for (auto& it : commands) {
+				write(it.first + "\t- " + it.second.description);
+			}
+		},
+		"This command. Prints descriptions of all other commands added.");
+
+		addCommand("clear", [this](const std::vector<std::string>& args) {
+			messages.clear();
+		},
+		"Cleans the console log.");
 	}
 
 	void Console::setup() {
@@ -56,8 +69,7 @@ namespace vray {
 
 		ImGui::PopItemWidth();
 
-		if (reclaimFocus) ImGui::SetKeyboardFocusHere();
-
+		if (reclaimFocus) ImGui::SetKeyboardFocusHere(-1);
 		ImGui::End();
 	}
 
