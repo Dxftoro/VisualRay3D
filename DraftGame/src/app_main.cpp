@@ -84,9 +84,10 @@ class DraftGame : public vray::Game {
 private:
 	vray::EngineContext& engine;
 	vray::GameContext& game;
+	vray::Console* console;
 	PlayerController pc;
 
-	entt::entity player, teapot, yellowLight, blueLight;
+	entt::entity player, teapot;
 	vray::CompCamera* camera;
 
 	float playerSpeed;
@@ -160,10 +161,12 @@ private:
 		glm::vec3 position = transform.getPosition();
 
 		float forwardMove = 0.0f, sideMove = 0.0f;
-		if (inputService.keyPressed(VR_KEY_W)) forwardMove += 1.0f;
-		if (inputService.keyPressed(VR_KEY_S)) forwardMove -= 1.0f;
-		if (inputService.keyPressed(VR_KEY_A)) sideMove -= 1.0f;
-		if (inputService.keyPressed(VR_KEY_D)) sideMove += 1.0f;
+		if (!console->isOpened()) {
+			if (inputService.keyPressed(VR_KEY_W)) forwardMove += 1.0f;
+			if (inputService.keyPressed(VR_KEY_S)) forwardMove -= 1.0f;
+			if (inputService.keyPressed(VR_KEY_A)) sideMove -= 1.0f;
+			if (inputService.keyPressed(VR_KEY_D)) sideMove += 1.0f;
+		}
 
 		pc.calculateDirections(camera);
 		glm::vec3 wishVel = (pc.forward * forwardMove) + (pc.right * sideMove); wishVel.y = 0.0f;
@@ -274,20 +277,11 @@ private:
 		}
 	}
 
-	inline void handleLightDeletion(vray::Event& evt) {
-		//if (!game.world.valid(someLight)) VR_LOGIMPORTANT("someLight is invalid!");
-		
+	inline void handleConsole(vray::Event& evt) {
 		if (evt.getType() == vray::KEY_PRESSED) {
 			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
-			if (keyEvent.getKeyCode() == VR_KEY_F) {
-				VR_LOGIMPORTANT("Going to destroy the light!");
-				game.world.destroy(yellowLight);
-				VR_LOGIMPORTANT("Entity destroyed!");
-			}
-			else if (keyEvent.getKeyCode() == VR_KEY_G) {
-				VR_LOGIMPORTANT("Going to destroy the light!");
-				game.world.destroy(blueLight);
-				VR_LOGIMPORTANT("Entity destroyed!");
+			if (keyEvent.getKeyCode() == VR_KEY_ESCAPE) {
+				console->setOpened(!console->isOpened());
 			}
 		}
 	}
@@ -432,6 +426,13 @@ private:
 		return billboard;
 	}
 
+	void consoleTest(const std::vector<std::string>& args) {
+		console->write("Arg count: " + STR(args.size()));
+		for (const std::string& arg : args) {
+			console->write(arg);
+		}
+	}
+
 public:
 	DraftGame()
 	:	Game(vray::WindowParams("Draft Game", 1290, 723)),
@@ -454,6 +455,11 @@ public:
 		pc.onGround = true;
 		player = game.world.create();
 		playerSpeed = 0.0f;
+
+		console = engine.debugger->getConsole();
+		console->addCommand("test", [this](const std::vector<std::string>& args) {
+			consoleTest(args);
+		}, "A test command.");
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
@@ -496,8 +502,8 @@ public:
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
-		blueLight = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		yellowLight = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+		spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
+		spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 
@@ -513,10 +519,13 @@ public:
 	}
 
 	inline void onEvent(vray::Event& evt) {
-		handleRotation(evt);
+		if (!console->isOpened()) {
+			handleRotation(evt);
+			handleRaycast(evt);
+		}
+
 		handleMouseUnlock(evt);
-		handleRaycast(evt);
-		handleLightDeletion(evt);
+		handleConsole(evt);
 
 		const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
 		//VR_LOGINFO(std::to_string(playerPos.x) + ", " + std::to_string(playerPos.z));

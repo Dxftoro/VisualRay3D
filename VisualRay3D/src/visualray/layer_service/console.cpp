@@ -7,7 +7,7 @@
 
 namespace vray {
 
-	Console::Console() : initialized(false) {
+	Console::Console() : initialized(false), opened(false) {
 		inputBuffer.resize(VR_CONSOLE_INPUT_BUFFER_SIZE);
 	}
 
@@ -64,11 +64,12 @@ namespace vray {
 	void Console::tokenize(const std::string& message, std::vector<std::string>& args) {
 		std::string arg;
 		for (char c : message) {
-			if (c == ' ' || c == '\t' || c == '\0') {
+			if (c == ' ' || c == '\t') {
 				args.push_back(arg);
 				arg.clear();
 				continue;
 			}
+			else if (c == '\0') break;
 
 			arg += c;
 		}
@@ -93,12 +94,12 @@ namespace vray {
 		}
 	}
 
-	void Console::open() {
-		opened = true;
-	}
+	void Console::addCommand(
+		const const std::string& name, 
+		const CommandCallback& callback, 
+		const std::string& description) {
 
-	void Console::close() {
-		opened = false;
+		commands[name] = { callback, description };
 	}
 
 }

@@ -6,8 +6,8 @@
 
 namespace vray {
 
+	using CommandCallback = std::function<void(const std::vector<std::string>&)>;
 	struct VRAYLIB ConsoleCommand {
-		using CommandCallback = std::function<void(const std::vector<std::string>&)>;
 		CommandCallback callback;
 		std::string description;
 	};
@@ -27,8 +27,10 @@ namespace vray {
 		void write(const std::string& message) { messages.push_back("~ " + message); }
 		void tokenize(const std::string& message, std::vector<std::string>& outArgs);
 		void execute(const std::string& message);
-		void open();
-		void close();
+		void addCommand(const std::string& name, const CommandCallback& callback, const std::string& description);
+		void setOpened(bool opened) { this->opened = opened; }
+
+		bool isOpened() const { return opened; }
 	};
 
 }
