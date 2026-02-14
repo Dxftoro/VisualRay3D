@@ -11,7 +11,6 @@
 
 #include "event_service/event.h"
 #include "event_service/game_events.h"
-#include "layer_service/layer_stack.h"
 #include "managers/resource_manager.h"
 
 namespace vray {
@@ -20,7 +19,6 @@ namespace vray {
 
 	struct VRAYLIB EngineContext {
 		std::unique_ptr<Window> window;
-		//LayerStack layerStack;
 		Debugger* debugger;
 		Renderer* renderer;
 		IPhysics* physics;
@@ -73,12 +71,6 @@ namespace vray {
 		Window* getWindow() const { return engineContext.window.get(); }
 		EngineContext& getEngineContext() { return engineContext; }
 		GameContext& getGameContext() { return gameContext; }
-
-		//inline void pushLayer(Layer* layer) { engineContext.layerStack.pushLayer(layer); }
-		//inline void pushOverlay(Layer* overlay) { engineContext.layerStack.pushOverlay(overlay); }
-
-		//inline void popLayer(Layer* layer) { engineContext.layerStack.popLayer(); }
-		//inline void popOverlay(Layer* overlay) { engineContext.layerStack.popOverlay(); }
 
 		static float deltaTime();
 		static float getFpsLimit() { return fpsLimit; };

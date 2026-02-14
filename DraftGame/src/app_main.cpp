@@ -1,6 +1,5 @@
 #include <visualray.h>
 #include <visualray/event_service/keyboard_events.h>
-#include <visualray/layer_service/imgui_layer.h>
 #include <visualray/layer_service/debugger.h>
 
 struct PlayerController {

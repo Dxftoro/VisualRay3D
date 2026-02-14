@@ -5,7 +5,6 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "event_service/game_events.h"
-#include "layer_service/imgui_layer.h"
 #include "layer_service/debugger.h"
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
@@ -33,7 +32,6 @@ namespace vray {
 
 		engineContext.inputService = InputService(engineContext.window.get());
 		engineContext.debugger = new Debugger(engineContext.window.get());
-		//pushOverlay(new ImGuiLayer(engineContext.window.get()));
 
 		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable>);
 		
@@ -91,7 +89,6 @@ namespace vray {
 			engineContext.renderer->update(deltaTime());
 
 			engineContext.window->onUpdate();
-			//engineContext.layerStack.update();
 			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
 

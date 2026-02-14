@@ -15,8 +15,6 @@
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
     <ClCompile Include="src\visualray\layer_service\debugger.cpp" />
     <ClCompile Include="src\visualray\layer_service\fps_counter.cpp" />
-    <ClCompile Include="src\visualray\layer_service\imgui_layer.cpp" />
-    <ClCompile Include="src\visualray\layer_service\layer_stack.cpp" />
     <ClCompile Include="src\visualray\logger.cpp" />
     <ClCompile Include="src\visualray\logservice.cpp" />
     <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
@@ -65,8 +63,6 @@
     <ClInclude Include="src\visualray\kernel.h" />
     <ClInclude Include="src\visualray\layer_service\debugger.h" />
     <ClInclude Include="src\visualray\layer_service\fps_counter.h" />
-    <ClInclude Include="src\visualray\layer_service\imgui_layer.h" />
-    <ClInclude Include="src\visualray\layer_service\layer_stack.h" />
     <ClInclude Include="src\visualray\logger.h" />
     <ClInclude Include="src\visualray\logservice.h" />
     <ClInclude Include="src\visualray\managers\resource.h" />
