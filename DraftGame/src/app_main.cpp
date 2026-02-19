@@ -465,7 +465,10 @@ public:
 		}, "A test command.");
 
 		console->addCommand("sett", [this](const std::vector<std::string>& args) {
-			if (args.size() <= 1) console->write("No such args!");
+			if (args.size() <= 1) {
+				console->write("No such args!");
+				return;
+			}
 			
 			try {
 				billboardTexture = game.textures.get(args[1]);
