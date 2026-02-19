@@ -90,6 +90,8 @@ private:
 	entt::entity player, teapot;
 	vray::CompCamera* camera;
 
+	vray::Texture* billboardTexture;
+
 	float playerSpeed;
 	
 	inline void moveRotated(glm::vec3& position, const float angle, const float moveSpeed) {
@@ -419,7 +421,7 @@ private:
 		game.world.emplace<vray::CompBillboard>(billboard);
 
 		vray::CompBillboardData& data = game.world.get<vray::CompBillboardData>(billboard);
-		data.setTexture(game.textures.get("ozu"));
+		data.setTexture(billboardTexture);
 		data.setPosition(position);
 		data.setSize(size);
 
@@ -451,6 +453,7 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
+		billboardTexture = ozuTexture;
 
 		pc.onGround = true;
 		player = game.world.create();
@@ -460,6 +463,17 @@ public:
 		console->addCommand("test", [this](const std::vector<std::string>& args) {
 			consoleTest(args);
 		}, "A test command.");
+
+		console->addCommand("sett", [this](const std::vector<std::string>& args) {
+			if (args.size() <= 1) console->write("No such args!");
+			
+			try {
+				billboardTexture = game.textures.get(args[1]);
+			}
+			catch (std::exception exc) {
+				console->write(exc.what());
+			}
+		});
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);

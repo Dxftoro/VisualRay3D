@@ -27,7 +27,8 @@ namespace vray {
 		void write(const std::string& message) { messages.push_back("~ " + message); }
 		void tokenize(const std::string& message, std::vector<std::string>& outArgs);
 		void execute(const std::string& message);
-		void addCommand(const std::string& name, const CommandCallback& callback, const std::string& description);
+		void addCommand(const std::string& name, const CommandCallback& callback,
+			const std::string& description = "No description provided.");
 		void setOpened(bool opened) { this->opened = opened; }
 
 		bool isOpened() const { return opened; }
