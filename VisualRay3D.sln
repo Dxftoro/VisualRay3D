@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,8 +10,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "ImGui\ImGui.vcxproj", "{D7246C64-5795-4C28-9E0C-C9D655B5EC1F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "thirdparty\GLAD\GLAD.vcxproj", "{C12B75C9-BC6F-4EF0-870C-1CAA5E52F145}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{6CC1C8A3-7B34-4808-8EE1-3FC9B6092FC4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "thirdparty\GLFW\GLFW.vcxproj", "{6E624436-019A-4B70-B718-E99DC564A1E1}"
 EndProject
@@ -36,10 +35,6 @@ Global
 		{C12B75C9-BC6F-4EF0-870C-1CAA5E52F145}.Debug|x64.Build.0 = Debug|x64
 		{C12B75C9-BC6F-4EF0-870C-1CAA5E52F145}.Release|x64.ActiveCfg = Release|x64
 		{C12B75C9-BC6F-4EF0-870C-1CAA5E52F145}.Release|x64.Build.0 = Release|x64
-		{6CC1C8A3-7B34-4808-8EE1-3FC9B6092FC4}.Debug|x64.ActiveCfg = Debug|x64
-		{6CC1C8A3-7B34-4808-8EE1-3FC9B6092FC4}.Debug|x64.Build.0 = Debug|x64
-		{6CC1C8A3-7B34-4808-8EE1-3FC9B6092FC4}.Release|x64.ActiveCfg = Release|x64
-		{6CC1C8A3-7B34-4808-8EE1-3FC9B6092FC4}.Release|x64.Build.0 = Release|x64
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Debug|x64.ActiveCfg = Debug|x64
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Debug|x64.Build.0 = Debug|x64
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Release|x64.ActiveCfg = Release|x64

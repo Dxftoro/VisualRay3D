@@ -105,7 +105,7 @@ namespace vray {
 		float shininess;
 	};
 
-	struct VRAYLIB CompPointLight {};
+	struct VRAYLIB CompPointLight { bool dummy; };
 
 	struct VRAYLIB CompPointLightData {
 		glm::vec4 position;
@@ -122,7 +122,7 @@ namespace vray {
 		bool deleted = false;
 	};
 
-	struct VRAYLIB CompBillboard {};
+	struct VRAYLIB CompBillboard { bool dummy; };
 
 	struct VRAYLIB CompBillboardData {
 	private:

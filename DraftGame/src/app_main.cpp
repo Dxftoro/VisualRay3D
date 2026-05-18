@@ -87,7 +87,7 @@ private:
 	vray::Console* console;
 	PlayerController pc;
 
-	entt::entity player, teapot;
+	entt::entity player, teapot, light1, light2;
 	vray::CompCamera* camera;
 
 	vray::Texture* billboardTexture;
@@ -428,11 +428,51 @@ private:
 		return billboard;
 	}
 
+	entt::entity spawnPhysicsModel(const glm::vec3& position, const glm::vec3& scale, vray::Mesh* mesh) {
+		entt::entity model = game.world.create();
+
+		vray::CompTransform transform;
+		transform.setPosition(position);
+
+		vray::CompRenderable renderable(mesh, game.textures.get("default"));
+		vray::CompHitbox hitbox{
+			.shapeType = vray::CompHitbox::ShapeType::BOX,
+			.physType = vray::CompHitbox::PhysType::DYNAMIC,
+			.size = scale,
+			.radius = 10,
+			.mass = 10.0f
+		};
+
+		game.world.emplace<vray::CompTransform>(model, transform);
+		game.world.emplace<vray::CompRenderable>(model, renderable);
+		game.world.emplace<vray::CompHitbox>(model, hitbox);
+
+		return model;
+	}
+
 	void consoleTest(const std::vector<std::string>& args) {
 		console->write("Arg count: " + STR(args.size()));
 		for (const std::string& arg : args) {
 			console->write(arg);
 		}
+	}
+
+	void updateLight(entt::entity marker) {
+		auto& transform = game.world.get<vray::CompTransform>(marker);
+		const glm::vec3& position = transform.getPosition();
+
+		transform.setPosition({
+			position.x + 0.5 * glm::sin(deltaTime() * 5.0f),
+			position.y,
+			position.z + 0.1 * glm::sin(deltaTime() * 5.0f)
+		});
+
+		game.world.patch<vray::CompPointLight>(marker, [marker, this, transform](vray::CompPointLight& light) {
+			auto& data = game.world.get<vray::CompPointLightData>(marker);
+			data.position.x = transform.getPosition().x;
+			data.position.y = transform.getPosition().y;
+			data.position.z = transform.getPosition().z;
+		});
 	}
 
 public:
@@ -478,6 +518,43 @@ public:
 			}
 		});
 
+		console->addCommand("aabbs", [this](const std::vector<std::string>& args) {
+			if (args.size() <= 1) {
+				console->write("No such args!");
+				return;
+			}
+
+			bool enabled = (args[1] == "1") ? true : false;
+			if (!engine.physicsDebugSystem) {
+				return;
+			}
+			engine.physicsDebugSystem->setEnabled(enabled);
+		});
+
+		console->addCommand("load", [this](const std::vector<std::string>& args) {
+			if (args.size() < 4) {
+				console->write("No such args!");
+				return;
+			}
+
+			glm::vec3 cameraFront, position;
+
+			camera->calculateFront(cameraFront);
+			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
+			
+			if (!result) return;
+			position = result->hitPoint + result->hitNormal * 5.0f;
+
+			try {
+				vray::Mesh* mesh = game.meshes.get("models/" + args[1]);
+				glm::vec3 scale = { std::stof(args[2]), std::stof(args[3]), std::stof(args[4]) };
+				spawnPhysicsModel(position, scale, mesh);
+			}
+			catch (std::runtime_error exc) {
+				console->write(exc.what());
+			}
+		});
+
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
 		engine.debugger->addVariable("Forward: (%.3f, %.3f, %.3f)", &pc.forward);
@@ -519,8 +596,8 @@ public:
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
 		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
-		spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
-		spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
+		light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
+		light2 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 
@@ -528,6 +605,8 @@ public:
 		detectGround();
 		handleKeysGrounded();
 
+		updateLight(light1);
+		updateLight(light2);
 		//vray::CompTransform& transform = world.get<vray::CompTransform>(teapot);
 
 		//timeAccumulator += deltaTime();

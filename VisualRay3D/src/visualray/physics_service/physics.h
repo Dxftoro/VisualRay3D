@@ -23,6 +23,7 @@ namespace vray {
 	public:
 		virtual void pushDebugLine(const glm::vec3& start, const glm::vec3& end) = 0;
 		virtual void update(bool enabled) = 0;
+		virtual void setEnabled(bool enabled) = 0;
 	};
 
 }

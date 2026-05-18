@@ -45,6 +45,13 @@ namespace vray {
 		elements.clear();
 	}
 
+	void Rp3dDebugSystem::setEnabled(bool enabled) {
+		VR_ENGINE_LOGINFO("Debug system enabled call");
+		rp3d::DebugRenderer& debugRenderer = physics->getDebugRenderer();
+		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, enabled);
+		debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, enabled);
+	}
+
 	void Rp3dDebugSystem::pushUserVertexData() {
 		for (unsigned int index = 0; index < userVertexData.size(); index++) {
 			vertexData.push_back(userVertexData[index]);

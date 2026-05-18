@@ -21,6 +21,7 @@ namespace vray {
 
 		virtual void pushDebugLine(const glm::vec3& start, const glm::vec3& end) override;
 		virtual void update(bool enabled) override;
+		virtual void setEnabled(bool enabled) override;
 
 		void pushUserVertexData();
 	};
