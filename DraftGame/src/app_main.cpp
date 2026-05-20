@@ -457,17 +457,19 @@ private:
 		}
 	}
 
-	void updateLight(entt::entity marker) {
+	void updateLight(entt::entity marker, bool reversed) {
 		auto& transform = game.world.get<vray::CompTransform>(marker);
 		const glm::vec3& position = transform.getPosition();
 
+		static float delta = 0.0f;
+		delta += deltaTime();
 		transform.setPosition({
-			position.x + 0.5 * glm::sin(deltaTime() * 5.0f),
+			23.0f * glm::cos(delta * 0.1f) * (reversed ? -1.0f : 1.0f),
 			position.y,
-			position.z + 0.1 * glm::sin(deltaTime() * 5.0f)
+			23.0f * glm::sin(delta * 0.1f) * (reversed ? -1.0f : 1.0f)
 		});
 
-		game.world.patch<vray::CompPointLight>(marker, [marker, this, transform](vray::CompPointLight& light) {
+		game.world.patch<vray::CompPointLight>(marker, [marker, this, &transform](vray::CompPointLight& light) {
 			auto& data = game.world.get<vray::CompPointLightData>(marker);
 			data.position.x = transform.getPosition().x;
 			data.position.y = transform.getPosition().y;
@@ -605,8 +607,8 @@ public:
 		detectGround();
 		handleKeysGrounded();
 
-		updateLight(light1);
-		updateLight(light2);
+		updateLight(light1, true);
+		updateLight(light2, false);
 		//vray::CompTransform& transform = world.get<vray::CompTransform>(teapot);
 
 		//timeAccumulator += deltaTime();
