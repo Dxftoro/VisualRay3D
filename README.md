@@ -1,5 +1,5 @@
 # VisualRay3D
-VisualRay3D is a ECS game engine with focus on low-end devices. For now it has been implemented as a dynamic library and still very minimalistic.
+VisualRay3D is an ECS game engine with focus on low-end devices. For now it has been implemented as a dynamic library and still very minimalistic.
 The primary goal of this project is to make an individual creative tool.
 
 The engine uses [GLFW](https://github.com/glfw/glfw) and OpenGL 4.6 for context/rendering, ReactPhysics3D for physics and [EnTT](https://github.com/skypjack/entt) for an ECS implementation.
