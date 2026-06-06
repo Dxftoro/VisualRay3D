@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\visualray\audio_service\alsoft_audio.cpp" />
     <ClCompile Include="src\visualray\game.cpp" />
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
     <ClCompile Include="src\visualray\layer_service\console.cpp" />
@@ -50,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\visualray.h" />
+    <ClInclude Include="src\visualray\audio_service\alsoft_audio.h" />
+    <ClInclude Include="src\visualray\audio_service\audio.h" />
+    <ClInclude Include="src\visualray\audio_service\audio_exception.h" />
     <ClInclude Include="src\visualray\entry_point.h" />
     <ClInclude Include="src\visualray\event_service\event.h" />
     <ClInclude Include="src\visualray\event_service\game_events.h" />

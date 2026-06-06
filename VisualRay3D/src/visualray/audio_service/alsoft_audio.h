@@ -1,10 +1,10 @@
 #pragma once
 #include "audio.h"
 
-namespace vray {
+struct ALCdevice;
+struct ALCcontext;
 
-	struct ALCdevice;
-	struct ALCcontext;
+namespace vray {
 
 	class AlsoftAudio : public Audio {
 	private:
@@ -12,7 +12,7 @@ namespace vray {
 		ALCcontext* context;
 
 	public:
-		AlsoftAudio(entt::registry& world) : Audio(world) {}
+		AlsoftAudio(entt::registry& world);
 		~AlsoftAudio() override;
 
 		void update() override;
