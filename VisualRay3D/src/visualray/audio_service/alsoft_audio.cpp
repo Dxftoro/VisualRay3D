@@ -9,9 +9,12 @@ namespace vray {
 
 	AlsoftAudio::AlsoftAudio(entt::registry& _world) : Audio(_world) {
 		device = alcOpenDevice(nullptr);
+		if (!device) throw AudioException("Can't open sound device!");
 
-		if (!device) {
-
+		context = alcCreateContext(device, nullptr);
+		if (!context || !alcMakeContextCurrent(context)) {
+			alcCloseDevice(device);
+			throw AudioException("Can't setup audio context!");
 		}
 	}
 
