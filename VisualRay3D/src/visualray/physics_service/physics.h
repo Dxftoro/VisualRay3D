@@ -3,7 +3,7 @@
 #include "kernel.h"
 #include "raycast_result.h"
 
-#include <glm/glm.hpp>
+#include <thirdparty/glm/glm.hpp>
 
 namespace vray {
 

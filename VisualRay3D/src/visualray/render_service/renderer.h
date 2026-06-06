@@ -7,7 +7,7 @@
 #include "world/components.h"
 #include "../thirdparty/EnTT/entt.hpp"
 
-#include <glm/glm.hpp>
+#include <thirdparty/glm/glm.hpp>
 
 //#include "vertex_array.h"
 #include "glsl_program.h"

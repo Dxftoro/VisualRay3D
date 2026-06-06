@@ -8,7 +8,7 @@ TODO: Uniform layouts and attribute layouts
 #include "vrpch.h"
 #include "kernel.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <thirdparty/glm/gtc/matrix_transform.hpp>
 #include "glsl_uniform_buffer.h"
 
 namespace vray {

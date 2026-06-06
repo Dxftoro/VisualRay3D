@@ -1,8 +1,8 @@
 #include "vrpch.h"
 #include <glad/glad.h>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <thirdparty/glm/gtx/string_cast.hpp>
+#include <thirdparty/glm/gtc/matrix_transform.hpp>
 
 #include "renderer.h"
 #include "vertex_array.h"

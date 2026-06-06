@@ -2,7 +2,7 @@
 #include "kernel.h"
 
 #include "frustum_camera.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include <thirdparty/glm/gtc/matrix_transform.hpp>
 
 namespace vray {
 

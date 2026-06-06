@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
+#include <thirdparty/glm/gtx/string_cast.hpp>
 
 namespace vray {
 

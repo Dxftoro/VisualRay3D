@@ -4,7 +4,7 @@
 
 #include "logservice.h"
 #include <glad/glad.h>
-#include <glm/gtc/type_ptr.hpp>
+#include <thirdparty/glm/gtc/type_ptr.hpp>
 
 namespace vray {
 

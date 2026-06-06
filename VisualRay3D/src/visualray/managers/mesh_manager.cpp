@@ -3,8 +3,8 @@
 //#include "resource_loader.h"
 //
 //#define GLM_ENABLE_EXPERIMENTAL
-//#include <glm/glm.hpp>
-//#include <glm/gtx/string_cast.hpp>
+//#include <thirdparty/glm/glm.hpp>
+//#include <thirdparty/glm/gtx/string_cast.hpp>
 //
 //#define TINYOBJLOADER_IMPLEMENTATION
 //#include "thirdparty/tiny_obj_loader.h"

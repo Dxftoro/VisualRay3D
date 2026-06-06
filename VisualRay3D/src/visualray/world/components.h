@@ -1,6 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <thirdparty/glm/glm.hpp>
+#include <thirdparty/glm/gtc/quaternion.hpp>
 #include "managers/resource.h"
 
 namespace vray {
