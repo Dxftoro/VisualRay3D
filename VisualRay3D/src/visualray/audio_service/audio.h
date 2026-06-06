@@ -1,9 +1,10 @@
 #pragma once
+#include "kernel.h"
 #include <thirdparty/EnTT/entt.hpp>
 
 namespace vray {
 
-	class Audio {
+	class VRAYLIB Audio {
 	private:
 		entt::registry& world;
 

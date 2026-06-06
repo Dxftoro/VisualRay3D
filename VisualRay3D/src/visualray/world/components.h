@@ -159,4 +159,14 @@ namespace vray {
 		bool deleted = false;
 	};
 
+	struct VRAYLIB CompSound {
+	};
+
+	struct VRAYLIB CompSoundSource {
+		glm::vec3 position;
+	};
+
+	struct VRAYLIB CompSoundListener {
+		glm::vec3 position;
+	};
 }

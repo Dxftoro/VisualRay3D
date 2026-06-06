@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\visualray\audio_service\alsoft_audio.cpp" />
+    <ClCompile Include="src\visualray\audio_service\audio_exception.cpp" />
     <ClCompile Include="src\visualray\game.cpp" />
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
     <ClCompile Include="src\visualray\layer_service\console.cpp" />

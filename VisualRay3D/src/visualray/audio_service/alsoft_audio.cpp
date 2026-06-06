@@ -18,4 +18,14 @@ namespace vray {
 		}
 	}
 
+	AlsoftAudio::~AlsoftAudio() {
+		alcMakeContextCurrent(nullptr);
+		alcDestroyContext(context);
+		alcCloseDevice(device);
+	}
+
+	void AlsoftAudio::update() {
+
+	}
+
 }
