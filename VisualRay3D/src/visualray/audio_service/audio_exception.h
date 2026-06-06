@@ -1,10 +1,15 @@
 #include <stdexcept>
+#include "vrpch.h"
 
 namespace vray {
 
-	class AudioException : public std::runtime_error {
+	class AudioException : public std::exception {
+	private:
+		std::string message;
+
 	public:
-		using std::runtime_error::runtime_error;
+		explicit AudioException(const std::string& _message) : message(_message) {}
+		const char* what() const noexcept override;
 	};
 
 }
