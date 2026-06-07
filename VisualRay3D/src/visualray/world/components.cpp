@@ -114,4 +114,8 @@ namespace vray {
 		textureChanged = true;
 	}
 
+	void CompSoundListener::setPosition(const glm::vec3& postition) {
+		this->position = position; setDirty(true);
+	}
+
 }

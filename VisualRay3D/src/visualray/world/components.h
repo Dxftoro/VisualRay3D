@@ -162,10 +162,11 @@ namespace vray {
 	struct VRAYLIB CompSound {
 		Sound* sound;
 		float volume;
+		glm::vec3 position;
 	};
 
-	struct VRAYLIB CompSoundSource {
-		glm::vec3 position;
+	struct VRAYLIB CompSoundPlay {
+		bool dummy;
 	};
 
 	struct VRAYLIB CompSoundListener {
@@ -177,7 +178,7 @@ namespace vray {
 		CompSoundListener() : position(0.0f), dirty(true) {}
 
 		void setDirty(bool dirty) { this->dirty = dirty; }
-		void setPosition(const glm::vec3& position) { this->position = position; }
+		void setPosition(const glm::vec3& position);
 
 		bool isDirty() const { return dirty; }
 		const glm::vec3& getPosition() const { return position; }

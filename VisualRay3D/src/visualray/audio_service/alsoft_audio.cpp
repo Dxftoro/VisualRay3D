@@ -28,6 +28,15 @@ namespace vray {
 		alcCloseDevice(device);
 	}
 
+	void AlsoftAudio::updateListener(CompSoundListener& listener) {
+		const glm::vec3& position = listener.getPosition();
+
+		alListener3f(AL_POSITION,
+			position.x,
+			position.y,
+			position.z);
+	}
+
 	void AlsoftAudio::onListenerAdded(entt::registry& world, const entt::entity entity) {
 		if (activeListener != entt::null) {
 			VR_ENGINE_LOGIMPORTANT("Sound listener changed, removing previous!");
