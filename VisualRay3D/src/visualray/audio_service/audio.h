@@ -5,7 +5,7 @@
 namespace vray {
 
 	class VRAYLIB Audio {
-	private:
+	protected:
 		entt::registry& world;
 
 	public:

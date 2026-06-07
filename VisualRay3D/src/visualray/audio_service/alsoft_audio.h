@@ -10,6 +10,10 @@ namespace vray {
 	private:
 		ALCdevice* device;
 		ALCcontext* context;
+		entt::entity activeListener;
+
+		void onListenerAdded(entt::registry& world, const entt::entity);
+		void updateListener(CompSoundListener& listener);
 
 	public:
 		AlsoftAudio(entt::registry& world);
