@@ -1,7 +1,5 @@
 #pragma once
-#include <array>
-#include <queue>
-
+#include "vrpch.h"
 #include <AL/al.h>
 
 #define VR_ALSOFT_MAX_SOURCES	256

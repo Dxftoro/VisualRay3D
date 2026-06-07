@@ -111,6 +111,9 @@
     <ClCompile Include="src\visualray\audio_service\audio_exception.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\visualray\audio_service\alsoft_source_pool.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\visualray\kernel.h">
@@ -489,6 +492,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\audio_service\audio_exception.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\audio_service\alsoft_source_pool.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
