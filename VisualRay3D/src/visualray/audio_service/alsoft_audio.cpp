@@ -33,10 +33,17 @@ namespace vray {
 		alcCloseDevice(device);
 	}
 
-	void AlsoftAudio::updateListener(CompSoundListener& listener) {
+	void AlsoftAudio::updateListener(const CompSoundListener& listener) {
 		const glm::vec3& position = listener.getPosition();
-
 		alListener3f(AL_POSITION,
+			position.x,
+			position.y,
+			position.z);
+	}
+
+	void AlsoftAudio::updateSourcePosition(ALuint source, const CompSound& sound) {
+		const glm::vec3& position = sound.getPosition();
+		alSource3f(source, AL_POSITION,
 			position.x,
 			position.y,
 			position.z);
@@ -56,13 +63,18 @@ namespace vray {
 
 	void AlsoftAudio::onSoundAdded(entt::registry& world, const entt::entity entity) {		
 		auto& sound = world.get<CompSound>(entity);
-		if (sources->isFull()) {
-			sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
-			return;
-		}
+		sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
 
-		sound.setSourceId(sources->acquire());
-		ALuint source = sources->get(sound.getSourceId());
+		//if (sources->isFull()) {
+		//	sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
+		//	return;
+		//}
+
+		//sound.setSourceId(sources->acquire());
+		//sound.setSourceIdDirty(false);
+
+		//ALuint source = sources->get(sound.getSourceId());
+		//alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
 	}
 
 	void AlsoftAudio::update() {
@@ -72,8 +84,37 @@ namespace vray {
 			listener.setDirty(false);
 		}
 
-		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {
+		soundGroup.each([this](entt::entity entity, CompSound& sound) {
+			if (sound.getSourceId() == VR_ALSOFT_SOURCE_NULL) return;
 
+			AlSourceId id(sound.getSourceId());
+			ALuint source = sources->get(id);
+
+			ALint state;
+			alGetSourcei(source, AL_SOURCE_STATE, &state);
+
+			if (state == AL_PLAYING && sound.isPositionDirty()) updateSourcePosition(source, sound);
+			else if (state == AL_STOPPED) {
+				sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
+				sources->release(id);
+			}
+		});
+
+		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {
+			if (sources->isFull()) return;
+
+			AlSourceId id = sources->acquire();
+			ALuint source = sources->get(id);
+			alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
+			alSourcei(source, AL_GAIN, sound.getVolume());
+
+			if (!cmdPlay.ignoreSourcePosition) {
+				updateSourcePosition(source, sound);
+			}
+
+			alSourcePlay(source);
+
+			sound.setSourceId(source);
 		});
 		world.clear<CompSoundPlay>();
 	}

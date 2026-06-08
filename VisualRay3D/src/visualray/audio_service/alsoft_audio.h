@@ -17,7 +17,8 @@ namespace vray {
 
 		void onListenerAdded(entt::registry& world, const entt::entity);
 		void onSoundAdded(entt::registry& world, const entt::entity);
-		void updateListener(CompSoundListener& listener);
+		void updateListener(const CompSoundListener& listener);
+		void updateSourcePosition(ALuint source, const CompSound& sound);
 
 		using SoundGroup = decltype(world.group<CompSound>());
 		using PlayingGroup = decltype(world.group<CompSoundPlay>(entt::get<CompSound>));

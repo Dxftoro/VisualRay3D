@@ -165,23 +165,25 @@ namespace vray {
 		float volume;
 		int sourceId;
 		glm::vec3 position;
-		bool dirty;
+		bool positionDirty, sourceIdDirty;
 
 	public:
 		CompSound(Sound* _sound)
-			: sound(_sound), volume(1.0f), position(0.0f), sourceId(-1) {}
+		:	sound(_sound), volume(1.0f), position(0.0f), sourceId(-1),
+			positionDirty(true), sourceIdDirty(true) {}
 
-		void setSound(Sound* sound) { this->sound = sound; }
-		void setDirty(bool dirty) { this->dirty = dirty; }
+		void setPositionDirty(bool dirty) { this->positionDirty = dirty; }
+		void setSourceIdDirty(bool dirty) { this->sourceIdDirty = dirty; }
 		void setPosition(const glm::vec3& position);
 		void setVolume(float volume) { this->volume = volume; }
-		void setSourceId(int sourceId) { this->sourceId = sourceId; }
+		void setSourceId(int sourceId);
 
 		Sound* getSound() const { return sound; }
 		const glm::vec3& getPosition() const { return position; }
 		float getVolume() const { return volume; }
 		int getSourceId() const { return sourceId; }
-		bool isDirty() const { return dirty; }
+		bool isPositionDirty() const { return positionDirty; }
+		bool isSourceIdDirty() const { return sourceIdDirty; }
 	};
 
 	struct VRAYLIB CompSoundPlay {

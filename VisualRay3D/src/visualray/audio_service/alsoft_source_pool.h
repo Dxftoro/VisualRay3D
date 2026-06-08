@@ -1,5 +1,6 @@
 #pragma once
 #include "vrpch.h"
+#include "../util.h"
 #include <AL/al.h>
 
 #define VR_ALSOFT_MAX_SOURCES	256
@@ -7,7 +8,10 @@
 
 namespace vray {
 
-	using AlSourceId = int;
+	class AlSourceId : public Strong<int> {
+	public:
+		using Strong<int>::Strong;
+	};
 
 	class AlsoftSourcePool {
 	private:
@@ -23,6 +27,7 @@ namespace vray {
 		ALuint get(AlSourceId id) const;
 		AlSourceId acquire();
 
+		constexpr AlSourceId size() const { return AlSourceId(sources.size()); }
 		bool isFull() const { return freeIds.empty(); }
 	};
 
