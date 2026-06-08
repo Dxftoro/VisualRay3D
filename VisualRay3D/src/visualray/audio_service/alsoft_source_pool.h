@@ -22,6 +22,8 @@ namespace vray {
 		void release(AlSourceId id);
 		ALuint get(AlSourceId id) const;
 		AlSourceId acquire();
+
+		bool isFull() const { return freeIds.empty(); }
 	};
 
 }

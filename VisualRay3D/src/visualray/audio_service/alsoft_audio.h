@@ -1,5 +1,7 @@
 #pragma once
 #include "audio.h"
+#include "alsoft_source_pool.h"
+#include "../world/components.h"
 
 struct ALCdevice;
 struct ALCcontext;
@@ -10,10 +12,18 @@ namespace vray {
 	private:
 		ALCdevice* device;
 		ALCcontext* context;
+		AlsoftSourcePool* sources;
 		entt::entity activeListener;
 
 		void onListenerAdded(entt::registry& world, const entt::entity);
+		void onSoundAdded(entt::registry& world, const entt::entity);
 		void updateListener(CompSoundListener& listener);
+
+		using SoundGroup = decltype(world.group<CompSound>());
+		using PlayingGroup = decltype(world.group<CompSoundPlay>(entt::get<CompSound>));
+		
+		SoundGroup soundGroup;
+		PlayingGroup playingGroup;
 
 	public:
 		AlsoftAudio(entt::registry& world);

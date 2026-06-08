@@ -160,13 +160,32 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompSound {
+	private:
 		Sound* sound;
 		float volume;
+		int sourceId;
 		glm::vec3 position;
+		bool dirty;
+
+	public:
+		CompSound(Sound* _sound)
+			: sound(_sound), volume(1.0f), position(0.0f), sourceId(-1) {}
+
+		void setSound(Sound* sound) { this->sound = sound; }
+		void setDirty(bool dirty) { this->dirty = dirty; }
+		void setPosition(const glm::vec3& position);
+		void setVolume(float volume) { this->volume = volume; }
+		void setSourceId(int sourceId) { this->sourceId = sourceId; }
+
+		Sound* getSound() const { return sound; }
+		const glm::vec3& getPosition() const { return position; }
+		float getVolume() const { return volume; }
+		int getSourceId() const { return sourceId; }
+		bool isDirty() const { return dirty; }
 	};
 
 	struct VRAYLIB CompSoundPlay {
-		bool dummy;
+		bool ignoreSourcePosition;
 	};
 
 	struct VRAYLIB CompSoundListener {

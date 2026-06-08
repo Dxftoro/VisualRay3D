@@ -59,7 +59,7 @@ namespace vray {
 		/*	Removing lights that marked as deleted by moving the last buffer element
 			to recently deleted element place */
 		else if (lightIndex.index >= 0 && lightIndex.index <= lastLightIndex - 1) {
-			VR_LOGIMPORTANT("handleDelted called on light index in a middle!");
+			VR_LOGIMPORTANT("handleDeleted called on light index in a middle!");
 
 			auto [tailLight, tailLightIndex] = world.get<CompPointLightData, CompPointLightIndex>(
 				bufferedEntites[lastLightIndex - 1]);

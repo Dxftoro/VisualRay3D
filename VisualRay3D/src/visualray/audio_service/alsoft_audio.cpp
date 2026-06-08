@@ -1,7 +1,6 @@
 #include "vrpch.h"
 #include "alsoft_audio.h"
 #include "audio_exception.h"
-#include "../world/components.h"
 #include "logservice.h"
 
 #include <AL/al.h>
@@ -19,10 +18,16 @@ namespace vray {
 			throw AudioException("Can't setup audio context!");
 		}
 
+		sources = new AlsoftSourcePool();
+
+		soundGroup = world.group<CompSound>();
+		playingGroup = world.group<CompSoundPlay>(entt::get<CompSound>);
 		world.on_construct<CompSoundListener>().connect<&AlsoftAudio::onListenerAdded>(this);
+		world.on_construct<CompSound>().connect<&AlsoftAudio::onSoundAdded>(this);
 	}
 
 	AlsoftAudio::~AlsoftAudio() {
+		delete sources;
 		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(context);
 		alcCloseDevice(device);
@@ -49,6 +54,17 @@ namespace vray {
 		listener.setDirty(false);
 	}
 
+	void AlsoftAudio::onSoundAdded(entt::registry& world, const entt::entity entity) {		
+		auto& sound = world.get<CompSound>(entity);
+		if (sources->isFull()) {
+			sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
+			return;
+		}
+
+		sound.setSourceId(sources->acquire());
+		ALuint source = sources->get(sound.getSourceId());
+	}
+
 	void AlsoftAudio::update() {
 		auto& listener = world.get<CompSoundListener>(activeListener);
 		if (listener.isDirty()) {
@@ -56,7 +72,10 @@ namespace vray {
 			listener.setDirty(false);
 		}
 
+		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {
 
+		});
+		world.clear<CompSoundPlay>();
 	}
 
 }
