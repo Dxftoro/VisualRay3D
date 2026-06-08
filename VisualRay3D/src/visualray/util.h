@@ -28,7 +28,7 @@ namespace vray {
 
 		/* Postfix increment */
 		T& operator++(int) {
-			T res = *this;
+			T res = value;
 			++value;
 			return res;
 		}
