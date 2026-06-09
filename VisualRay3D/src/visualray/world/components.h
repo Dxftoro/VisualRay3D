@@ -196,7 +196,7 @@ namespace vray {
 		bool dirty;
 
 	public:
-		CompSoundListener() : position(0.0f), dirty(true) {}
+		CompSoundListener(const glm::vec3& _position) : position(_position), dirty(true) {}
 
 		void setDirty(bool dirty) { this->dirty = dirty; }
 		void setPosition(const glm::vec3& position);

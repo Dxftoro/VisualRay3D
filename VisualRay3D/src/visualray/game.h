@@ -37,6 +37,7 @@ namespace vray {
 		entt::registry world;
 		ResourceManager<Mesh> meshes;
 		ResourceManager<Texture> textures;
+		ResourceManager<Sound> sounds;
 
 		GameContext(const GameContext&) = delete;
 		GameContext& operator=(const GameContext&) = delete;

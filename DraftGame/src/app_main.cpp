@@ -495,6 +495,7 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
+		vray::Sound* shootSound = game.sounds.load("sounds/shoot.ogg", "shoot");
 		billboardTexture = ozuTexture;
 
 		pc.onGround = true;
@@ -585,6 +586,9 @@ public:
 		engine.cameraSystem.setActiveCamera(camera);
 
 		engine.renderer->setTestTexture(ozuTexture);
+
+		game.world.emplace<vray::CompSoundListener>(player, playerTransform.getPosition());
+		game.world.emplace<vray::CompSound>(player, shootSound);
 
 		//for (int i = 0; i < 15; i++) {
 		//	spawnCube({
