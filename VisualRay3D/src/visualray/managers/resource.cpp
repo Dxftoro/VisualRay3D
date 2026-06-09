@@ -78,6 +78,8 @@ namespace vray {
 			elements.push_back(index.vertex_index);
 		}
 
+		fin.close();
+
 		BufferLayout layout({
 			{ "VertexPosition",		BufferObjectType::FLOAT3 },
 			{ "VertexNormal",		BufferObjectType::FLOAT3 },
