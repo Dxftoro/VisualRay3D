@@ -22,7 +22,12 @@
 
 namespace vray {
 
-	Mesh::Mesh(std::ifstream& fin) : copy(false) {
+	Mesh::Mesh(const std::string& filename) : copy(false) {
+		std::ifstream fin(filename);
+		if (!fin) {
+			throw std::runtime_error("Can't open mesh \"" + filename + "\"!");
+		}
+
 		tinyobj::attrib_t attributes;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;

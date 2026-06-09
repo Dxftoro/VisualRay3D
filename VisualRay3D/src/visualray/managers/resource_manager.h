@@ -33,22 +33,12 @@ namespace vray {
 
 	template<typename T>
 	T* ResourceManager<T>::load(const std::string& filename, const std::string& resourceName) {
-		std::ifstream fin(filename);
-		if (!fin) {
+		if (!std::filesystem::exists(filename)) {
 			throw std::runtime_error("\"" + filename + "\" - File not found!");
 		}
 
 		std::string finalName = resourceName == "" ? filename : resourceName;
-		std::unique_ptr<T> resourcePtr;
-
-		if constexpr (std::is_same_v<T, Texture>) {
-			resourcePtr = std::make_unique<T>(filename);
-		}
-		else {
-			resourcePtr = std::make_unique<T>(fin);
-		}
-
-		fin.close();
+		std::unique_ptr<T> resourcePtr = std::make_unique<T>(filename);
 
 		T* rawPtr = resourcePtr.get();
 		resourceMap[finalName] = std::move(resourcePtr);

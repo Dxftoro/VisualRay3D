@@ -18,7 +18,7 @@ namespace vray {
 		bool copy;
 
 	public:
-		Mesh(std::ifstream& fin);
+		Mesh(const std::string& filename);
 		Mesh(VertexArray* _vertexArray)
 			: vertexArray(_vertexArray), copy(false) {
 		}
