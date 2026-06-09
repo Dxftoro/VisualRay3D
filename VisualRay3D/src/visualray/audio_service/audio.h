@@ -10,7 +10,7 @@ namespace vray {
 
 	public:
 		Audio(entt::registry& _world) : world(_world) {}
-		virtual ~Audio() = 0;
+		virtual ~Audio() {}
 		virtual void update() = 0;
 	};
 

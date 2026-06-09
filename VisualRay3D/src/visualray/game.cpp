@@ -9,6 +9,8 @@
 #include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
+#include "audio_service/alsoft_audio.h"
+
 //#include "physics_service/ode_physics.h"
 #include "physics_service/rp3d_physics.h"
 #include "physics_service/rp3d_debug_system.h"
@@ -38,6 +40,8 @@ namespace vray {
 		engineContext.renderer = new Renderer(engineContext.window.get(), gameContext.world);
 		Renderer* renderer = engineContext.renderer;
 
+		engineContext.audio = new AlsoftAudio(gameContext.world);
+
 		engineContext.physics = new Rp3dPhysics(gameContext.world);
 		IPhysics* physics = engineContext.physics;
 
@@ -52,6 +56,8 @@ namespace vray {
 	Game::~Game() {
 		VR_ENGINE_LOGINFO("Clearing renderer");
 		delete engineContext.renderer;
+		VR_ENGINE_LOGINFO("Clearing audio");
+		delete engineContext.audio;
 		VR_ENGINE_LOGINFO("Clearing physics");
 		delete engineContext.physics;
 		VR_ENGINE_LOGINFO("Clearing physics debug system");

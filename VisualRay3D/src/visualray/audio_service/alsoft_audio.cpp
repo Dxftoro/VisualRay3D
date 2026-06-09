@@ -1,6 +1,7 @@
 #include "vrpch.h"
 #include "alsoft_audio.h"
 #include "audio_exception.h"
+#include "alsoft_source_pool.h"
 #include "logservice.h"
 
 #include <AL/al.h>
@@ -41,7 +42,7 @@ namespace vray {
 			position.z);
 	}
 
-	void AlsoftAudio::updateSourcePosition(ALuint source, const CompSound& sound) {
+	void AlsoftAudio::updateSourcePosition(unsigned int source, const CompSound& sound) {
 		const glm::vec3& position = sound.getPosition();
 		alSource3f(source, AL_POSITION,
 			position.x,

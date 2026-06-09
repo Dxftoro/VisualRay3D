@@ -5,6 +5,7 @@
 #include "world/components.h"
 #include "world/systems.h"
 #include "render_service/renderer.h"
+#include "audio_service/audio.h"
 #include "physics_service/physics.h"
 #include "window_service/window.h"
 #include "input_service/input_service.h"
@@ -21,6 +22,7 @@ namespace vray {
 		std::unique_ptr<Window> window;
 		Debugger* debugger;
 		Renderer* renderer;
+		Audio* audio;
 		IPhysics* physics;
 		IPhysicsDebugSystem* physicsDebugSystem;
 		CameraSystem cameraSystem;
