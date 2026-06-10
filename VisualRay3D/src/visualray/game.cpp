@@ -88,6 +88,8 @@ namespace vray {
 			}
 			else frameNumber++;
 
+			engineContext.audio->update();
+
 			this->update();
 			this->renderSubmit();
 

@@ -263,6 +263,8 @@ private:
 			vray::MouseClickEvent& mouseEvent = dynamic_cast<vray::MouseClickEvent&>(evt);
 			if (mouseEvent.getMouseButtonCode() != VR_MOUSE_BUTTON_1) return;
 
+			game.world.emplace<vray::CompSoundPlay>(player, vray::CompSoundPlay{ false });
+
 			glm::vec3 cameraFront;
 			camera->calculateFront(cameraFront);
 

@@ -94,7 +94,10 @@ namespace vray {
 			ALint state;
 			alGetSourcei(source, AL_SOURCE_STATE, &state);
 
-			if (state == AL_PLAYING && sound.isPositionDirty()) updateSourcePosition(source, sound);
+			if (state == AL_PLAYING && sound.isPositionDirty()) {
+				updateSourcePosition(source, sound);
+				sound.setPositionDirty(false);
+			}
 			else if (state == AL_STOPPED) {
 				sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
 				sources->release(id);
@@ -111,11 +114,11 @@ namespace vray {
 
 			if (!cmdPlay.ignoreSourcePosition) {
 				updateSourcePosition(source, sound);
+				sound.setPositionDirty(false);
 			}
 
+			sound.setSourceId(id.get());
 			alSourcePlay(source);
-
-			sound.setSourceId(source);
 		});
 		world.clear<CompSoundPlay>();
 	}
