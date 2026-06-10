@@ -109,7 +109,6 @@ namespace vray {
 
 		auto& camera = world.get<CompCamera>(activeListener);
 		if (playingSomething && camera.isViewDirty()) {
-			VR_ENGINE_LOGIMPORTANT("Listener camera changed!");
 			updateListener(camera);
 		}
 

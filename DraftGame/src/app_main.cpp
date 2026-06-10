@@ -497,7 +497,7 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
-		vray::Sound* shootSound = game.sounds.load("sounds/click.ogg", "shoot");
+		vray::Sound* shootSound = game.sounds.load("sounds/shoot.ogg", "shoot");
 		VR_LOGIMPORTANT("Sound channels: " + std::to_string(shootSound->getChannelCount()));
 
 		billboardTexture = ozuTexture;
