@@ -20,6 +20,12 @@ namespace vray {
 		}
 
 		sources = new AlsoftSourcePool();
+		orientation[0] = 0.0f;
+		orientation[1] = 0.0f;
+		orientation[2] = 0.0f;
+		orientation[3] = 0.0f;
+		orientation[4] = 1.0f;
+		orientation[5] = 0.0f;
 
 		soundGroup = world.group<CompSound>();
 		playingGroup = world.group<CompSoundPlay>(entt::get<CompSound>);
@@ -34,12 +40,21 @@ namespace vray {
 		alcCloseDevice(device);
 	}
 
-	void AlsoftAudio::updateListener(const CompSoundListener& listener) {
-		const glm::vec3& position = listener.getPosition();
+	void AlsoftAudio::updateListener(CompCamera& camera) {
+		const glm::vec3& position = camera.getPosition();
+		glm::vec3 forward;
+		camera.calculateFront(forward);
+
 		alListener3f(AL_POSITION,
 			position.x,
 			position.y,
 			position.z);
+
+		orientation[0] = forward.x;
+		orientation[1] = forward.y;
+		orientation[2] = forward.z;
+
+		alListenerfv(AL_ORIENTATION, orientation);
 	}
 
 	void AlsoftAudio::updateSourcePosition(unsigned int source, const CompSound& sound) {
@@ -57,9 +72,8 @@ namespace vray {
 		}
 
 		activeListener = entity;
-		auto& listener = world.get<CompSoundListener>(activeListener);
-		updateListener(listener);
-		listener.setDirty(false);
+		auto& camera  = world.get<CompCamera>(activeListener);
+		updateListener(camera);
 
 		ALfloat listenerGain;
 		alGetListenerf(AL_GAIN, &listenerGain);
@@ -72,14 +86,10 @@ namespace vray {
 	}
 
 	void AlsoftAudio::update() {
-		auto& listener = world.get<CompSoundListener>(activeListener);
-		if (listener.isDirty()) {
-			updateListener(listener);
-			listener.setDirty(false);
-		}
-
-		soundGroup.each([this](entt::entity entity, CompSound& sound) {
+		bool playingSomething = false;
+		soundGroup.each([this, &playingSomething](entt::entity entity, CompSound& sound) {
 			if (sound.getSourceId() == VR_ALSOFT_SOURCE_NULL) return;
+			playingSomething = true;
 
 			AlSourceId id(sound.getSourceId());
 			ALuint source = sources->get(id);
@@ -97,13 +107,23 @@ namespace vray {
 			}
 		});
 
+		auto& camera = world.get<CompCamera>(activeListener);
+		if (playingSomething && camera.isViewDirty()) {
+			VR_ENGINE_LOGIMPORTANT("Listener camera changed!");
+			updateListener(camera);
+		}
+
 		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {
 			if (sources->isFull()) return;
 
 			AlSourceId id = sources->acquire();
 			ALuint source = sources->get(id);
 			alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
+			
 			alSourcef(source, AL_MAX_DISTANCE, sound.getMaxDistance());
+			alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
+			alSourcef(source, AL_REFERENCE_DISTANCE, 5.0f);
+
 			alSourcef(source, AL_GAIN, sound.getVolume());
 			alSourcef(source, AL_PITCH, sound.getPitch());
 

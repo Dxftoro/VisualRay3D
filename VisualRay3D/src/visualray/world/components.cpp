@@ -122,8 +122,4 @@ namespace vray {
 		this->sourceId = sourceId;
 	}
 
-	void CompSoundListener::setPosition(const glm::vec3& postition) {
-		this->position = position; setDirty(true);
-	}
-
 }

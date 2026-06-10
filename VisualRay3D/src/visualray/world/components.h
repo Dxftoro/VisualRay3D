@@ -197,17 +197,6 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompSoundListener {
-	private:
-		glm::vec3 position;
-		bool dirty;
-
-	public:
-		CompSoundListener(const glm::vec3& _position) : position(_position), dirty(true) {}
-
-		void setDirty(bool dirty) { this->dirty = dirty; }
-		void setPosition(const glm::vec3& position);
-
-		bool isDirty() const { return dirty; }
-		const glm::vec3& getPosition() const { return position; }
+		int gain;
 	};
 }

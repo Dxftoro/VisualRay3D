@@ -497,7 +497,7 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
-		vray::Sound* shootSound = game.sounds.load("sounds/shoot.ogg", "shoot");
+		vray::Sound* shootSound = game.sounds.load("sounds/click.ogg", "shoot");
 		VR_LOGIMPORTANT("Sound channels: " + std::to_string(shootSound->getChannelCount()));
 
 		billboardTexture = ozuTexture;
@@ -591,11 +591,12 @@ public:
 
 		engine.renderer->setTestTexture(ozuTexture);
 
-		game.world.emplace<vray::CompSoundListener>(player, playerTransform.getPosition());
+		game.world.emplace<vray::CompSoundListener>(player, vray::CompSoundListener(1.0f));
 		auto& sound = game.world.emplace<vray::CompSound>(player, shootSound);
-		sound.setPosition({ 0.0f, 20.0f, 0.0f });
-		sound.setVolume(0.5f);
-		sound.setPitch(0.2f);
+		sound.setPosition({ 0.0f, 5.0f, 0.0f });
+		sound.setMaxDistance(10.0f);
+		//sound.setVolume(0.5f);
+		//sound.setPitch(0.2f);
 
 		//for (int i = 0; i < 15; i++) {
 		//	spawnCube({
@@ -620,10 +621,6 @@ public:
 
 		updateLight(light1, true);
 		updateLight(light2, false);
-
-		auto& listener = game.world.get<vray::CompSoundListener>(player);
-		const glm::vec3& position = game.world.get<vray::CompTransform>(player).getPosition();
-		listener.setPosition(position);
 	}
 
 	inline void onEvent(vray::Event& evt) {
@@ -635,7 +632,7 @@ public:
 		handleMouseUnlock(evt);
 		handleConsole(evt);
 
-		const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
+		//const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
 		//VR_LOGINFO(std::to_string(playerPos.x) + ", " + std::to_string(playerPos.z));
 	}
 };

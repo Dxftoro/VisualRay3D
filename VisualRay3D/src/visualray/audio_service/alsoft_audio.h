@@ -15,10 +15,11 @@ namespace vray {
 		ALCcontext* context;
 		AlsoftSourcePool* sources;
 		entt::entity activeListener;
+		float orientation[6];
 
 		void onListenerAdded(entt::registry& world, const entt::entity);
 		void onSoundAdded(entt::registry& world, const entt::entity);
-		void updateListener(const CompSoundListener& listener);
+		void updateListener(CompCamera& listener);
 		void updateSourcePosition(unsigned int source, const CompSound& sound);
 
 		using SoundGroup = decltype(world.group<CompSound>());
