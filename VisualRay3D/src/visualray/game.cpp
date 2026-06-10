@@ -57,6 +57,7 @@ namespace vray {
 		VR_ENGINE_LOGINFO("Clearing renderer");
 		delete engineContext.renderer;
 		VR_ENGINE_LOGINFO("Clearing audio");
+		gameContext.sounds.clear();
 		delete engineContext.audio;
 		VR_ENGINE_LOGINFO("Clearing physics");
 		delete engineContext.physics;

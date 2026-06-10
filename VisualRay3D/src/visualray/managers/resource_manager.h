@@ -4,18 +4,6 @@
 
 namespace vray {
 
-	//class IResourceManager {
-	//private:
-	//public:
-	//	virtual Resource& load(const std::string& filename, const std::string& resourceName = "") = 0;
-	//	virtual Resource& get(const std::string& resourceName) = 0;
-	//	virtual void clear() = 0;
-	//};
-
-//	======================================================================================
-// 
-//	======================================================================================
-
 	template <typename T>
 	class ResourceManager {
 	private:
@@ -24,11 +12,11 @@ namespace vray {
 
 	public:
 		ResourceManager() {}
-		~ResourceManager() {}
+		~ResourceManager() { clear(); }
 
 		T* load(const std::string& filename, const std::string& resourceName = "");
 		T* get(const std::string& resourceName);
-		void clear() {}
+		void clear() { resourceMap.clear(); }
 	};
 
 	template<typename T>
