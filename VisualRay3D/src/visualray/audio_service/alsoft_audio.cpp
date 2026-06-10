@@ -40,7 +40,7 @@ namespace vray {
 		alcCloseDevice(device);
 	}
 
-	void AlsoftAudio::updateListener(CompCamera& camera) {
+	void AlsoftAudio::updateListener(CompCamera& camera, CompSoundListener& listener) {
 		const glm::vec3& position = camera.getPosition();
 		glm::vec3 forward;
 		camera.calculateFront(forward);
@@ -55,6 +55,7 @@ namespace vray {
 		orientation[2] = forward.z;
 
 		alListenerfv(AL_ORIENTATION, orientation);
+		alListeneri(AL_GAIN, listener.gain);
 	}
 
 	void AlsoftAudio::updateSourcePosition(unsigned int source, const CompSound& sound) {
@@ -73,7 +74,8 @@ namespace vray {
 
 		activeListener = entity;
 		auto& camera  = world.get<CompCamera>(activeListener);
-		updateListener(camera);
+		auto& listener = world.get<CompSoundListener>(activeListener);
+		updateListener(camera, listener);
 
 		ALfloat listenerGain;
 		alGetListenerf(AL_GAIN, &listenerGain);
@@ -108,8 +110,9 @@ namespace vray {
 		});
 
 		auto& camera = world.get<CompCamera>(activeListener);
+		auto& listener = world.get<CompSoundListener>(activeListener);
 		if (playingSomething && camera.isViewDirty()) {
-			updateListener(camera);
+			updateListener(camera, listener);
 		}
 
 		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {
@@ -117,16 +120,15 @@ namespace vray {
 
 			AlSourceId id = sources->acquire();
 			ALuint source = sources->get(id);
-			alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
-			
-			alSourcef(source, AL_MAX_DISTANCE, sound.getMaxDistance());
-			alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
-			alSourcef(source, AL_REFERENCE_DISTANCE, 5.0f);
 
+			alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
+			alSourcef(source, AL_MAX_DISTANCE, sound.getMaxDistance());
+			alSourcef(source, AL_REFERENCE_DISTANCE, sound.getRefDistance());
 			alSourcef(source, AL_GAIN, sound.getVolume());
 			alSourcef(source, AL_PITCH, sound.getPitch());
 
-			if (!cmdPlay.ignoreSourcePosition) {
+			alSourcei(source, AL_SOURCE_RELATIVE, cmdPlay.local ? AL_TRUE : AL_FALSE);
+			if (!cmdPlay.local) {
 				updateSourcePosition(source, sound);
 				sound.setPositionDirty(false);
 			}

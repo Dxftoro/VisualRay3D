@@ -497,7 +497,7 @@ public:
 		vray::Texture* stoneBricks = game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
-		vray::Sound* shootSound = game.sounds.load("sounds/shoot.ogg", "shoot");
+		vray::Sound* shootSound = game.sounds.load("sounds/click.ogg", "shoot");
 		VR_LOGIMPORTANT("Sound channels: " + std::to_string(shootSound->getChannelCount()));
 
 		billboardTexture = ozuTexture;
@@ -594,7 +594,8 @@ public:
 		game.world.emplace<vray::CompSoundListener>(player, vray::CompSoundListener(1.0f));
 		auto& sound = game.world.emplace<vray::CompSound>(player, shootSound);
 		sound.setPosition({ 0.0f, 5.0f, 0.0f });
-		sound.setMaxDistance(10.0f);
+		sound.setMaxDistance(5.0f);
+		sound.setRefDistance(2.0f);
 		//sound.setVolume(0.5f);
 		//sound.setPitch(0.2f);
 

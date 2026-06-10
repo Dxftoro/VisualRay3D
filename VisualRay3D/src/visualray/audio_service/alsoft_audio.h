@@ -19,7 +19,7 @@ namespace vray {
 
 		void onListenerAdded(entt::registry& world, const entt::entity);
 		void onSoundAdded(entt::registry& world, const entt::entity);
-		void updateListener(CompCamera& listener);
+		void updateListener(CompCamera& camera, CompSoundListener& listener);
 		void updateSourcePosition(unsigned int source, const CompSound& sound);
 
 		using SoundGroup = decltype(world.group<CompSound>());

@@ -162,7 +162,7 @@ namespace vray {
 	struct VRAYLIB CompSound {
 	private:
 		Sound* sound;
-		float volume, pitch, maxDistance;
+		float volume, pitch, refDistance, maxDistance;
 		int sourceId;
 		glm::vec3 position;
 		bool positionDirty;
@@ -172,6 +172,7 @@ namespace vray {
 		:	sound(_sound),
 			volume(1.0f),
 			pitch(1.0f),
+			refDistance(1.0f),
 			maxDistance(1000.0f),
 			position(0.0f), sourceId(-1),
 			positionDirty(true) {}
@@ -180,12 +181,16 @@ namespace vray {
 		void setPosition(const glm::vec3& position);
 		void setPitch(float pitch) { this->pitch = pitch; }
 		void setVolume(float volume) { this->volume = volume; }
+		void setRefDistance(float refDistance) { this->refDistance = refDistance; }
 		void setMaxDistance(float maxDistance) { this->maxDistance = maxDistance; }
 		void setSourceId(int sourceId);
 
 		Sound* getSound() const { return sound; }
 		const glm::vec3& getPosition() const { return position; }
 		float getVolume() const { return volume; }
+
+		/* The distance in meters at which the sound will be heard at it's 100% volume */
+		float getRefDistance() const { return refDistance; }
 		float getMaxDistance() const { return maxDistance; }
 		float getPitch() const { return pitch; }
 		int getSourceId() const { return sourceId; }
@@ -193,7 +198,7 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompSoundPlay {
-		bool ignoreSourcePosition;
+		bool local;
 	};
 
 	struct VRAYLIB CompSoundListener {
