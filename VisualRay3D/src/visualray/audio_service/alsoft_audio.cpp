@@ -60,22 +60,15 @@ namespace vray {
 		auto& listener = world.get<CompSoundListener>(activeListener);
 		updateListener(listener);
 		listener.setDirty(false);
+
+		ALfloat listenerGain;
+		alGetListenerf(AL_GAIN, &listenerGain);
+		VR_ENGINE_LOGIMPORTANT("Listener gain: " + std::to_string(listenerGain));
 	}
 
 	void AlsoftAudio::onSoundAdded(entt::registry& world, const entt::entity entity) {		
 		auto& sound = world.get<CompSound>(entity);
 		sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
-
-		//if (sources->isFull()) {
-		//	sound.setSourceId(VR_ALSOFT_SOURCE_NULL);
-		//	return;
-		//}
-
-		//sound.setSourceId(sources->acquire());
-		//sound.setSourceIdDirty(false);
-
-		//ALuint source = sources->get(sound.getSourceId());
-		//alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
 	}
 
 	void AlsoftAudio::update() {
@@ -110,7 +103,9 @@ namespace vray {
 			AlSourceId id = sources->acquire();
 			ALuint source = sources->get(id);
 			alSourcei(source, AL_BUFFER, sound.getSound()->getHandle());
-			alSourcei(source, AL_GAIN, sound.getVolume());
+			alSourcef(source, AL_MAX_DISTANCE, sound.getMaxDistance());
+			alSourcef(source, AL_GAIN, sound.getVolume());
+			alSourcef(source, AL_PITCH, sound.getPitch());
 
 			if (!cmdPlay.ignoreSourcePosition) {
 				updateSourcePosition(source, sound);
@@ -121,6 +116,11 @@ namespace vray {
 			alSourcePlay(source);
 		});
 		world.clear<CompSoundPlay>();
+
+		ALenum error = alGetError();
+		if (error != AL_NO_ERROR) {
+			VR_ENGINE_LOGERROR("OpenAL error: " + std::to_string(error));
+		}
 	}
 
 	void AlsoftAudio::cleanup() {
