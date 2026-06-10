@@ -21,9 +21,7 @@
     <ClCompile Include="src\visualray\layer_service\fps_counter.cpp" />
     <ClCompile Include="src\visualray\logger.cpp" />
     <ClCompile Include="src\visualray\logservice.cpp" />
-    <ClCompile Include="src\visualray\managers\mesh_manager.cpp" />
     <ClCompile Include="src\visualray\managers\resource.cpp" />
-    <ClCompile Include="src\visualray\managers\resource_loader.cpp" />
     <ClCompile Include="src\visualray\physics_service\ode_physics.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp" />
@@ -75,8 +73,6 @@
     <ClInclude Include="src\visualray\logger.h" />
     <ClInclude Include="src\visualray\logservice.h" />
     <ClInclude Include="src\visualray\managers\resource.h" />
-    <ClInclude Include="src\visualray\managers\mesh_manager.h" />
-    <ClInclude Include="src\visualray\managers\resource_loader.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
     <ClInclude Include="src\visualray\physics_service\ode_physics.h" />
     <ClInclude Include="src\visualray\physics_service\physics.h" />

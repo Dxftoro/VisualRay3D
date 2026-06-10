@@ -6,7 +6,6 @@
 
 #include "event_service/game_events.h"
 #include "layer_service/debugger.h"
-#include "managers/resource_loader.h"
 #include "render_service/render_request.h"
 
 #include "audio_service/alsoft_audio.h"
