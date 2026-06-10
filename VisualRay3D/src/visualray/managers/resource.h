@@ -33,6 +33,7 @@ namespace vray {
 
 	class VRAYLIB Texture : public Resource {
 	private:
+		int width, height, cCount;
 		unsigned int handle;
 
 	public:

@@ -114,8 +114,8 @@ namespace vray {
 
 	Mesh::~Mesh() { if (!copy) delete vertexArray; }
 
-	Texture::Texture(const std::string& filename) {
-		int width, height, cCount;
+	Texture::Texture(const std::string& filename)
+	:	width(0), height(0), cCount(0) {
 		unsigned char* colorData = stbi_load(filename.c_str(), &width, &height, &cCount, 0);
 
 		if (colorData == nullptr) {
