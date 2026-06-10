@@ -56,13 +56,18 @@ namespace vray {
 	Game::~Game() {
 		VR_ENGINE_LOGINFO("Clearing renderer");
 		delete engineContext.renderer;
+
 		VR_ENGINE_LOGINFO("Clearing audio");
+		engineContext.audio->cleanup();
 		gameContext.sounds.clear();
 		delete engineContext.audio;
+
 		VR_ENGINE_LOGINFO("Clearing physics");
 		delete engineContext.physics;
+		
 		VR_ENGINE_LOGINFO("Clearing physics debug system");
 		delete engineContext.physicsDebugSystem;
+		
 		VR_ENGINE_LOGINFO("Clearing debugger");
 		delete engineContext.debugger;
 	}

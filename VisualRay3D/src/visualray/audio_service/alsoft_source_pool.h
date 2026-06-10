@@ -24,6 +24,8 @@ namespace vray {
 
 		void set(AlSourceId id, ALuint source);
 		void release(AlSourceId id);
+		void cleanup();
+
 		ALuint get(AlSourceId id) const;
 		AlSourceId acquire();
 

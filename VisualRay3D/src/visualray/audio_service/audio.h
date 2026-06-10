@@ -12,6 +12,7 @@ namespace vray {
 		Audio(entt::registry& _world) : world(_world) {}
 		virtual ~Audio() {}
 		virtual void update() = 0;
+		virtual void cleanup() = 0;
 	};
 
 }

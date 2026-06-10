@@ -123,4 +123,7 @@ namespace vray {
 		world.clear<CompSoundPlay>();
 	}
 
+	void AlsoftAudio::cleanup() {
+		sources->cleanup();
+	}
 }

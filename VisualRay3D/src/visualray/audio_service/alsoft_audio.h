@@ -32,6 +32,7 @@ namespace vray {
 		~AlsoftAudio() override;
 
 		void update() override;
+		void cleanup() override;
 	};
 
 }
