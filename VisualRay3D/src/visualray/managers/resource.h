@@ -43,6 +43,9 @@ namespace vray {
 		void bind() const;
 		void unbind() const;
 
+		int getWidth() const { return width; }
+		int getHeight() const { return height; }
+		int getChannelCount() const { return cCount; }
 		unsigned int getHandle() const { return handle; }
 	};
 
