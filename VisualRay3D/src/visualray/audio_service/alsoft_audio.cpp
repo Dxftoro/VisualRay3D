@@ -111,6 +111,7 @@ namespace vray {
 
 		auto& camera = world.get<CompCamera>(activeListener);
 		auto& listener = world.get<CompSoundListener>(activeListener);
+
 		if (playingSomething && camera.isViewDirty()) {
 			updateListener(camera, listener);
 		}

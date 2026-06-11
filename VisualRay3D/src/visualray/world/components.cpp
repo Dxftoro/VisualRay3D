@@ -54,7 +54,7 @@ namespace vray {
 	CompCamera::CompCamera(float _fov, float width, float height, float _near, float _far)
 		:	fov(_fov), near(_near), far(_far),
 			projectionMatrix(glm::perspectiveFov(glm::radians(_fov), width, height, _near, _far)),
-			position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false) {
+			position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false), viewDirty(true) {
 
 		viewMatrix = glm::lookAt(position, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
