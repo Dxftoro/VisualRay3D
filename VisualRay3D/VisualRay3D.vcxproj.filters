@@ -60,9 +60,6 @@
     <ClCompile Include="src\visualray\world\components.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\managers\resource.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="src\visualray\world\systems.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -106,6 +103,15 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\audio_service\alsoft_source_pool.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\managers\mesh.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\managers\texture.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\managers\sound.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

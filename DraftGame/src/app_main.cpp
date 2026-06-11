@@ -595,7 +595,7 @@ public:
 		auto& sound = game.world.emplace<vray::CompSound>(player, shootSound);
 		sound.setPosition({ 0.0f, 0.0f, 0.0f });
 		sound.setMaxDistance(1000.0f);
-		sound.setRefDistance(1.0f);
+		sound.setRefDistance(30.0f);
 		//sound.setVolume(0.5f);
 		//sound.setPitch(0.2f);
 

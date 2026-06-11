@@ -21,7 +21,9 @@
     <ClCompile Include="src\visualray\layer_service\fps_counter.cpp" />
     <ClCompile Include="src\visualray\logger.cpp" />
     <ClCompile Include="src\visualray\logservice.cpp" />
-    <ClCompile Include="src\visualray\managers\resource.cpp" />
+    <ClCompile Include="src\visualray\managers\mesh.cpp" />
+    <ClCompile Include="src\visualray\managers\sound.cpp" />
+    <ClCompile Include="src\visualray\managers\texture.cpp" />
     <ClCompile Include="src\visualray\physics_service\ode_physics.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_debug_system.cpp" />
     <ClCompile Include="src\visualray\physics_service\rp3d_logger.cpp" />
