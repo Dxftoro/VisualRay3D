@@ -296,7 +296,10 @@ private:
 		vray::CompTransform cubeTransform;
 		cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
 		cubeTransform.setPosition(position);
-		
+
+		auto& renderable = game.world.emplace<vray::CompRenderable>(cube,
+			vray::CompRenderable(game.meshes.get("cube"), game.textures.get("default")));
+
 		vray::CompHitbox cubeHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
@@ -306,8 +309,6 @@ private:
 		};
 
 		game.world.emplace<vray::CompTransform>(cube, cubeTransform);
-		game.world.emplace<vray::CompRenderable>(cube,
-			vray::CompRenderable(game.meshes.get("ershik"), game.textures.get("default")));
 		game.world.emplace<vray::CompHitbox>(cube, cubeHitbox);
 	}
 
@@ -567,15 +568,15 @@ public:
 		engine.debugger->addVariable("Forward: (%.3f, %.3f, %.3f)", &pc.forward);
 		engine.debugger->addVariable("Right: (%.3f, %.3f, %.3f)", &pc.right);
 
-		vray::CompTransform plathformTransform;
+		vray::CompTransform platformTransform;
 		
-		plathformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
-		plathformTransform.setScale({ 10.0f, 1.0f, 10.0f });
+		platformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
+		platformTransform.setScale({ 10.0f, 1.0f, 10.0f });
 
-		vray::CompHitbox plathformHitbox{
+		vray::CompHitbox platformHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::STATIC,
-			.size = plathformTransform.getScale(),
+			.size = platformTransform.getScale(),
 			.radius = 10,
 			.mass = 10.0f
 		};
@@ -596,15 +597,13 @@ public:
 		sound.setPosition({ 0.0f, 0.0f, 0.0f });
 		sound.setMaxDistance(1000.0f);
 		sound.setRefDistance(30.0f);
-		//sound.setVolume(0.5f);
-		//sound.setPitch(0.2f);
 
-		//for (int i = 0; i < 15; i++) {
-		//	spawnCube({
-		//		vray::frand(-5.0f, 5.0f),
-		//		40.0,
-		//		vray::frand(-5.0f, 5.0f)});
-		//}
+		for (int i = 0; i < 15; i++) {
+			spawnCube({
+				vray::frand(-5.0f, 5.0f),
+				40.0,
+				vray::frand(-5.0f, 5.0f)});
+		}
 
 		spawnTeapot({ 0.0f, 20.0f, 0.0f });
 		//VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
