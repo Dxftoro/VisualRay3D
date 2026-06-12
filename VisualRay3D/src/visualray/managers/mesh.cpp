@@ -1,6 +1,8 @@
 #include "vrpch.h"
 #include "resource.h"
 
+#include <limits.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <thirdparty/glm/glm.hpp>
 #include <thirdparty/glm/gtx/string_cast.hpp>
@@ -59,7 +61,12 @@ namespace std {
 
 namespace vray {
 
-	Mesh::Mesh(const std::string& filename) : copy(false) {
+	Mesh::Mesh(const std::string& filename)
+	:	Resource(false),
+		baseSize(0.0f),
+		aabbMin(FLT_MAX),
+		aabbMax(-FLT_MIN) {
+
 		std::ifstream fin(filename);
 		if (!fin) {
 			throw std::runtime_error("Can't open mesh \"" + filename + "\"!");
@@ -73,6 +80,8 @@ namespace vray {
 		bool success = tinyobj::LoadObj(&attributes, &shapes, &materials,
 			&warningMessage, &errorMessage, &fin, nullptr, true);
 
+		fin.close();
+
 		if (!success) {
 			VR_LOGERROR(errorMessage);
 			throw std::runtime_error(errorMessage);
@@ -82,7 +91,6 @@ namespace vray {
 		std::vector<float> vertexData;
 		std::vector<int> elements;
 		std::unordered_map<Vertex, int> vertexMap;
-		//VR_LOGINFO(std::to_string(vertexData.size()));
 
 		for (const tinyobj::shape_t& shape : shapes) {
 			for (const tinyobj::index_t& index : shape.mesh.indices) {
@@ -93,27 +101,15 @@ namespace vray {
 					attributes.vertices[3 * index.vertex_index + 2]
 				};
 
-				//vertexData[8 * index.vertex_index] = vertex.position.x;
-				//vertexData[8 * index.vertex_index + 1] = vertex.position.y;
-				//vertexData[8 * index.vertex_index + 2] = vertex.position.z;
-
 				if (index.normal_index >= 0) {
 					vertex.normal = {
 						attributes.normals[3 * index.normal_index],
 						attributes.normals[3 * index.normal_index + 1],
 						attributes.normals[3 * index.normal_index + 2]
 					};
-
-					//vertexData[8 * index.vertex_index + 3] = attributes.normals[3 * index.normal_index];
-					//vertexData[8 * index.vertex_index + 4] = attributes.normals[3 * index.normal_index + 1];
-					//vertexData[8 * index.vertex_index + 5] = attributes.normals[3 * index.normal_index + 2];
 				}
 				else {
 					vertex.normal = { 1.0f, 1.0f, 1.0f };
-
-					//vertexData[8 * index.vertex_index + 3] = 1.0f;
-					//vertexData[8 * index.vertex_index + 4] = 1.0f;
-					//vertexData[8 * index.vertex_index + 5] = 1.0f;
 				}
 
 				if (index.texcoord_index >= 0) {
@@ -121,20 +117,16 @@ namespace vray {
 						attributes.texcoords[2 * index.texcoord_index],
 						attributes.texcoords[2 * index.texcoord_index + 1]
 					};
-
-					//vertexData[8 * index.vertex_index + 6] = attributes.texcoords[2 * index.texcoord_index];
-					//vertexData[8 * index.vertex_index + 7] = attributes.texcoords[2 * index.texcoord_index + 1];
 				}
 				else {
 					vertex.texture = { 1.0f, 1.0f };
-
-					//vertexData[8 * index.vertex_index + 6] = 0.0f;
-					//vertexData[8 * index.vertex_index + 7] = 0.0f;
 				}
 
 				auto it = vertexMap.find(vertex);
 				if (it == vertexMap.end()) {
-					vertexMap[vertex] = vertexData.size() / 8; // !!!
+					aabbMin = glm::min(aabbMin, vertex.position);
+					aabbMax = glm::max(aabbMax, vertex.position);
+					vertexMap[vertex] = vertexData.size() / 8;
 					vertex.writeToBuffer(vertexData);
 				}
 
@@ -142,13 +134,13 @@ namespace vray {
 			}
 		}
 
-		fin.close();
+		baseSize = aabbMax - aabbMin; // !!!
 
 		BufferLayout layout({
 			{ "VertexPosition",		BufferObjectType::FLOAT3 },
 			{ "VertexNormal",		BufferObjectType::FLOAT3 },
 			{ "VertexTexCoords",	BufferObjectType::FLOAT2 }
-			});
+		});
 
 		vertexArray = new VertexArray();
 		vertexArray->bind();
@@ -164,7 +156,7 @@ namespace vray {
 		vertexArray->unbind();
 	}
 
-	Mesh::Mesh(const Mesh& mesh) : copy(true) {
+	Mesh::Mesh(const Mesh& mesh) : Resource(true) {
 		this->vertexArray = mesh.vertexArray;
 	}
 
@@ -176,6 +168,8 @@ namespace vray {
 		return *this;
 	}
 
-	Mesh::~Mesh() { if (!copy) delete vertexArray; }
+	Mesh::~Mesh() {
+		if (!copy) { delete vertexArray; }
+	}
 
 }

@@ -1,12 +1,15 @@
 #pragma once
 #include "vrpch.h"
 #include "kernel.h"
+#include <thirdparty/glm/glm.hpp>
 
 namespace vray {
 
 	class VRAYLIB Resource {
 	protected:
 		bool copy;
+		Resource(bool _copy) : copy(_copy) {}
+
 	public:
 		Resource() : copy(false) {} // !!!
 	};
@@ -15,12 +18,12 @@ namespace vray {
 	class VRAYLIB Mesh : public Resource {
 	private:
 		VertexArray* vertexArray;
-		bool copy;
+		glm::vec3 baseSize, aabbMin, aabbMax;
 
 	public:
 		Mesh(const std::string& filename);
 		Mesh(VertexArray* _vertexArray)
-			: vertexArray(_vertexArray), copy(false) {
+			: Resource(false), vertexArray(_vertexArray), baseSize(0.0f), aabbMin(0.0f), aabbMax(0.0f) {
 		}
 		~Mesh();
 
@@ -28,7 +31,9 @@ namespace vray {
 		Mesh& operator=(const Mesh&);
 
 		VertexArray* getVertexArray() const { return vertexArray; }
-		bool isACopy() const { return copy; }
+		const glm::vec3 getBaseSize() const { return baseSize; }
+		const glm::vec3 getAabbMin() const { return aabbMin; }
+		const glm::vec3 getAaabbMax() const { return aabbMax; }
 	};
 
 	class VRAYLIB Texture : public Resource {
