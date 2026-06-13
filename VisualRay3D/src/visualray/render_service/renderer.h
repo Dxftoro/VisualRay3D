@@ -20,9 +20,6 @@
 namespace vray {
 
     /* Forward declarations */
-    struct CompCamera;
-    struct CompVisualMaterial;
-    struct CompPointLight;
     class GlslUniformBuffer;
 
     class Renderer {

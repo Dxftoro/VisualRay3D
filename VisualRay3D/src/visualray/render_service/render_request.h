@@ -5,6 +5,7 @@ namespace vray {
 
 	class CompRenderable;
 	class CompTransform;
+	class CompTransformMatrices;
 
 	class RenderRequest {
 	public:
@@ -15,14 +16,14 @@ namespace vray {
 
 		CompRenderable* renderable;
 		CompTransform* transform;
+		CompTransformMatrices* matrices;
 		uint16_t drawMode;
 		Type requestType;
 
-		RenderRequest(CompRenderable* _renderable, CompTransform* _transform,
+		RenderRequest(CompRenderable* _renderable, CompTransform* _transform, CompTransformMatrices* _matrices,
 			uint16_t _drawMode, Type _requestType = Type::DRAW_MESH)
-			: renderable(_renderable), transform(_transform),
+			: renderable(_renderable), transform(_transform), matrices(_matrices),
 			drawMode(_drawMode), requestType(_requestType) {};
-		//void complete() const;
 	};
 
 }

@@ -59,7 +59,8 @@ namespace vray {
 		void renderSubmit();
 		void onEventInternal(Event& evt);
 
-		using VisibleGroup = decltype(gameContext.world.group<CompTransform>(entt::get<CompRenderable>));
+		using VisibleGroup = decltype(gameContext.world.group<CompTransform>(
+				entt::get<CompRenderable, CompTransformMatrices>));
 		VisibleGroup visibleGroup;
 
 	public:

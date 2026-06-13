@@ -119,8 +119,8 @@ namespace vray {
 
 	void Game::renderSubmit() {
 		visibleGroup.each([this]
-		(entt::entity entity, CompTransform& transform, CompRenderable& renderable) {
-			RenderRequest request(&renderable, &transform, 4U);
+		(entt::entity entity, CompTransform& transform, CompRenderable& renderable, CompTransformMatrices& matrices) {
+			RenderRequest request(&renderable, &transform, &matrices, 4U);
 			engineContext.renderer->submit(std::move(request));
 		});
 	}

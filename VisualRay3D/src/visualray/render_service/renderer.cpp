@@ -17,6 +17,28 @@
 
 namespace vray {
 
+	void updateTransform(CompTransform* transform, CompTransformMatrices* matrices) {
+		matrices->transform = glm::identity<glm::mat4>();
+		matrices->transform = glm::translate(matrices->transform, transform->getPosition());
+		matrices->transform *= glm::mat4_cast(transform->getRotation());
+		matrices->transform = glm::scale(matrices->transform, transform->getScale());
+		transform->setDirty(false);
+	}
+
+	void onTransformAdded(entt::registry& world, const entt::entity entity) {
+		auto& transform = world.get<CompTransform>(entity);
+		auto& matrices = world.emplace<CompTransformMatrices>(entity, CompTransformMatrices(
+			glm::identity<glm::mat4>(),
+			glm::identity<glm::mat3>()
+		));
+
+		updateTransform(&transform, &matrices);
+	}
+
+	void onTransformRemoved(entt::registry& world, const entt::entity entity) {
+		world.erase<CompTransformMatrices>(entity);
+	}
+
 	Renderer::Renderer(Window* _currentWindow, entt::registry& world)
 		: currentWindow(_currentWindow), initialCamera(true), lightSystem(world), billboardSystem(world) {
 
@@ -103,6 +125,9 @@ namespace vray {
 
 		//VR_ENGINE_LOGWARN("Setting data to UBOs");
 		//uboMaterial.setData(&material, sizeof(material));
+
+		world.on_construct<CompTransform>().connect<onTransformAdded>();
+		world.on_destroy<CompTransform>().connect<onTransformRemoved>();
 	}
 
 	Renderer::~Renderer() {
@@ -149,16 +174,18 @@ namespace vray {
 		while (!renderQueue.empty()) {
 			RenderRequest& request = renderQueue.front();
 			CompTransform* transform = request.transform;
+			CompTransformMatrices* matrices = request.matrices;
 
 			if (camera->isViewDirty() || transform->isDirty()) {
-				transform->setNormalMatrix(
+				updateTransform(transform, matrices);
+				matrices->normal = glm::mat3(
 					glm::transpose(
-						glm::inverse(glm::mat3(viewMatrix * transform->getTransformMatrix())))
+						glm::inverse(glm::mat3(viewMatrix * matrices->transform)))
 				);
 			}
 
-			program.setUniform(uModelMatrix, transform->getTransformMatrix());
-			program.setUniform(uNormalMatrix, transform->getNormalMatrix());
+			program.setUniform(uModelMatrix, matrices->transform);
+			program.setUniform(uNormalMatrix, matrices->normal);
 
 			VertexArray* vertexArray = request.renderable->mesh->getVertexArray();
 			

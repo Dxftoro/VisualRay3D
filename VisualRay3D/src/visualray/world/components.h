@@ -17,35 +17,36 @@ namespace vray {
 		glm::vec3 position;
 		glm::quat rotation;
 		glm::vec3 scale;
-		glm::mat4 transformMatrix;
-		glm::mat3 normalMatrix;
 
 	public:
 		CompTransform()
 			: position(0.0f), rotation(glm::identity<glm::quat>()), scale(1.0f),
-			  transformMatrix(1.0f), normalMatrix(1.0f), dirty(true), sync(false) {}
+				dirty(true), sync(false) {}
 
 		CompTransform(
 			const glm::vec3& _position,
 			const glm::quat& _rotation,
 			const glm::vec3& _scale)
 			: position(_position), rotation(_rotation), scale(_scale),
-			transformMatrix(1.0f), normalMatrix(1.0f), dirty(true), sync(false) {}
+				dirty(true), sync(false) {}
 
 		const glm::vec3& getPosition() const { return position; }
 		const glm::quat& getRotation() const { return rotation; }
 		const glm::vec3& getScale() const { return scale; }
-		const glm::mat4& getTransformMatrix();
-		const glm::mat3& getNormalMatrix() const;
 		bool isDirty() const { return dirty; };
 		bool isSync() const { return sync; }
 
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
 		void setRotation(const glm::quat& rotation);
-		void setNormalMatrix(const glm::mat3 normalMatrix);
 		void setScale(const glm::vec3& scale);
+		void setDirty(bool dirty) { this->dirty = dirty; }
 		void setSync(bool sync) { this->sync = sync; };
+	};
+
+	struct VRAYLIB CompTransformMatrices {
+		glm::mat4 transform;
+		glm::mat3 normal;
 	};
 
 	struct VRAYLIB CompRenderable {

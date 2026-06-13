@@ -4,25 +4,6 @@
 
 namespace vray {
 
-	const glm::mat4& CompTransform::getTransformMatrix() {
-		if (dirty) {
-			transformMatrix = glm::identity<glm::mat4>();
-			transformMatrix = glm::translate(transformMatrix, position);
-			transformMatrix *= glm::mat4_cast(rotation);
-			transformMatrix = glm::scale(transformMatrix, scale);
-			dirty = false;
-		}
-		return transformMatrix;
-	}
-
-	const glm::mat3& CompTransform::getNormalMatrix() const {
-		//if (dirty) {
-		//	normalMatrix = glm::mat3(glm::transpose(glm::inverse(transformMatrix)));
-		//	dirty = false;
-		//}
-		return normalMatrix;
-	}
-
 	void CompTransform::setPosition(const glm::vec3& position) { 
 		this->position = position;
 		dirty = true;
@@ -45,10 +26,6 @@ namespace vray {
 		this->scale = scale;
 		dirty = true;
 		sync = false;
-	}
-
-	void CompTransform::setNormalMatrix(const glm::mat3 normalMatrix) {
-		this->normalMatrix = normalMatrix;
 	}
 
 	CompCamera::CompCamera(float _fov, float width, float height, float _near, float _far)
