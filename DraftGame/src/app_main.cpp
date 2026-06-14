@@ -212,11 +212,13 @@ private:
 
 		if (inputService.keyPressed(VR_KEY_UP)) {
 			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
-			teapotTransform.setScale(teapotTransform.getScale() + glm::vec3(0.1));
+			teapotTransform.setScale(teapotTransform.getScale() * 1.05f);
+			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getScale()));
 		}
 		else if (inputService.keyPressed(VR_KEY_DOWN)) {
 			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
-			teapotTransform.setScale(teapotTransform.getScale() - glm::vec3(0.1));
+			teapotTransform.setScale(teapotTransform.getScale() * 0.95f);
+			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getScale()));
 		}
 	}
 
@@ -328,12 +330,19 @@ private:
 		entt::entity teapot = game.world.create();
 
 		vray::CompRenderable teapotRenderable(game.meshes.get("teapot"), game.textures.get("stone_bricks"));
+		teapotRenderable.material = {
+			.ka = glm::vec3(0.1f),
+			.kd = glm::vec3(1.0f),
+			.ks = glm::vec3(0.1f),
+			.shininess = 256.0f
+		};
+
 		game.world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
 
 		vray::CompTransform teapotTransform;
 		teapotTransform.setPosition(position);
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
-		teapotTransform.setScale(teapotRenderable.mesh->getBaseSize() * glm::vec3(0.25));
+		teapotTransform.setScale(teapotRenderable.mesh->getBaseSize() * 0.25f);
 		//teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
 		
 		vray::CompHitbox teapotHitbox{
@@ -384,17 +393,16 @@ private:
 		VR_LOGINFO(std::to_string(cellStartPosition.x) + ", " + std::to_string(cellStartPosition.z));
 
 		glm::vec3 cellPosition = cellStartPosition;
-		spawnPlatform(cellPosition, size);
+		spawnPlatform(cellPosition, cellSize);
 
 		for (int i = 0; i < cellCount - 1; i++) {			
 			if (i > 0 && (i + 1) % size == 0) {
-				VR_LOGINFO(std::to_string(i));
 				cellPosition.x = cellStartPosition.x;
 				cellPosition.z += cellSize;
 			}
 			else cellPosition.x += cellSize;
 
-			spawnPlatform(cellPosition, size);
+			spawnPlatform(cellPosition, cellSize);
 		}
 	}
 
@@ -624,7 +632,7 @@ public:
 		spawnTeapot({ 0.0f, 40.0f, 0.0f });
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
-		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 15, 15);
+		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 30, 4);
 		light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		light2 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}

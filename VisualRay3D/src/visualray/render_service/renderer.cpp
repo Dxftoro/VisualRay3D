@@ -133,6 +133,7 @@ namespace vray {
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
+		glEnable(GL_CULL_FACE);
 
 		glGenVertexArrays(1, &debugVao);
 		glGenBuffers(1, &debugVbo);
@@ -197,6 +198,8 @@ namespace vray {
 	void Renderer::flush() {
 		const glm::mat4& viewMatrix = camera->getViewMatrix();
 
+		uboMaterial.bind();
+
 		while (!renderQueue.empty()) {
 			RenderRequest& request = renderQueue.front();
 			CompTransform* transform = request.transform;
@@ -212,6 +215,8 @@ namespace vray {
 
 			program.setUniform(uModelMatrix, matrices->transform);
 			program.setUniform(uNormalMatrix, matrices->normal);
+			uboMaterial.setData(&(request.renderable->material),
+				sizeof(CompRenderable::Material));
 
 			VertexArray* vertexArray = request.renderable->mesh->getVertexArray();
 			
@@ -223,6 +228,8 @@ namespace vray {
 
 			renderQueue.pop();
 		}
+
+		uboMaterial.unbind();
 
 		camera->setViewDirty(false);
 	}

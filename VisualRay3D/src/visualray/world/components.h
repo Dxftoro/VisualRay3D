@@ -58,6 +58,14 @@ namespace vray {
 	struct VRAYLIB CompRenderable {
 		Mesh* mesh;
 		Texture* texture;
+
+		struct Material {
+			alignas(16) glm::vec3 ka = glm::vec3(0.1f);
+			alignas(16) glm::vec3 kd = glm::vec3(1.0f);
+			alignas(16) glm::vec3 ks = glm::vec3(1.0f);
+			float shininess = 32.0f;
+		} material;
+
 		CompRenderable(Mesh* _mesh, Texture* _texture)
 			: mesh(_mesh), texture(_texture) {}
 	};
