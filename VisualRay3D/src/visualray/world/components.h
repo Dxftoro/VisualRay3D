@@ -1,7 +1,11 @@
 #pragma once
+#define GLM_ENABLE_EXPERIMENTAL
 #include <thirdparty/glm/glm.hpp>
 #include <thirdparty/glm/gtc/quaternion.hpp>
+#include <thirdparty/glm/gtx/string_cast.hpp>
+
 #include "managers/resource.h"
+#include "logservice.h"
 
 namespace vray {
 
@@ -21,7 +25,9 @@ namespace vray {
 	public:
 		CompTransform()
 			: position(0.0f), rotation(glm::identity<glm::quat>()), scale(1.0f),
-				dirty(true), sync(false) {}
+			dirty(true), sync(false) {
+			VR_LOGIMPORTANT("Constr: " + glm::to_string(scale));
+		}
 
 		CompTransform(
 			const glm::vec3& _position,

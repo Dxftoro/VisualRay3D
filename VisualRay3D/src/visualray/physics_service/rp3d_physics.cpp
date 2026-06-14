@@ -44,7 +44,11 @@ namespace vray {
 
 		switch (hitbox.shapeType) {
 		case CompHitbox::ShapeType::BOX: {
-			rp3d::BoxShape* boxShape = physicsCommon.createBoxShape(glmToVec3(hitbox.size));
+			rp3d::BoxShape* boxShape = physicsCommon.createBoxShape(glmToVec3({
+				hitbox.size.x / 2,
+				hitbox.size.y / 2,
+				hitbox.size.z / 2
+			}));
 			rigidBody->addCollider(boxShape, rp3d::Transform::identity());
 			break;
 		}

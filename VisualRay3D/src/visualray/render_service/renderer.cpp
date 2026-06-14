@@ -17,22 +17,48 @@
 
 namespace vray {
 
-	void updateTransform(CompTransform* transform, CompTransformMatrices* matrices) {
+	void updateTransform(
+		CompRenderable* renderable,
+		CompTransform* transform,
+		CompTransformMatrices* matrices) {
 		matrices->transform = glm::identity<glm::mat4>();
 		matrices->transform = glm::translate(matrices->transform, transform->getPosition());
 		matrices->transform *= glm::mat4_cast(transform->getRotation());
-		matrices->transform = glm::scale(matrices->transform, transform->getScale());
+
+		glm::vec3 scale = transform->getScale() / renderable->mesh->getBaseSize();
+		//VR_ENGINE_LOGIMPORTANT(
+		//	glm::to_string(transform->getScale()) + " | " +
+		//	glm::to_string(scale));
+
+		matrices->transform = glm::scale(matrices->transform,
+			transform->getScale() / renderable->mesh->getBaseSize());
+
 		transform->setDirty(false);
 	}
 
+	//void updateTransform(CompTransform* transform, CompTransformMatrices* matrices) {
+	//	matrices->transform = glm::identity<glm::mat4>();
+	//	matrices->transform = glm::translate(matrices->transform, transform->getPosition());
+	//	matrices->transform *= glm::mat4_cast(transform->getRotation());
+	//	matrices->transform = glm::scale(matrices->transform, transform->getScale());
+	//	transform->setDirty(false);
+	//}
+
 	void onTransformAdded(entt::registry& world, const entt::entity entity) {
+		//VR_ENGINE_LOGIMPORTANT("Transform added!");
+
 		auto& transform = world.get<CompTransform>(entity);
 		auto& matrices = world.emplace<CompTransformMatrices>(entity, CompTransformMatrices(
 			glm::identity<glm::mat4>(),
 			glm::identity<glm::mat3>()
 		));
 
-		updateTransform(&transform, &matrices);
+		auto renderable = world.try_get<CompRenderable>(entity);
+		if (renderable) {
+			//VR_ENGINE_LOGIMPORTANT("Applying transform scale " + glm::to_string(renderable->mesh->getBaseSize()));
+			transform.setScale(renderable->mesh->getBaseSize());
+			//VR_ENGINE_LOGIMPORTANT("After apply " + glm::to_string(transform.getScale()));
+		}
 	}
 
 	void onTransformRemoved(entt::registry& world, const entt::entity entity) {
@@ -177,7 +203,7 @@ namespace vray {
 			CompTransformMatrices* matrices = request.matrices;
 
 			if (camera->isViewDirty() || transform->isDirty()) {
-				updateTransform(transform, matrices);
+				updateTransform(request.renderable, transform, matrices);
 				matrices->normal = glm::mat3(
 					glm::transpose(
 						glm::inverse(glm::mat3(viewMatrix * matrices->transform)))

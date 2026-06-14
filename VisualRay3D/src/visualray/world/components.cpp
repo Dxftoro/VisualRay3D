@@ -1,5 +1,7 @@
 #include "vrpch.h"
 #include "components.h"
+#include "logservice.h"
+
 #include <thirdparty/glm/gtc/matrix_transform.hpp>
 
 namespace vray {
@@ -23,6 +25,7 @@ namespace vray {
 	}
 
 	void CompTransform::setScale(const glm::vec3& scale) { 
+		//VR_LOGIMPORTANT("Setting scale! " + glm::to_string(scale));
 		this->scale = scale;
 		dirty = true;
 		sync = false;

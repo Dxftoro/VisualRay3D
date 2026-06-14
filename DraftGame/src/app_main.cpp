@@ -2,6 +2,9 @@
 #include <visualray/event_service/keyboard_events.h>
 #include <visualray/layer_service/debugger.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <thirdparty/glm/gtx/string_cast.hpp>
+
 struct PlayerController {
 	glm::vec3 velocity = glm::vec3(0.0f);
 	glm::vec3 forward = glm::vec3(0.0f), right = glm::vec3(0.0f);
@@ -206,6 +209,15 @@ private:
 
 		transform.setPosition(position);
 		camera->setPosition(position + glm::vec3(0.0f, 4.0f, 0.0f));
+
+		if (inputService.keyPressed(VR_KEY_UP)) {
+			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
+			teapotTransform.setScale(teapotTransform.getScale() + glm::vec3(0.1));
+		}
+		else if (inputService.keyPressed(VR_KEY_DOWN)) {
+			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
+			teapotTransform.setScale(teapotTransform.getScale() - glm::vec3(0.1));
+		}
 	}
 
 	inline void detectGround() {
@@ -294,7 +306,7 @@ private:
 		entt::entity cube = game.world.create();
 		
 		vray::CompTransform cubeTransform;
-		cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
+		//cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
 		cubeTransform.setPosition(position);
 
 		auto& renderable = game.world.emplace<vray::CompRenderable>(cube,
@@ -303,7 +315,7 @@ private:
 		vray::CompHitbox cubeHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = cubeTransform.getScale() * 0.9f,
+			.size = cubeTransform.getScale(),
 			.radius = 1,
 			.mass = 12.0f
 		};
@@ -315,24 +327,25 @@ private:
 	void spawnTeapot(const glm::vec3& position) {
 		entt::entity teapot = game.world.create();
 
+		vray::CompRenderable teapotRenderable(game.meshes.get("teapot"), game.textures.get("stone_bricks"));
+		game.world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
+
 		vray::CompTransform teapotTransform;
 		teapotTransform.setPosition(position);
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
-		teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
+		teapotTransform.setScale(teapotRenderable.mesh->getBaseSize() * glm::vec3(0.25));
+		//teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
 		
 		vray::CompHitbox teapotHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = glm::vec3(1.0f, 2.0f, 2.0f),
+			.size = teapotTransform.getScale(),
 			.radius = 10,
 			.mass = 12.0f
 		};
 
-		vray::CompRenderable teapotRenderable(game.meshes.get("teapot"), game.textures.get("stone_bricks"));
 		game.world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		game.world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
-		game.world.emplace<vray::CompRenderable>(teapot, teapotRenderable);
-
 		this->teapot = teapot;
 	}
 
@@ -360,7 +373,7 @@ private:
 
 	void spawnPlatformGrid(const glm::vec3& center, float _cellSize, int size) {
 		int cellCount = size * size;
-		float cellSize = _cellSize + 2.0f;
+		float cellSize = _cellSize;
 
 		const glm::vec3 cellStartPosition = {
 			center.x - (cellSize * (size / 2)) + cellSize * 0.5,
@@ -373,7 +386,7 @@ private:
 		glm::vec3 cellPosition = cellStartPosition;
 		spawnPlatform(cellPosition, size);
 
-		for (int i = 0; i <= cellCount - 1; i++) {			
+		for (int i = 0; i < cellCount - 1; i++) {			
 			if (i > 0 && (i + 1) % size == 0) {
 				VR_LOGINFO(std::to_string(i));
 				cellPosition.x = cellStartPosition.x;
@@ -499,7 +512,10 @@ public:
 		vray::Texture* defaultTexture = game.textures.load("textures/default.png", "default");
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
 		vray::Sound* shootSound = game.sounds.load("sounds/click.ogg", "shoot");
+
 		VR_LOGIMPORTANT("Sound channels: " + std::to_string(shootSound->getChannelCount()));
+		VR_LOGIMPORTANT("Cube: " + glm::to_string(cubeMesh->getBaseSize()));
+		VR_LOGIMPORTANT("Teapot: " + glm::to_string(teapotMesh->getBaseSize()));
 
 		billboardTexture = ozuTexture;
 
@@ -573,13 +589,13 @@ public:
 		platformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
 		platformTransform.setScale({ 10.0f, 1.0f, 10.0f });
 
-		vray::CompHitbox platformHitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::STATIC,
-			.size = platformTransform.getScale(),
-			.radius = 10,
-			.mass = 10.0f
-		};
+		//vray::CompHitbox platformHitbox{
+		//	.shapeType = vray::CompHitbox::ShapeType::BOX,
+		//	.physType = vray::CompHitbox::PhysType::STATIC,
+		//	.size = platformTransform.getScale(),
+		//	.radius = 10,
+		//	.mass = 10.0f
+		//};
 
 		vray::CompTransform playerTransform;
 		playerTransform.setPosition({0.0f, 40.0f, 0.0f});
@@ -605,17 +621,18 @@ public:
 				vray::frand(-5.0f, 5.0f)});
 		}
 
-		spawnTeapot({ 0.0f, 20.0f, 0.0f });
-		//VR_LOGINFO("Teapot entity id is " + std::to_string((uint32_t)teapot));
+		spawnTeapot({ 0.0f, 40.0f, 0.0f });
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
-		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 10.0f, 6);
+		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 15, 15);
 		light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		light2 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
 	~DraftGame() {}
 
 	inline void update() override {
+		auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
+
 		detectGround();
 		handleKeysGrounded();
 
@@ -631,9 +648,6 @@ public:
 
 		handleMouseUnlock(evt);
 		handleConsole(evt);
-
-		//const glm::vec3& playerPos = game.world.get<vray::CompTransform>(player).getPosition();
-		//VR_LOGINFO(std::to_string(playerPos.x) + ", " + std::to_string(playerPos.z));
 	}
 };
 

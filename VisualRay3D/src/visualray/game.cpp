@@ -34,7 +34,7 @@ namespace vray {
 		engineContext.inputService = InputService(engineContext.window.get());
 		engineContext.debugger = new Debugger(engineContext.window.get());
 
-		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable>);
+		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable, CompTransformMatrices>);
 		
 		engineContext.renderer = new Renderer(engineContext.window.get(), gameContext.world);
 		Renderer* renderer = engineContext.renderer;
