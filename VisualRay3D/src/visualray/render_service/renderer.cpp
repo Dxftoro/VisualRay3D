@@ -150,6 +150,8 @@ namespace vray {
 
 		debugVertexCount = 0;
 
+		setClearColor(glm::vec4(0.2f));
+
 		//VR_ENGINE_LOGWARN("Setting data to UBOs");
 		//uboMaterial.setData(&material, sizeof(material));
 
@@ -161,8 +163,11 @@ namespace vray {
 		if (camera && initialCamera) delete camera;
 	}
 
+	void Renderer::setClearColor(const glm::vec4& color) {
+		glClearColor(color.r, color.g, color.b, color.a);
+	}
+
 	void Renderer::clear() {
-		glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 

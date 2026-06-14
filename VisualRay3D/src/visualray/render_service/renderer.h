@@ -57,6 +57,7 @@ namespace vray {
 
         void onEvent(Event& evt);
 
+        void setClearColor(const glm::vec4& color);
         void setCamera(CompCamera* camera);
         void setTestTexture(Texture* texture) { billboardSystem.setTexture(texture); }
         CompCamera* getCamera() const { return camera; }

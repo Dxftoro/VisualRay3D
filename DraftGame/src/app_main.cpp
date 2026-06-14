@@ -527,6 +527,8 @@ public:
 
 		billboardTexture = ozuTexture;
 
+		setClearColor(glm::vec4(0.1f, 0.6f, 0.8f, 0.0f));
+
 		pc.onGround = true;
 		player = game.world.create();
 		playerSpeed = 0.0f;

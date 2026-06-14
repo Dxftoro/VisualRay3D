@@ -135,5 +135,9 @@ namespace vray {
 		engineContext.renderer->onEvent(evt);
 	}
 
+	void Game::setClearColor(const glm::vec4& color) {
+		engineContext.renderer->setClearColor(color);
+	}
+
 	float Game::deltaTime() { return _deltaTime; }
 }

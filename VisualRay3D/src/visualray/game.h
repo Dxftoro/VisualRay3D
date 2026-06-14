@@ -76,6 +76,8 @@ namespace vray {
 		EngineContext& getEngineContext() { return engineContext; }
 		GameContext& getGameContext() { return gameContext; }
 
+		void setClearColor(const glm::vec4& color);
+
 		static float deltaTime();
 		static float getFpsLimit() { return fpsLimit; };
 		static void	setFpsLimit(int _fpsLimit) { fpsLimit = _fpsLimit; };
