@@ -1,8 +1,8 @@
 #include "vrpch.h"
 #include "rp3d_physics.h"
 #include "rp3d_logger.h"
-
 #include "logservice.h"
+#include "../event_service/physics_events.h"
 
 namespace vray {
 
@@ -12,6 +12,34 @@ namespace vray {
 		lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
 		lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
 		return -1;
+	}
+
+	void Rp3dEventListener::onContact(const rp3d::CollisionCallback::CallbackData& data) {
+		for (rp3d::uint32 i = 0; i < data.getNbContactPairs(); ++i) {
+			rp3d::CollisionCallback::ContactPair contactPair = data.getContactPair(i);
+
+			CollisionEvent event(
+				(entt::entity)(uintptr_t)contactPair.getBody1()->getUserData(),
+				(entt::entity)(uintptr_t)contactPair.getBody2()->getUserData(),
+				(CollisionEvent::ContactType)(int)contactPair.getEventType()
+			);
+
+			callback(event);
+		}
+	}
+
+	void Rp3dEventListener::onTrigger(const rp3d::OverlapCallback::CallbackData& data) {
+		for (rp3d::uint32 i = 0; i < data.getNbOverlappingPairs(); ++i) {
+			rp3d::OverlapCallback::OverlapPair overlapPair = data.getOverlappingPair(i);
+
+			TriggerEvent event(
+				(entt::entity)(uintptr_t)overlapPair.getBody1()->getUserData(),
+				(entt::entity)(uintptr_t)overlapPair.getBody2()->getUserData(),
+				(CollisionEvent::ContactType)(int)overlapPair.getEventType()
+			);
+
+			callback(event);
+		}
 	}
 
 	BodyTableIterator Rp3dPhysics::createPhysicsBody(entt::entity entity) {
@@ -73,31 +101,25 @@ namespace vray {
 		return it;
 	}
 
-	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : world(_world) {
-		//static Rp3dLogger logger;
-		//physicsCommon.setLogger(&logger);
+	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : eventListener(nullptr), world(_world) {
 		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
 		physicsWorld = physicsCommon.createPhysicsWorld();
 		
 		physicsWorld->setIsDebugRenderingEnabled(true);
 
 		rp3d::DebugRenderer& debugRenderer = physicsWorld->getDebugRenderer();
-		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
-		
-		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
-		
-		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
-		
-		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
-		//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
-
-		//VR_ENGINE_LOGINFO("DR ADDR: " + std::to_string(&physicsWorld->getDebugRenderer()));
 
 		VR_ENGINE_LOGINFO("World debug enabled: " +
 			std::to_string(physicsWorld->getIsDebugRenderingEnabled()));
 		VR_ENGINE_LOGINFO("Collision shapes debug: " +
 			std::to_string(debugRenderer.getIsDebugItemDisplayed(
 				rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE)));
+	}
+
+	void Rp3dPhysics::setEventCallback(const EventCallback& callback) {
+		if (eventListener != nullptr) delete eventListener;
+		eventListener = new Rp3dEventListener(callback);
+		physicsWorld->setEventListener(eventListener);
 	}
 
 	void Rp3dPhysics::update(float deltaTime) {

@@ -26,11 +26,22 @@ namespace vray {
 		std::optional<RaycastResult>& getLastResult() { return lastRaycastResult; }
 	};
 
+	class Rp3dEventListener : public rp3d::EventListener {
+	private:
+		IPhysics::EventCallback callback;
+
+	public:
+		Rp3dEventListener(const IPhysics::EventCallback& _callback) : callback(_callback) {}
+		void onContact(const rp3d::CollisionCallback::CallbackData& data) override;
+		void onTrigger(const rp3d::OverlapCallback::CallbackData& data) override;
+	};
+
 	class Rp3dPhysics : public IPhysics {
 	private:
 		rp3d::PhysicsCommon physicsCommon;
 		rp3d::PhysicsWorld* physicsWorld;
 		std::unordered_map<entt::entity, BodySyncData> bodyTable;
+		Rp3dEventListener* eventListener;
 		entt::registry& world;
 
 		using DynamicGroup = decltype(world.group<CompHitbox>(entt::get<CompTransform>));
@@ -43,9 +54,10 @@ namespace vray {
 	public:
 		Rp3dPhysics(entt::registry& world);
 
-		virtual void update(float deltaTime) override;
-		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& end) override;
-		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& dir, float range) override;
+		void update(float deltaTime) override;
+		std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& end) override;
+		std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& dir, float range) override;
+		void setEventCallback(const EventCallback& callback) override;
 
 		rp3d::DebugRenderer& getDebugRenderer() const;
 		rp3d::PhysicsWorld* getPhysicsWorld() const;

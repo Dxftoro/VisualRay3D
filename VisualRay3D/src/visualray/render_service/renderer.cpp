@@ -8,8 +8,6 @@
 #include "vertex_array.h"
 #include "renderer_callbacks.h"
 
-#include "event_service/game_events.h"
-#include "event_service/mouse_events.h"
 #include "input_codes.h"
 #include "input_service/input_service.h"
 
@@ -239,22 +237,15 @@ namespace vray {
 		camera->setViewDirty(false);
 	}
 
-	void Renderer::onEvent(Event& evt) {
-		switch (evt.getType()) {
-		case EventType::WINDOW_RESIZE: {
-			WindowResizeEvent& resizeEvt = dynamic_cast<WindowResizeEvent&>(evt);
-			int width = resizeEvt.getWidth();
-			int height = resizeEvt.getHeight();
+	bool Renderer::onWindowResize(WindowResizeEvent& evt) {
+		int width = evt.getWidth();
+		int height = evt.getHeight();
+		
+		if (!width || !height) return true;
 
-			if (!width || !height) return;
-
-			camera->setProjectionBorders(width, height);
-			glViewport(0, 0, width, height);
-			resizeEvt.dump();
-			break;
-		}
-		default: break;
-		}
+		camera->setProjectionBorders(width, height);
+		glViewport(0, 0, width, height);
+		return true;
 	}
 
 	void Renderer::setCamera(CompCamera* camera) {

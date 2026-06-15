@@ -18,6 +18,8 @@ namespace vray {
 		GAME_TICK,
 		GAME_UPDATE,
 		RENDER_STEP,
+		COLLISION,
+		TRIGGER,
 		LAST
 	};
 
@@ -27,7 +29,8 @@ namespace vray {
 		KEYBOARD_EVENT = SETBIT(1),
 		MOUSE_EVENT = SETBIT(2),
 		RENDER_EVENT = SETBIT(3),
-		GAME_EVENT = SETBIT(4)
+		PHYSICS_EVENT = SETBIT(4),
+		GAME_EVENT = SETBIT(5)
 	};
 
 	constexpr EventCategory operator&(EventCategory left, EventCategory right) {
@@ -72,7 +75,7 @@ namespace vray {
 		}
 	};
 
-#define VR_DEFINE_EVENT_TYPE(EVENT_TYPE) static EventType getStaticType() { return EVENT_TYPE; }\
+#define VR_DEFINE_EVENT_TYPE(EVENT_TYPE) static constexpr EventType getStaticType() { return EVENT_TYPE; }\
 	virtual EventType getType() const override { return getStaticType(); }\
 	virtual std::string getName() const override { return #EVENT_TYPE; }
 

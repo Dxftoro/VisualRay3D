@@ -2,7 +2,7 @@
 
 #include "vrpch.h"
 #include "kernel.h"
-#include "event_service/event.h"
+#include "event_service/game_events.h"
 #include "window_service/window.h"
 #include "world/components.h"
 #include "../thirdparty/EnTT/entt.hpp"
@@ -55,7 +55,7 @@ namespace vray {
         void submit(RenderRequest&& query);
         inline void flush();
 
-        void onEvent(Event& evt);
+        bool onWindowResize(WindowResizeEvent& evt);
 
         void setClearColor(const glm::vec4& color);
         void setCamera(CompCamera* camera);

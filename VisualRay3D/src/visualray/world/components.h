@@ -26,7 +26,6 @@ namespace vray {
 		CompTransform()
 			: position(0.0f), rotation(glm::identity<glm::quat>()), scale(1.0f),
 			dirty(true), sync(false) {
-			VR_LOGIMPORTANT("Constr: " + glm::to_string(scale));
 		}
 
 		CompTransform(

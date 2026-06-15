@@ -491,5 +491,8 @@
     <ClInclude Include="src\visualray\audio_service\alsoft_source_pool.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\visualray\event_service\physics_events.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

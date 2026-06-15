@@ -43,6 +43,9 @@ namespace vray {
 
 		engineContext.physics = new Rp3dPhysics(gameContext.world);
 		IPhysics* physics = engineContext.physics;
+		physics->setEventCallback(
+			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
+		);
 
 		engineContext.physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
 		engineContext.cameraSystem = CameraSystem(renderer);
@@ -130,9 +133,11 @@ namespace vray {
 		dispatcher.fire<WindowCloseEvent>(
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
+		dispatcher.fire<WindowResizeEvent>(
+			std::bind(&Renderer::onWindowResize, engineContext.renderer, std::placeholders::_1)
+		);
 
 		onEvent(evt);
-		engineContext.renderer->onEvent(evt);
 	}
 
 	void Game::setClearColor(const glm::vec4& color) {

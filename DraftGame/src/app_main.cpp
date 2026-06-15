@@ -1,5 +1,7 @@
 #include <visualray.h>
 #include <visualray/event_service/keyboard_events.h>
+#include <visualray/event_service/physics_events.h>
+#include <visualray/audio_service/audio.h>
 #include <visualray/layer_service/debugger.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -277,7 +279,7 @@ private:
 			vray::MouseClickEvent& mouseEvent = dynamic_cast<vray::MouseClickEvent&>(evt);
 			if (mouseEvent.getMouseButtonCode() != VR_MOUSE_BUTTON_1) return;
 
-			game.world.emplace<vray::CompSoundPlay>(player, vray::CompSoundPlay{ false });
+			engine.audio->play(player);
 
 			glm::vec3 cameraFront;
 			camera->calculateFront(cameraFront);
@@ -304,6 +306,26 @@ private:
 		}
 	}
 
+	inline void handlePhysics(vray::Event& evt) {
+		vray::EventDispatcher dispatcher(evt);
+		dispatcher.fire<vray::CollisionEvent>([this](vray::CollisionEvent evt) -> bool {
+			if (evt.getContactType() == vray::CollisionEvent::ContactType::START) {
+				if (!game.world.try_get<CompCubeTag>(evt.getEntity1())) return true;
+
+				auto& sound = game.world.get<vray::CompSound>(evt.getEntity1());
+				sound.setPitch(vray::frand(0.8f, 1.2f));
+
+				engine.audio->play(evt.getEntity1());
+			}
+
+			return true;
+		});
+	}
+
+	struct CompCubeTag {
+		bool dummy;
+	};
+
 	void spawnCube(const glm::vec3& position) {
 		entt::entity cube = game.world.create();
 		
@@ -324,6 +346,11 @@ private:
 
 		game.world.emplace<vray::CompTransform>(cube, cubeTransform);
 		game.world.emplace<vray::CompHitbox>(cube, cubeHitbox);
+		auto& sound = game.world.emplace<vray::CompSound>(cube, game.sounds.get("shoot"));
+		sound.setMaxDistance(50.0f);
+		sound.setRefDistance(10.0f);
+
+		game.world.emplace<CompCubeTag>(cube, CompCubeTag(false));
 	}
 
 	void spawnTeapot(const glm::vec3& position) {
@@ -634,7 +661,7 @@ public:
 		spawnTeapot({ 0.0f, 40.0f, 0.0f });
 
 		//spawnPlatformLine({ 0.0f, 5.0f, 0.0f }, 10.0f, 7);
-		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 30, 4);
+		spawnPlatformGrid({ 0.0f, 5.0f, 0.0f }, 15, 6);
 		light1 = spawnLightMarker({ 20.0f, 15.0f, 0.0f }, { 0.2f, 2.0f, 2.0f });
 		light2 = spawnLightMarker({ -10.0, 10.0, 10.0 }, { 0.3f, 1.0f, 0.1f });
 	}
@@ -648,6 +675,14 @@ public:
 
 		updateLight(light1, true);
 		updateLight(light2, false);
+
+		game.world.view<CompCubeTag>().each([this](entt::entity entity, CompCubeTag& tag){
+			auto& transform = game.world.get<vray::CompTransform>(entity);
+			if (transform.isDirty()) {
+				auto& sound = game.world.get<vray::CompSound>(entity);
+				sound.setPosition(transform.getPosition());
+			}
+		});
 	}
 
 	inline void onEvent(vray::Event& evt) {
@@ -658,6 +693,7 @@ public:
 
 		handleMouseUnlock(evt);
 		handleConsole(evt);
+		handlePhysics(evt);
 	}
 };
 
