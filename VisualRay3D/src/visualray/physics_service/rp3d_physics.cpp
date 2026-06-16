@@ -166,6 +166,19 @@ namespace vray {
 		return callback.getLastResult();
 	}
 
+	bool Rp3dPhysics::testOverlap(entt::entity entity1, entt::entity entity2) {
+		auto it1 = bodyTable.find(entity1);
+		auto it2 = bodyTable.find(entity2);
+
+		/* TODO: Physics exception */
+		if (it1 == bodyTable.end() || it2 == bodyTable.end()) {
+			VR_ENGINE_LOGERROR("Tested entities does not have CompHitbox!");
+			return false;
+		}
+
+		return physicsWorld->testOverlap(it1->second.body, it2->second.body);
+	}
+
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {
 		return physicsWorld->getDebugRenderer();
 	}

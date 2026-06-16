@@ -677,6 +677,10 @@ public:
 		updateLight(light2, false);
 
 		game.world.view<CompCubeTag>().each([this](entt::entity entity, CompCubeTag& tag){
+			if (engine.physics->testOverlap(entity, teapot)) {
+				VR_LOGIMPORTANT("A cube is overlaped by the teapot!");
+			}
+
 			auto& transform = game.world.get<vray::CompTransform>(entity);
 			if (transform.isDirty()) {
 				auto& sound = game.world.get<vray::CompSound>(entity);

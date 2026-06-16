@@ -55,8 +55,12 @@ namespace vray {
 		Rp3dPhysics(entt::registry& world);
 
 		void update(float deltaTime) override;
+		
 		std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& end) override;
 		std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& dir, float range) override;
+		
+		bool testOverlap(entt::entity entity1, entt::entity entity2) override;
+
 		void setEventCallback(const EventCallback& callback) override;
 
 		rp3d::DebugRenderer& getDebugRenderer() const;
