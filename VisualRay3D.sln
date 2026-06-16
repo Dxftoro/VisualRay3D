@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "thirdparty\GLAD\GLA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "thirdparty\GLFW\GLFW.vcxproj", "{6E624436-019A-4B70-B718-E99DC564A1E1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reactphysics3d", "thirdparty\ReactPhysics3D\out\reactphysics3d.vcxproj", "{E245455D-5129-3538-BF02-C38A0626CD7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +41,10 @@ Global
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Debug|x64.Build.0 = Debug|x64
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Release|x64.ActiveCfg = Release|x64
 		{6E624436-019A-4B70-B718-E99DC564A1E1}.Release|x64.Build.0 = Release|x64
+		{E245455D-5129-3538-BF02-C38A0626CD7A}.Debug|x64.ActiveCfg = Debug|x64
+		{E245455D-5129-3538-BF02-C38A0626CD7A}.Debug|x64.Build.0 = Debug|x64
+		{E245455D-5129-3538-BF02-C38A0626CD7A}.Release|x64.ActiveCfg = Release|x64
+		{E245455D-5129-3538-BF02-C38A0626CD7A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

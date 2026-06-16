@@ -186,8 +186,14 @@
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
       <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\thirdparty\GLFW\GLFW.vcxproj">
+      <Project>{6e624436-019a-4b70-b718-e99dc564a1e1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
       <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\thirdparty\ReactPhysics3D\out\reactphysics3d.vcxproj">
+      <Project>{e245455d-5129-3538-bf02-c38a0626cd7a}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -218,6 +224,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="thirdparty_debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -245,8 +252,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)thirdparty\ReactPhysics3D\lib;$(SolutionDir)thirdparty\ODE\lib\Debug;$(SolutionDir)thirdparty\OpenAL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;reactphysics3d.lib;oded.lib;vcasand.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)thirdparty\ODE\lib\Debug;$(SolutionDir)thirdparty\OpenAL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;oded.lib;vcasand.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y /D "$(SolutionDir)thirdparty\OpenAL\bin\OpenAL32.dll" "$(TargetDir)"</Command>

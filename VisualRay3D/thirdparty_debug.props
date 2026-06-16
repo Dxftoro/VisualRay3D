@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\$(ProjectName)\src\visualray\$(SolutionDir)\thirdparty\GLFW\include;$(SolutionDir)\ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;$(SolutionDir)\thirdparty\ODE\include;$(SolutionDir)\thirdparty\OpenAL\include$(SolutionDir)\thirdparty\STB\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)thirdparty\ReactPhysics3D\lib\Debug;$(SolutionDir)thirdparty\ODE\lib\Debug;$(SolutionDir)thirdparty\OpenAL\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;user32.lib;gdi32.lib;shell32.lib;reactphysics3d.lib;oded.lib;vcasand.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

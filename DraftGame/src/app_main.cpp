@@ -484,6 +484,7 @@ private:
 
 		vray::CompTransform transform;
 		transform.setPosition(position);
+		transform.setScale(scale);
 
 		vray::CompRenderable renderable(mesh, game.textures.get("default"));
 		vray::CompHitbox hitbox{
