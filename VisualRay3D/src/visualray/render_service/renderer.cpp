@@ -23,13 +23,13 @@ namespace vray {
 		matrices->transform = glm::translate(matrices->transform, transform->getPosition());
 		matrices->transform *= glm::mat4_cast(transform->getRotation());
 
-		glm::vec3 scale = transform->getScale() / renderable->mesh->getBaseSize();
+		glm::vec3 scale = transform->getSize() / renderable->mesh->getBaseSize();
 		//VR_ENGINE_LOGIMPORTANT(
 		//	glm::to_string(transform->getScale()) + " | " +
 		//	glm::to_string(scale));
 
 		matrices->transform = glm::scale(matrices->transform,
-			transform->getScale() / renderable->mesh->getBaseSize());
+			transform->getSize() / renderable->mesh->getBaseSize());
 
 		transform->setDirty(false);
 	}
@@ -54,7 +54,7 @@ namespace vray {
 		auto renderable = world.try_get<CompRenderable>(entity);
 		if (renderable) {
 			//VR_ENGINE_LOGIMPORTANT("Applying transform scale " + glm::to_string(renderable->mesh->getBaseSize()));
-			transform.setScale(renderable->mesh->getBaseSize());
+			transform.setSize(renderable->mesh->getBaseSize());
 			//VR_ENGINE_LOGIMPORTANT("After apply " + glm::to_string(transform.getScale()));
 		}
 	}

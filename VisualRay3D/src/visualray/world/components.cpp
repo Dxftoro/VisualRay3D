@@ -24,9 +24,9 @@ namespace vray {
 		sync = false;
 	}
 
-	void CompTransform::setScale(const glm::vec3& scale) { 
+	void CompTransform::setSize(const glm::vec3& size) { 
 		//VR_LOGIMPORTANT("Setting scale! " + glm::to_string(scale));
-		this->scale = scale;
+		this->size = size;
 		dirty = true;
 		sync = false;
 	}

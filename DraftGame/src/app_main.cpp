@@ -214,13 +214,13 @@ private:
 
 		if (inputService.keyPressed(VR_KEY_UP)) {
 			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
-			teapotTransform.setScale(teapotTransform.getScale() * 1.05f);
-			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getScale()));
+			teapotTransform.setSize(teapotTransform.getSize() * 1.05f);
+			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getSize()));
 		}
 		else if (inputService.keyPressed(VR_KEY_DOWN)) {
 			auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
-			teapotTransform.setScale(teapotTransform.getScale() * 0.95f);
-			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getScale()));
+			teapotTransform.setSize(teapotTransform.getSize() * 0.95f);
+			VR_LOGIMPORTANT(glm::to_string(teapotTransform.getSize()));
 		}
 	}
 
@@ -330,7 +330,7 @@ private:
 		entt::entity cube = game.world.create();
 		
 		vray::CompTransform cubeTransform;
-		//cubeTransform.setScale({ 1.0f, 1.0f, 1.0f });
+		//cubeTransform.setSize({ 1.0f, 1.0f, 1.0f });
 		cubeTransform.setPosition(position);
 
 		auto& renderable = game.world.emplace<vray::CompRenderable>(cube,
@@ -339,7 +339,7 @@ private:
 		vray::CompHitbox cubeHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = cubeTransform.getScale(),
+			.size = cubeTransform.getSize(),
 			.radius = 1,
 			.mass = 12.0f
 		};
@@ -369,13 +369,13 @@ private:
 		vray::CompTransform teapotTransform;
 		teapotTransform.setPosition(position);
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
-		teapotTransform.setScale(teapotRenderable.mesh->getBaseSize() * 0.25f);
-		//teapotTransform.setScale({ 0.25f, 0.25f, 0.25f });
+		teapotTransform.setSize(teapotRenderable.mesh->getBaseSize() * 0.25f);
+		//teapotTransform.setSize({ 0.25f, 0.25f, 0.25f });
 		
 		vray::CompHitbox teapotHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = teapotTransform.getScale(),
+			.size = teapotTransform.getSize(),
 			.radius = 10,
 			.mass = 12.0f
 		};
@@ -391,12 +391,12 @@ private:
 		vray::CompTransform transform;
 		//transform.setPosition({ 0.0f, 5.0f, 0.0f });
 		transform.setPosition(position);
-		transform.setScale({ size, 1.0f, size });
+		transform.setSize({ size, 1.0f, size });
 
 		vray::CompHitbox hitbox {
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::STATIC,
-			.size = transform.getScale(),
+			.size = transform.getSize(),
 			.radius = 10,
 			.mass = 10.0f
 		};
@@ -450,7 +450,7 @@ private:
 
 		vray::CompTransform transform;
 		transform.setPosition(position);
-		transform.setScale({ 0.5f, 0.5f, 0.5f });
+		transform.setSize({ 0.5f, 0.5f, 0.5f });
 
 		vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get("default"));
 		
@@ -484,7 +484,7 @@ private:
 
 		vray::CompTransform transform;
 		transform.setPosition(position);
-		transform.setScale(scale);
+		transform.setSize(scale);
 
 		vray::CompRenderable renderable(mesh, game.textures.get("default"));
 		vray::CompHitbox hitbox{
@@ -624,7 +624,7 @@ public:
 		vray::CompTransform platformTransform;
 		
 		platformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
-		platformTransform.setScale({ 10.0f, 1.0f, 10.0f });
+		platformTransform.setSize({ 10.0f, 1.0f, 10.0f });
 
 		//vray::CompHitbox platformHitbox{
 		//	.shapeType = vray::CompHitbox::ShapeType::BOX,

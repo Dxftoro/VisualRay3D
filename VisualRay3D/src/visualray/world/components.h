@@ -20,31 +20,31 @@ namespace vray {
 
 		glm::vec3 position;
 		glm::quat rotation;
-		glm::vec3 scale;
+		glm::vec3 size;
 
 	public:
 		CompTransform()
-			: position(0.0f), rotation(glm::identity<glm::quat>()), scale(1.0f),
+			: position(0.0f), rotation(glm::identity<glm::quat>()), size(1.0f),
 			dirty(true), sync(false) {
 		}
 
 		CompTransform(
 			const glm::vec3& _position,
 			const glm::quat& _rotation,
-			const glm::vec3& _scale)
-			: position(_position), rotation(_rotation), scale(_scale),
+			const glm::vec3& _size)
+			: position(_position), rotation(_rotation), size(_size),
 				dirty(true), sync(false) {}
 
 		const glm::vec3& getPosition() const { return position; }
 		const glm::quat& getRotation() const { return rotation; }
-		const glm::vec3& getScale() const { return scale; }
+		const glm::vec3& getSize() const { return size; }
 		bool isDirty() const { return dirty; };
 		bool isSync() const { return sync; }
 
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
 		void setRotation(const glm::quat& rotation);
-		void setScale(const glm::vec3& scale);
+		void setSize(const glm::vec3& size);
 		void setDirty(bool dirty) { this->dirty = dirty; }
 		void setSync(bool sync) { this->sync = sync; };
 	};
