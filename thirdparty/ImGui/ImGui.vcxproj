@@ -121,11 +121,11 @@
     <ClInclude Include="imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\thirdparty\GLFW\GLFW.vcxproj">
+    <ProjectReference Include="..\GLFW\GLFW.vcxproj">
       <Project>{6e624436-019a-4b70-b718-e99dc564a1e1}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project> 
+</Project>

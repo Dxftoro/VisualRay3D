@@ -178,17 +178,14 @@
     <ClInclude Include="src\visualray\world\systems.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
-      <Project>{d7246c64-5795-4c28-9e0c-c9d655b5ec1f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
       <Project>{c12b75c9-bc6f-4ef0-870c-1caa5e52f145}</Project>
     </ProjectReference>
     <ProjectReference Include="..\thirdparty\GLFW\GLFW.vcxproj">
       <Project>{6e624436-019a-4b70-b718-e99dc564a1e1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\thirdparty\JoltPhysics\JoltPhysics.vcxproj">
-      <Project>{ec21aab4-7ad3-4034-9e69-d36fc91ecb24}</Project>
+    <ProjectReference Include="..\thirdparty\ImGui\ImGui.vcxproj">
+      <Project>{d7246c64-5795-4c28-9e0c-c9d655b5ec1f}</Project>
     </ProjectReference>
     <ProjectReference Include="..\thirdparty\ReactPhysics3D\out\reactphysics3d.vcxproj">
       <Project>{e245455d-5129-3538-bf02-c38a0626cd7a}</Project>
@@ -247,7 +244,7 @@
       <LanguageStandard>stdcpp23</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>vrpch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)\thirdparty\GLFW\include;$(SolutionDir)\ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;$(SolutionDir)\thirdparty\ODE\include;$(SolutionDir)\thirdparty\OpenAL\include;$(SolutionDir)\thirdparty\STB\include;$(SolutionDir)\thirdparty\TinyObjLoader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\$(ProjectName)\src\visualray\;$(SolutionDir)\thirdparty\GLFW\include;$(SolutionDir)\thirdparty\ImGui\;$(SolutionDir)\thirdparty\GLAD\;$(SolutionDir)\thirdparty\ReactPhysics3D\include;$(SolutionDir)\thirdparty\ODE\include;$(SolutionDir)\thirdparty\OpenAL\include;$(SolutionDir)\thirdparty\STB\include;$(SolutionDir)\thirdparty\TinyObjLoader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
