@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>$(SolutionDir)thirdparty\ReactPhysics3D\out\thirdparty\ReactPhysics3D\out\CMakeFiles\4.2.0\x64\Debug\VCTargetsPath</FullPath>
+      <FullPath>D:\Programming\MyPrograms\VisualRay3D\thirdparty\ReactPhysics3D\out\CMakeFiles\4.2.0\x64\Debug\VCTargetsPath</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
