@@ -549,9 +549,8 @@ public:
 		vray::Texture* ozuTexture = game.textures.load("textures/ozu.png", "ozu");
 		vray::Sound* shootSound = game.sounds.load("sounds/click.ogg", "shoot");
 
+		VR_LOGIMPORTANT("VisualRay3D version: " VR_VERSION);
 		VR_LOGIMPORTANT("Sound channels: " + std::to_string(shootSound->getChannelCount()));
-		VR_LOGIMPORTANT("Cube: " + glm::to_string(cubeMesh->getBaseSize()));
-		VR_LOGIMPORTANT("Teapot: " + glm::to_string(teapotMesh->getBaseSize()));
 
 		billboardTexture = ozuTexture;
 

@@ -6,6 +6,7 @@
 	#define VR_PLATFORM_WIN
 #endif
 
+#define VR_VERSION	"v1.0.0-alpha"
 #define VR_IMPLEMENT_GAME(GAME) vray::Game* vray::vrayMain(int argc, char* argv[]) { return vray::createGame<GAME>(argc, argv); }
 
 /* ------- Engine files ------- */
