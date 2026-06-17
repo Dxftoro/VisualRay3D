@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "thirdparty/stb_image.h"
+#include <stb/stb_image.h>
 
 namespace vray {
 

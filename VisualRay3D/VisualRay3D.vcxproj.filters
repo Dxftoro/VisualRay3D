@@ -179,9 +179,6 @@
     <ClInclude Include="src\visualray\render_service\renderer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\thirdparty\stb_image.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="src\visualray\render_service\texture_loader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -192,9 +189,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\managers\resource_manager.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="src\visualray\thirdparty\tiny_obj_loader.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\util.h">

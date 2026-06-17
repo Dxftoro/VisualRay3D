@@ -9,7 +9,7 @@
 #include <thirdparty/glm/gtx/hash.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include <thirdparty/tiny_obj_loader.h>
+#include <tiny_obj_loader.h>
 
 #include "render_service/rendering_buffer.h"
 #include "render_service/vertex_array.h"
