@@ -1,5 +1,0 @@
-D:/Programming/MyPrograms/VisualRay3D/thirdparty/ReactPhysics3D/out/CMakeFiles/reactphysics3d.dir
-D:/Programming/MyPrograms/VisualRay3D/thirdparty/ReactPhysics3D/out/CMakeFiles/RUN_TESTS.dir
-D:/Programming/MyPrograms/VisualRay3D/thirdparty/ReactPhysics3D/out/CMakeFiles/INSTALL.dir
-D:/Programming/MyPrograms/VisualRay3D/thirdparty/ReactPhysics3D/out/CMakeFiles/ALL_BUILD.dir
-D:/Programming/MyPrograms/VisualRay3D/thirdparty/ReactPhysics3D/out/CMakeFiles/ZERO_CHECK.dir
