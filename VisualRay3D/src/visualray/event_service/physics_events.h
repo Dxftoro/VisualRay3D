@@ -1,7 +1,6 @@
 #pragma once
-#include "kernel.h"
 #include "event.h"
-#include <thirdparty/EnTT/entt.hpp>
+#include "../thirdparty/EnTT/entt.hpp"
 
 namespace vray {
 

@@ -1,6 +1,4 @@
-#include "vrpch.h"
-#include "kernel.h"
-
+#include "../vrpch.h"
 #include "fps_counter.h"
 #include "console.h"
 

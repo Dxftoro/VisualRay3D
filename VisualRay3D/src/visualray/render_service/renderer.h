@@ -1,13 +1,12 @@
 #pragma once
 
-#include "vrpch.h"
-#include "kernel.h"
-#include "event_service/game_events.h"
-#include "window_service/window.h"
-#include "world/components.h"
+#include "../vrpch.h"
+#include "../kernel.h"
+#include "../event_service/game_events.h"
+#include "../window_service/window.h"
+#include "../world/components.h"
 #include "../thirdparty/EnTT/entt.hpp"
-
-#include <thirdparty/glm/glm.hpp>
+#include "../thirdparty/glm/glm.hpp"
 
 //#include "vertex_array.h"
 #include "glsl_program.h"

@@ -1,6 +1,7 @@
 #include "vrpch.h"
-#include "ode_physics.h"
 
+#ifdef VR_PLATFORM_WIN_DEBUG
+#include "ode_physics.h"
 #include "logservice.h"
 
 namespace vray {
@@ -191,8 +192,10 @@ namespace vray {
 			dJointAttach(contact, body1, body2);
 		}
 	}
+
 	void OdePhysics::handleMessages(int errnum, const char* msg, va_list ap) {
 		/* Empty */
 	}
 
 }
+#endif

@@ -4,9 +4,6 @@
 #include "thirdparty/EnTT/entt.hpp"
 #include "world/components.h"
 #include "world/systems.h"
-#include "render_service/renderer.h"
-#include "audio_service/audio.h"
-#include "physics_service/physics.h"
 #include "window_service/window.h"
 #include "input_service/input_service.h"
 
@@ -16,7 +13,12 @@
 
 namespace vray {
 
+	/* Forward declarations */
 	class Debugger;
+	class Renderer;
+	class Audio;
+	class IPhysics;
+	class IPhysicsDebugSystem;
 
 	struct VRAYLIB EngineContext {
 		std::unique_ptr<Window> window;

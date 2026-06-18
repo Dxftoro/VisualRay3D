@@ -1,8 +1,9 @@
 #pragma once
+
 #define GLM_ENABLE_EXPERIMENTAL
-#include <thirdparty/glm/glm.hpp>
-#include <thirdparty/glm/gtc/quaternion.hpp>
-#include <thirdparty/glm/gtx/string_cast.hpp>
+#include "thirdparty/glm/glm.hpp"
+#include "thirdparty/glm/gtc/quaternion.hpp"
+#include "thirdparty/glm/gtx/string_cast.hpp"
 
 #include "managers/resource.h"
 #include "logservice.h"

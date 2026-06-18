@@ -1,11 +1,9 @@
 #pragma once
-#include "vrpch.h"
-#include "kernel.h"
+#include "../vrpch.h"
 #include "raycast_result.h"
 #include "../event_service/event.h"
-
-#include <thirdparty/glm/glm.hpp>
-#include <thirdparty/EnTT/entt.hpp>
+#include "../thirdparty/glm/glm.hpp"
+#include "../thirdparty/EnTT/entt.hpp"
 
 namespace vray {
 

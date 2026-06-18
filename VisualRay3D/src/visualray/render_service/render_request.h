@@ -1,5 +1,5 @@
 #pragma once
-#include "vrpch.h"
+#include <stdint.h>
 
 namespace vray {
 

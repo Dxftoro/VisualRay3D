@@ -1,6 +1,6 @@
 #pragma once
-#include "kernel.h"
-#include "vrpch.h"
+#include "../kernel.h"
+#include "../vrpch.h"
 
 #define VR_CONSOLE_INPUT_BUFFER_SIZE	512
 

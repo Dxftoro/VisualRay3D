@@ -1,5 +1,4 @@
 #pragma once
-#include "kernel.h"
 #include "../thirdparty/EnTT/entt.hpp"
 #include "../world/components.h"
 

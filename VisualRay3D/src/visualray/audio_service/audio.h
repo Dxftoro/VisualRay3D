@@ -1,7 +1,6 @@
 #pragma once
-#include "kernel.h"
 #include "../world/components.h"
-#include <thirdparty/EnTT/entt.hpp>
+#include "../thirdparty/EnTT/entt.hpp"
 
 #define VR_PLAY_SOUND(WORLD, ENTITY, LOCAL) if (!WORLD.all_of<vray::CompSoundPlay>(ENTITY)) { \
 WORLD.emplace<vray::CompSoundPlay>(ENTITY, vray::CompSoundPlay{ LOCAL }); \

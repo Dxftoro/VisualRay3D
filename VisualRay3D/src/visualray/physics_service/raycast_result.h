@@ -1,7 +1,7 @@
 #pragma once
-#include "kernel.h"
-#include "thirdparty/EnTT/entt.hpp"
-#include <thirdparty/glm/glm.hpp>
+#include "../kernel.h"
+#include "../thirdparty/EnTT/entt.hpp"
+#include "../thirdparty/glm/glm.hpp"
 
 namespace vray {
 

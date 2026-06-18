@@ -5,10 +5,10 @@ TODO: Uniform layouts and attribute layouts
 */
 
 #pragma once
-#include "vrpch.h"
-#include "kernel.h"
+#include "../vrpch.h"
+#include "../kernel.h"
 
-#include <thirdparty/glm/gtc/matrix_transform.hpp>
+#include "../thirdparty/glm/gtc/matrix_transform.hpp"
 #include "glsl_uniform_buffer.h"
 
 namespace vray {

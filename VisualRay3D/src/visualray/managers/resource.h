@@ -1,7 +1,7 @@
 #pragma once
 #include "vrpch.h"
 #include "kernel.h"
-#include <thirdparty/glm/glm.hpp>
+#include "../thirdparty/glm/glm.hpp"
 
 namespace vray {
 

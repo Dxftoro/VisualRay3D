@@ -66,7 +66,7 @@
       <ForceConformanceInForLoopScope>
       </ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <MinimalRebuild>
       </MinimalRebuild>
       <Optimization>Disabled</Optimization>
@@ -116,7 +116,7 @@
       <ForceConformanceInForLoopScope>
       </ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <MinimalRebuild>
       </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
@@ -355,14 +355,6 @@
     <ClCompile Include="$(SolutionDir)thirdparty\ReactPhysics3D\src\utils\quickhull\QHHalfEdgeStructure.cpp" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)thirdparty\ReactPhysics3D\out\ZERO_CHECK.vcxproj">
-      <Project>{5490E55C-F575-3501-BBFF-CD0EAE74C10A}</Project>
-      <Name>ZERO_CHECK</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

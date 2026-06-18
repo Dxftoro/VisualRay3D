@@ -202,9 +202,6 @@
     <ClInclude Include="$(SolutionDir)thirdparty\ReactPhysics3D\include\reactphysics3d\utils\quickhull\QHHalfEdgeStructure.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="$(SolutionDir)thirdparty\ReactPhysics3D\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{789C017B-F9A0-3F74-88FA-9DD0C66E617B}</UniqueIdentifier>
     </Filter>

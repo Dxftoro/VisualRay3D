@@ -17,8 +17,18 @@
 #include "visualray/input_service/input_service.h"
 #include "visualray/event_service/event.h"
 #include "visualray/event_service/mouse_events.h"
+#include "visualray/event_service/keyboard_events.h"
+#include "visualray/event_service/physics_events.h"
 #include "visualray/window_service/window.h"
+#include "visualray/audio_service/audio.h"
 #include "visualray/render_service/renderer.h"
+#include "visualray/physics_service/physics.h"
+#include "visualray/layer_service/debugger.h"
+#include "visualray/layer_service/console.h"
 #include "visualray/util.h"
+
+/* ------- Third-party ------- */
+#include "visualray/thirdparty/glm/glm.hpp"
+#include "visualray/thirdparty/EnTT/entt.hpp"
 
 #include "visualray/entry_point.h"

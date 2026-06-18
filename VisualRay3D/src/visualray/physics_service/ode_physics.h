@@ -1,4 +1,6 @@
 #pragma once
+
+#ifdef VR_PLATFORM_WIN_DEBUG
 #include "physics.h"
 #include "world/components.h"
 
@@ -62,3 +64,4 @@ namespace vray {
 	};
 
 }
+#endif

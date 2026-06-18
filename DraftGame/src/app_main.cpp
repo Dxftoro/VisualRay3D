@@ -1,11 +1,7 @@
 #include <visualray.h>
-#include <visualray/event_service/keyboard_events.h>
-#include <visualray/event_service/physics_events.h>
-#include <visualray/audio_service/audio.h>
-#include <visualray/layer_service/debugger.h>
-
 #define GLM_ENABLE_EXPERIMENTAL
-#include <thirdparty/glm/gtx/string_cast.hpp>
+#include <visualray/thirdparty/glm/gtx/string_cast.hpp>
+#include <visualray/thirdparty/glm/gtc/matrix_transform.hpp>
 
 struct PlayerController {
 	glm::vec3 velocity = glm::vec3(0.0f);
