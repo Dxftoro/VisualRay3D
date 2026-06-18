@@ -14,6 +14,7 @@ var (
 	visualrayDll = binariesPath + "/VisualRay3D.dll"
 	visualrayLib = binariesPath + "/VisualRay3D.lib"
 	openalDll = binariesPath + "/OpenAL32.dll"
+	shadersPath = "DraftGame/shaders/"
 )
 
 func UpdateBinaryPath(path string) {
@@ -88,6 +89,46 @@ func MoveHeaders(includePath string) error {
         return nil
     })
 
+    fmt.Println()
+    return err
+}
+
+func MoveShaders(shadersDestPath string) error {
+		processedCount := 0
+
+	err := filepath.Walk(shadersPath, func(path string, info fs.FileInfo, err error) error {
+        if err != nil {
+        	panic(err)
+        	return nil
+        }
+
+        if info.IsDir() { return nil }
+
+        relPath, err := filepath.Rel(shadersPath, path)
+        if err != nil {
+        	panic(err)
+            return err
+        }
+
+        destPath := filepath.Join(shadersDestPath, relPath)
+
+        if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
+			panic(err)
+            return err
+        }
+
+		fmt.Printf("\rProcessing: %d", processedCount + 1)
+		err = MoveFile(path, destPath)
+		if err != nil {
+			panic(err)
+			return err
+		}
+
+        processedCount++
+        return nil
+    })
+
+    fmt.Println()
     return err
 }
 
@@ -136,6 +177,11 @@ func main() {
     }
 
 	err = MoveHeaders(destRoot + "/include/")
+    if err != nil {
+    	panic(err)
+    }
+
+	err = MoveShaders(destRoot + "/shaders/")
     if err != nil {
     	panic(err)
     }
