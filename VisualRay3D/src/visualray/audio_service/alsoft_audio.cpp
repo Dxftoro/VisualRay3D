@@ -73,9 +73,13 @@ namespace vray {
 		}
 
 		activeListener = entity;
-		auto& camera  = world.get<CompCamera>(activeListener);
 		auto& listener = world.get<CompSoundListener>(activeListener);
-		updateListener(camera, listener);
+		auto camera = world.try_get<CompCamera>(activeListener);
+
+		if (!camera) {
+			throw AudioException("CompCamera is missing on an active listener entity! To add CompSoundListener first add CompCamera.");
+		}
+		updateListener(*camera, listener);
 
 		ALfloat listenerGain;
 		alGetListenerf(AL_GAIN, &listenerGain);
@@ -109,11 +113,13 @@ namespace vray {
 			}
 		});
 
-		auto& camera = world.get<CompCamera>(activeListener);
-		auto& listener = world.get<CompSoundListener>(activeListener);
+		if (activeListener != entt::null) {
+			auto& camera = world.get<CompCamera>(activeListener);
+			auto& listener = world.get<CompSoundListener>(activeListener);
 
-		if (playingSomething && camera.isViewDirty()) {
-			updateListener(camera, listener);
+			if (playingSomething && camera.isViewDirty()) {
+				updateListener(camera, listener);
+			}
 		}
 
 		playingGroup.each([this](entt::entity entity, CompSoundPlay& cmdPlay, CompSound& sound) {

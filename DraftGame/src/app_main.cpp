@@ -47,7 +47,7 @@ struct PlayerController {
 
 		float accelSpeed = airAcceleration * wishSpeed * deltaTime;
 		if (accelSpeed > addSpeed) accelSpeed = addSpeed;
-		
+
 		velocity += wishDir * accelSpeed;
 	}
 
@@ -94,7 +94,7 @@ private:
 	vray::Texture* billboardTexture;
 
 	float playerSpeed;
-	
+
 	inline void moveRotated(glm::vec3& position, const float angle, const float moveSpeed) {
 		position.x += cos(angle) * moveSpeed * deltaTime();
 		position.z += sin(angle) * moveSpeed * deltaTime();
@@ -154,13 +154,13 @@ private:
 	inline void handleKeysGrounded() {
 		vray::InputService& inputService = engine.inputService;
 		vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
-		
+
 		if (inputService.keyPressed(VR_KEY_R)) {
 			pc.velocity = glm::vec3(0.0f);
 			pc.verticalVelocity = 0.0f;
 			transform.setPosition({ 0.0f, 20.0f, 0.0f });
 		}
-		
+
 		glm::vec3 position = transform.getPosition();
 
 		float forwardMove = 0.0f, sideMove = 0.0f;
@@ -175,7 +175,7 @@ private:
 		glm::vec3 wishVel = (pc.forward * forwardMove) + (pc.right * sideMove); wishVel.y = 0.0f;
 		glm::vec3 wishDir = glm::vec3(0.0f);
 		float wishSpeed = glm::length(wishVel);
-		
+
 		if (wishSpeed > pc.maxSpeed) {
 			wishVel *= pc.maxSpeed / wishSpeed;
 			wishSpeed = pc.maxSpeed;
@@ -259,7 +259,7 @@ private:
 		if (evt.getType() == vray::KEY_PRESSED) {
 			vray::KeyPressedEvent keyEvt = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvt.getKeyCode() != VR_KEY_TAB) return;
-			
+
 			vray::InputService::CursorMode cursorMode = inputService.getCursorMode();
 			if (cursorMode == vray::InputService::CursorMode::DISABLED)
 				inputService.setCursorMode(vray::InputService::CursorMode::NORMAL);
@@ -270,7 +270,7 @@ private:
 
 	inline void handleRaycast(vray::Event& evt) {
 		vray::InputService& inputService = engine.inputService;
-		
+
 		if (evt.getType() == vray::MOUSE_CLICK) {
 			vray::MouseClickEvent& mouseEvent = dynamic_cast<vray::MouseClickEvent&>(evt);
 			if (mouseEvent.getMouseButtonCode() != VR_MOUSE_BUTTON_1) return;
@@ -286,7 +286,7 @@ private:
 
 			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
 			if (!result) return;
-			
+
 			//engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
 			glm::vec3 billboardPosition = result->hitPoint + result->hitNormal * 2.0f;
 			spawnBillboard(billboardPosition, 1.0f);
@@ -315,7 +315,7 @@ private:
 			}
 
 			return true;
-		});
+			});
 	}
 
 	struct CompCubeTag {
@@ -324,7 +324,7 @@ private:
 
 	void spawnCube(const glm::vec3& position) {
 		entt::entity cube = game.world.create();
-		
+
 		vray::CompTransform cubeTransform;
 		//cubeTransform.setSize({ 1.0f, 1.0f, 1.0f });
 		cubeTransform.setPosition(position);
@@ -367,7 +367,7 @@ private:
 		teapotTransform.setRotation({ glm::radians(-90.0f), 0.0f, 0.0f });
 		teapotTransform.setSize(teapotRenderable.mesh->getBaseSize() * 0.25f);
 		//teapotTransform.setSize({ 0.25f, 0.25f, 0.25f });
-		
+
 		vray::CompHitbox teapotHitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::DYNAMIC,
@@ -389,7 +389,7 @@ private:
 		transform.setPosition(position);
 		transform.setSize({ size, 1.0f, size });
 
-		vray::CompHitbox hitbox {
+		vray::CompHitbox hitbox{
 			.shapeType = vray::CompHitbox::ShapeType::BOX,
 			.physType = vray::CompHitbox::PhysType::STATIC,
 			.size = transform.getSize(),
@@ -418,7 +418,7 @@ private:
 		glm::vec3 cellPosition = cellStartPosition;
 		spawnPlatform(cellPosition, cellSize);
 
-		for (int i = 0; i < cellCount - 1; i++) {			
+		for (int i = 0; i < cellCount - 1; i++) {
 			if (i > 0 && (i + 1) % size == 0) {
 				cellPosition.x = cellStartPosition.x;
 				cellPosition.z += cellSize;
@@ -449,9 +449,9 @@ private:
 		transform.setSize({ 0.5f, 0.5f, 0.5f });
 
 		vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get("default"));
-		
+
 		game.world.emplace<vray::CompPointLight>(lightMarker);
-		
+
 		vray::CompPointLightData& lightData = game.world.get<vray::CompPointLightData>(lightMarker);
 		lightData.position = glm::vec4(position, 1.0f);
 		lightData.mergeColor(color);
@@ -515,19 +515,19 @@ private:
 			23.0f * glm::cos(delta * 0.1f) * (reversed ? -1.0f : 1.0f),
 			position.y,
 			23.0f * glm::sin(delta * 0.1f) * (reversed ? -1.0f : 1.0f)
-		});
+			});
 
 		game.world.patch<vray::CompPointLight>(marker, [marker, this, &transform](vray::CompPointLight& light) {
 			auto& data = game.world.get<vray::CompPointLightData>(marker);
 			data.position.x = transform.getPosition().x;
 			data.position.y = transform.getPosition().y;
 			data.position.z = transform.getPosition().z;
-		});
+			});
 	}
 
 public:
 	DraftGame()
-	:	Game(vray::WindowParams("Draft Game", 1290, 723)),
+		: Game(vray::WindowParams("Draft Game", 1290, 723)),
 		engine(getEngineContext()),
 		game(getGameContext())
 	{
@@ -559,21 +559,21 @@ public:
 		console = engine.debugger->getConsole();
 		console->addCommand("test", [this](const std::vector<std::string>& args) {
 			consoleTest(args);
-		}, "A test command.");
+			}, "A test command.");
 
 		console->addCommand("sett", [this](const std::vector<std::string>& args) {
 			if (args.size() <= 1) {
 				console->write("No such args!");
 				return;
 			}
-			
+
 			try {
 				billboardTexture = game.textures.get(args[1]);
 			}
 			catch (std::exception exc) {
 				console->write(exc.what());
 			}
-		});
+			});
 
 		console->addCommand("aabbs", [this](const std::vector<std::string>& args) {
 			if (args.size() <= 1) {
@@ -586,7 +586,7 @@ public:
 				return;
 			}
 			engine.physicsDebugSystem->setEnabled(enabled);
-		});
+			});
 
 		console->addCommand("load", [this](const std::vector<std::string>& args) {
 			if (args.size() < 4) {
@@ -598,7 +598,7 @@ public:
 
 			camera->calculateFront(cameraFront);
 			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
-			
+
 			if (!result) return;
 			position = result->hitPoint + result->hitNormal * 5.0f;
 
@@ -610,7 +610,7 @@ public:
 			catch (std::runtime_error exc) {
 				console->write(exc.what());
 			}
-		});
+			});
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
@@ -618,7 +618,7 @@ public:
 		engine.debugger->addVariable("Right: (%.3f, %.3f, %.3f)", &pc.right);
 
 		vray::CompTransform platformTransform;
-		
+
 		platformTransform.setPosition({ 0.0f, 5.0f, 0.0f });
 		platformTransform.setSize({ 10.0f, 1.0f, 10.0f });
 
@@ -631,7 +631,7 @@ public:
 		//};
 
 		vray::CompTransform playerTransform;
-		playerTransform.setPosition({0.0f, 40.0f, 0.0f});
+		playerTransform.setPosition({ 0.0f, 40.0f, 0.0f });
 
 		game.world.emplace<vray::CompTransform>(player, playerTransform);
 		camera = &game.world.emplace<vray::CompCamera>(player,
@@ -651,7 +651,7 @@ public:
 			spawnCube({
 				vray::frand(-5.0f, 5.0f),
 				40.0,
-				vray::frand(-5.0f, 5.0f)});
+				vray::frand(-5.0f, 5.0f) });
 		}
 
 		spawnTeapot({ 0.0f, 40.0f, 0.0f });
@@ -672,17 +672,17 @@ public:
 		updateLight(light1, true);
 		updateLight(light2, false);
 
-		game.world.view<CompCubeTag>().each([this](entt::entity entity, CompCubeTag& tag){
-			if (engine.physics->testOverlap(entity, teapot)) {
-				VR_LOGIMPORTANT("A cube is overlaped by the teapot!");
-			}
+		game.world.view<CompCubeTag>().each([this](entt::entity entity, CompCubeTag& tag) {
+			//if (engine.physics->testOverlap(entity, teapot)) {
+			//	VR_LOGIMPORTANT("A cube is overlaped by the teapot!");
+			//}
 
 			auto& transform = game.world.get<vray::CompTransform>(entity);
 			if (transform.isDirty()) {
 				auto& sound = game.world.get<vray::CompSound>(entity);
 				sound.setPosition(transform.getPosition());
 			}
-		});
+			});
 	}
 
 	inline void onEvent(vray::Event& evt) {
