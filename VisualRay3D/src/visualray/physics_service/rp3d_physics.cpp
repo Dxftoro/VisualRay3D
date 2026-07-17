@@ -11,7 +11,7 @@ namespace vray {
 		lastRaycastResult->hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
 		lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
 		lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
-		return -1;
+		return info.hitFraction;
 	}
 
 	void Rp3dEventListener::onContact(const rp3d::CollisionCallback::CallbackData& data) {
