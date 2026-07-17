@@ -50,13 +50,6 @@ namespace vray {
 			glm::identity<glm::mat4>(),
 			glm::identity<glm::mat3>()
 		));
-
-		auto renderable = world.try_get<CompRenderable>(entity);
-		if (renderable) {
-			//VR_ENGINE_LOGIMPORTANT("Applying transform scale " + glm::to_string(renderable->mesh->getBaseSize()));
-			transform.setSize(renderable->mesh->getBaseSize());
-			//VR_ENGINE_LOGIMPORTANT("After apply " + glm::to_string(transform.getScale()));
-		}
 	}
 
 	void onTransformRemoved(entt::registry& world, const entt::entity entity) {

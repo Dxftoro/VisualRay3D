@@ -316,7 +316,7 @@ private:
 			}
 
 			return true;
-			});
+		});
 	}
 
 	struct CompCubeTag {
@@ -523,7 +523,7 @@ private:
 			data.position.x = transform.getPosition().x;
 			data.position.y = transform.getPosition().y;
 			data.position.z = transform.getPosition().z;
-			});
+		});
 	}
 
 public:
@@ -560,7 +560,7 @@ public:
 		console = engine.debugger->getConsole();
 		console->addCommand("test", [this](const std::vector<std::string>& args) {
 			consoleTest(args);
-			}, "A test command.");
+		}, "A test command.");
 
 		console->addCommand("sett", [this](const std::vector<std::string>& args) {
 			if (args.size() <= 1) {
@@ -574,7 +574,7 @@ public:
 			catch (std::exception exc) {
 				console->write(exc.what());
 			}
-			});
+		});
 
 		console->addCommand("aabbs", [this](const std::vector<std::string>& args) {
 			if (args.size() <= 1) {
@@ -587,7 +587,7 @@ public:
 				return;
 			}
 			engine.physicsDebugSystem->setEnabled(enabled);
-			});
+		});
 
 		console->addCommand("load", [this](const std::vector<std::string>& args) {
 			if (args.size() < 4) {
@@ -611,7 +611,7 @@ public:
 			catch (std::runtime_error exc) {
 				console->write(exc.what());
 			}
-			});
+		});
 
 		engine.debugger->addVariable("Vert. vel.: %.3f", &pc.verticalVelocity);
 		engine.debugger->addVariable("Speed: %.3f", &playerSpeed);
@@ -683,7 +683,7 @@ public:
 				auto& sound = game.world.get<vray::CompSound>(entity);
 				sound.setPosition(transform.getPosition());
 			}
-			});
+		});
 	}
 
 	inline void onEvent(vray::Event& evt) {
