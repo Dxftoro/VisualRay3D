@@ -1,3 +1,4 @@
+#define VR_ENTRY_POINT
 #include <visualray.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <visualray/thirdparty/glm/gtx/string_cast.hpp>

@@ -47,7 +47,7 @@ namespace vray {
 		bool operator<=(const T& value) { return this->value <= value; }
 		bool operator>=(const T& value) { return this->value >= value; }
 
-		T get() const { return value; }
+		constexpr T get() const { return value; }
 	};
 
 }

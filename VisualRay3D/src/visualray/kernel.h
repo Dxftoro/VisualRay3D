@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef _WIN32
+	#define VR_PLATFORM_WIN
+#endif
+
 #ifdef VR_PLATFORM_WIN
 	#ifdef VR_INTERNAL
 		#define VRAYLIB __declspec(dllexport)
