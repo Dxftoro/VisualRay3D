@@ -42,7 +42,7 @@ namespace vray {
 		}
 	}
 
-	rp3d::RigidBody* Rp3dPhysics::createPhysicsBody(entt::entity entity) {
+	CompRp3dBody Rp3dPhysics::createPhysicsBody(entt::entity entity) {
 		auto [hitbox, transform] = world.get<CompHitbox, CompTransform>(entity);
 
 		rp3d::Transform rp3dTransform{
@@ -60,14 +60,14 @@ namespace vray {
 		rp3d::RigidBody* rigidBody = physicsWorld->createRigidBody(rp3dTransform);
 		rigidBody->setUserData((void*)(uintptr_t)entity);
 
-		switch (hitbox.physType) {
+		switch (hitbox.getPhysType()) {
 		case CompHitbox::PhysType::STATIC:
 			rigidBody->setType(rp3d::BodyType::STATIC);
 			rigidBody->setMass(0.0f);
 			break;
 		case CompHitbox::PhysType::DYNAMIC: 
 			rigidBody->setType(rp3d::BodyType::DYNAMIC);
-			rigidBody->setMass(hitbox.mass);
+			rigidBody->setMass(hitbox.getMass());
 			break;
 		case CompHitbox::PhysType::KINEMATIC:
 			rigidBody->setType(rp3d::BodyType::KINEMATIC);
@@ -76,41 +76,43 @@ namespace vray {
 		default: break;
 		}
 
-		switch (hitbox.shapeType) {
+		rp3d::Collider* collider = nullptr;
+
+		switch (hitbox.getShapeType()) {
 		case CompHitbox::ShapeType::BOX: {
 			rp3d::BoxShape* boxShape = physicsCommon.createBoxShape(glmToVec3({
-				hitbox.size.x / 2,
-				hitbox.size.y / 2,
-				hitbox.size.z / 2
+				hitbox.getSize().x / 2,
+				hitbox.getSize().y / 2,
+				hitbox.getSize().z / 2
 			}));
-			rigidBody->addCollider(boxShape, rp3d::Transform::identity());
+			collider = rigidBody->addCollider(boxShape, rp3d::Transform::identity());
 			break;
 		}
 
 		case CompHitbox::ShapeType::CAPSULE: {
-			rp3d::CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(hitbox.size.x, hitbox.size.y);
-			rigidBody->addCollider(capsuleShape, rp3d::Transform::identity());
+			rp3d::CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(
+				hitbox.getSize().x, hitbox.getSize().y);
+			collider = rigidBody->addCollider(capsuleShape, rp3d::Transform::identity());
 			break;
 		}
 
 		case CompHitbox::ShapeType::SPHERE: {
-			rp3d::SphereShape* sphereShape = physicsCommon.createSphereShape(hitbox.radius);
-			rigidBody->addCollider(sphereShape, rp3d::Transform::identity());
+			rp3d::SphereShape* sphereShape = physicsCommon.createSphereShape(hitbox.getRadius());
+			collider = rigidBody->addCollider(sphereShape, rp3d::Transform::identity());
 			break;
 		}
 		default: break;
 		}
 
 		rigidBody->setIsDebugEnabled(true);
-		return rigidBody;
+
+		return CompRp3dBody { rigidBody, collider };
 	}
 
 	void Rp3dPhysics::onEntityAdded(entt::registry& world, entt::entity entity) {
 		if (world.all_of<CompTransform, CompHitbox>(entity)
 			&& !world.all_of<CompRp3dBody>(entity)) {
-			
-			CompRp3dBody rp3dBody{ createPhysicsBody(entity) };
-			world.emplace<CompRp3dBody>(entity, rp3dBody);
+			world.emplace<CompRp3dBody>(entity, createPhysicsBody(entity));
 		}
 	}
 
@@ -123,7 +125,7 @@ namespace vray {
 	}
 
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : eventListener(nullptr), world(_world) {
-		dynamicGroup = world.group<CompRp3dBody>(entt::get<CompTransform>);
+		dynamicGroup = world.group<CompRp3dBody>(entt::get<CompHitbox, CompTransform>);
 		physicsWorld = physicsCommon.createPhysicsWorld();
 
 		world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
@@ -155,24 +157,56 @@ namespace vray {
 		physicsWorld->setEventListener(eventListener);
 	}
 
+	void updateBodyData(CompRp3dBody& body, const CompHitbox& hitbox) {
+		body.body->setMass(hitbox.getMass());
+
+		switch (hitbox.getShapeType()) {
+		case CompHitbox::ShapeType::BOX: {
+			auto* box = (rp3d::BoxShape*)(body.collider->getCollisionShape());
+			box->setHalfExtents(Rp3dPhysics::glmToVec3(hitbox.getSize()));
+			break;
+		}
+
+		case CompHitbox::ShapeType::CAPSULE: {
+			auto* capsule = (rp3d::CapsuleShape*)(body.collider->getCollisionShape());
+			capsule->setRadius(hitbox.getSize().x);
+			capsule->setHeight(hitbox.getSize().y);
+			break;
+		}
+
+		case CompHitbox::ShapeType::SPHERE: {
+			auto* sphere = (rp3d::SphereShape*)(body.collider->getCollisionShape());
+			sphere->setRadius(hitbox.getRadius());
+			break;
+		}
+		default: break;
+		}
+	}
+
 	void Rp3dPhysics::update(float deltaTime) {
 		dynamicGroup.each([this](entt::entity entity, 
-			CompRp3dBody& body, CompTransform& transform) {
+			CompRp3dBody& body, CompHitbox& hitbox, CompTransform& transform) {
 
-			if (transform.isSync()) return;
-			
-			body.body->setTransform({ 
-				glmToVec3(transform.getPosition()), glmToQuat(transform.getRotation()) 
-			});
-			
-			transform.setSync(true);
+			if (transform.isSync()) {
+				body.body->setTransform({
+					glmToVec3(transform.getPosition()), glmToQuat(transform.getRotation())
+				});
+
+				transform.setSync(true);
+			}
+
+			if (hitbox.isDirty()) {
+				VR_ENGINE_LOGIMPORTANT("Hitbox is dirty!");
+				updateBodyData(body, hitbox);
+				hitbox.setDirty(false);
+			}
 		});
 
 		physicsWorld->update(deltaTime);
 
-		dynamicGroup.each([this](entt::entity entity, CompRp3dBody& body, CompTransform& transform){
-			auto& hitbox = world.get<CompHitbox>(entity);
-			if (hitbox.physType == CompHitbox::PhysType::STATIC) return;
+		dynamicGroup.each([this](entt::entity entity, 
+			CompRp3dBody& body, CompHitbox& hitbox, CompTransform& transform) {
+			if (hitbox.getPhysType() == CompHitbox::PhysType::STATIC) return;
 
 			const rp3d::Transform& rp3dTransform = body.body->getTransform();
 

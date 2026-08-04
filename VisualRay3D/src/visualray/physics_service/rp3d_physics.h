@@ -10,6 +10,7 @@ namespace vray {
 
 	struct CompRp3dBody {
 		rp3d::RigidBody* body;
+		rp3d::Collider* collider;
 	};
 
 	class RaycastCallback : public rp3d::RaycastCallback {
@@ -40,11 +41,11 @@ namespace vray {
 		Rp3dEventListener* eventListener;
 		entt::registry& world;
 
-		using DynamicGroup = decltype(world.group<CompRp3dBody>(entt::get<CompTransform>));
+		using DynamicGroup = decltype(world.group<CompRp3dBody>(entt::get<CompHitbox, CompTransform>));
 		DynamicGroup dynamicGroup;
 
 	private:
-		rp3d::RigidBody* createPhysicsBody(entt::entity entity);
+		CompRp3dBody createPhysicsBody(entt::entity entity);
 		void onEntityAdded(entt::registry& world, entt::entity entity);
 		void onEntityRemoved(entt::registry& world, entt::entity entity);
 

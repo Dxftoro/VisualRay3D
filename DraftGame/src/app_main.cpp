@@ -337,13 +337,12 @@ private:
 		auto& renderable = game.world.emplace<vray::CompRenderable>(cube,
 			vray::CompRenderable(game.meshes.get("cube"), game.textures.get("default")));
 
-		vray::CompHitbox cubeHitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = cubeTransform.getSize(),
-			.radius = 1,
-			.mass = 12.0f
-		};
+		vray::CompHitbox cubeHitbox(
+			vray::CompHitbox::ShapeType::BOX,
+			vray::CompHitbox::PhysType::DYNAMIC,
+			cubeTransform.getSize(),
+			12.0f
+		);
 
 		game.world.emplace<vray::CompTransform>(cube, cubeTransform);
 		game.world.emplace<vray::CompHitbox>(cube, cubeHitbox);
@@ -373,13 +372,12 @@ private:
 		teapotTransform.setSize(teapotRenderable.mesh->getBaseSize() * 0.25f);
 		//teapotTransform.setSize({ 0.25f, 0.25f, 0.25f });
 
-		vray::CompHitbox teapotHitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = teapotTransform.getSize(),
-			.radius = 10,
-			.mass = 12.0f
-		};
+		vray::CompHitbox teapotHitbox(
+			vray::CompHitbox::ShapeType::BOX,
+			vray::CompHitbox::PhysType::DYNAMIC,
+			teapotTransform.getSize(),
+			12.0f
+		);
 
 		game.world.emplace<vray::CompTransform>(teapot, teapotTransform);
 		game.world.emplace<vray::CompHitbox>(teapot, teapotHitbox);
@@ -394,13 +392,12 @@ private:
 		transform.setPosition(position);
 		transform.setSize({ size, 1.0f, size });
 
-		vray::CompHitbox hitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::STATIC,
-			.size = transform.getSize(),
-			.radius = 10,
-			.mass = 10.0f
-		};
+		vray::CompHitbox hitbox(
+			vray::CompHitbox::ShapeType::BOX,
+			vray::CompHitbox::PhysType::STATIC,
+			transform.getSize(),
+			10.0f
+		);
 
 		game.world.emplace<vray::CompTransform>(platform, transform);
 		game.world.emplace<vray::CompHitbox>(platform, hitbox);
@@ -488,13 +485,12 @@ private:
 		transform.setSize(scale);
 
 		vray::CompRenderable renderable(mesh, game.textures.get("default"));
-		vray::CompHitbox hitbox{
-			.shapeType = vray::CompHitbox::ShapeType::BOX,
-			.physType = vray::CompHitbox::PhysType::DYNAMIC,
-			.size = scale,
-			.radius = 10,
-			.mass = 10.0f
-		};
+		vray::CompHitbox hitbox(
+			vray::CompHitbox::ShapeType::BOX,
+			vray::CompHitbox::PhysType::DYNAMIC,
+			scale,
+			10.0f
+		);
 
 		game.world.emplace<vray::CompTransform>(model, transform);
 		game.world.emplace<vray::CompRenderable>(model, renderable);

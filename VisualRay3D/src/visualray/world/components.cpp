@@ -73,6 +73,21 @@ namespace vray {
 		front = glm::normalize(front);
 	}
 
+	void CompHitbox::setSize(const glm::vec3& size) {
+		this->size = size;
+		dirty = true;
+	}
+
+	void CompHitbox::setRadius(float radius) {
+		this->radius = radius;
+		dirty = true;
+	}
+
+	void CompHitbox::setMass(float mass) {
+		this->mass = mass;
+		dirty = true;
+	}
+
 	void CompPointLightData::mergeColor(const glm::vec3& color) {
 		la *= color;
 		ld *= color;

@@ -106,11 +106,40 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompHitbox {
-		enum class ShapeType : short int { BOX, CAPSULE, SPHERE } shapeType;
-		enum class PhysType : short int { STATIC, DYNAMIC, KINEMATIC } physType;
+		enum class ShapeType : short int { BOX, CAPSULE, SPHERE };
+		enum class PhysType : short int { STATIC, DYNAMIC, KINEMATIC };
+
+	private:
+		ShapeType shapeType;
+		PhysType physType;
 		glm::vec3 size;
 		float radius;
 		float mass;
+		bool dirty;
+
+	public:
+		CompHitbox(ShapeType _shapeType, PhysType _physType, const glm::vec3& _size, float _mass = 10.0f)
+			: shapeType(_shapeType), physType(_physType),
+			size(_size), mass(_mass), radius(1.0f), dirty(false) {
+		}
+		
+		/* This one will construct a dynamic hitbox! */
+		CompHitbox(ShapeType _shapeType, const glm::vec3& _size, float _mass = 10.0f)
+			: shapeType(_shapeType), physType(PhysType::DYNAMIC),
+			size(_size), mass(_mass), radius(1.0f), dirty(false) {
+		}
+
+		ShapeType getShapeType() const { return shapeType; }
+		PhysType getPhysType() const { return physType; }
+		const glm::vec3& getSize() const { return size; }
+		float getRadius() const { return radius; }
+		float getMass() const { return mass; }
+		bool isDirty() const { return dirty; }
+
+		void setSize(const glm::vec3& size);
+		void setRadius(float radius);
+		void setMass(float mass);
+		void setDirty(bool dirty) { this->dirty = dirty; }
 	};
 
 	struct VRAYLIB CompVisualMaterial {
