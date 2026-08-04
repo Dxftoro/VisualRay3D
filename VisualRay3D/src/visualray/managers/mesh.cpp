@@ -65,7 +65,7 @@ namespace vray {
 	:	Resource(false),
 		baseSize(0.0f),
 		aabbMin(FLT_MAX),
-		aabbMax(-FLT_MIN) {
+		aabbMax(-FLT_MAX) {
 
 		std::ifstream fin(filename);
 		if (!fin) {
