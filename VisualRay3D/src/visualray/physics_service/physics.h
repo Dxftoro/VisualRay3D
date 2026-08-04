@@ -10,6 +10,9 @@ namespace vray {
 	class IPhysics {
 	public:
 		using EventCallback = std::function<void(Event&)>;
+
+		virtual ~IPhysics() = default;
+
 		virtual void update(float deltaTime) = 0;
 		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& end) = 0;
 		virtual std::optional<RaycastResult> raycast(const glm::vec3& start, const glm::vec3& dir, float range) = 0;
@@ -19,6 +22,8 @@ namespace vray {
 
 	class IPhysicsDebugSystem {
 	public:
+		virtual ~IPhysicsDebugSystem() = default;
+
 		virtual void pushDebugLine(const glm::vec3& start, const glm::vec3& end) = 0;
 		virtual void update(bool enabled) = 0;
 		virtual void setEnabled(bool enabled) = 0;

@@ -42,15 +42,21 @@ namespace vray {
 		}
 	}
 
-	BodyTableIterator Rp3dPhysics::createPhysicsBody(entt::entity entity) {
-		CompHitbox& hitbox = dynamicGroup.get<CompHitbox>(entity);
-		CompTransform& transform = dynamicGroup.get<CompTransform>(entity);
+	rp3d::RigidBody* Rp3dPhysics::createPhysicsBody(entt::entity entity) {
+		auto [hitbox, transform] = world.get<CompHitbox, CompTransform>(entity);
 
 		rp3d::Transform rp3dTransform{
 			glmToVec3(transform.getPosition()),
 			glmToQuat(transform.getRotation())
 		};
 
+		/*
+			Setting an owner entity to this rigid body for searchless body-entity access.
+			We aren't allocating memory at body's user data pointer. Instead we are just
+			writing entt::entity value directly to this pointer's value.
+
+			Dirty trick, but with no need of memory management.
+		*/
 		rp3d::RigidBody* rigidBody = physicsWorld->createRigidBody(rp3dTransform);
 		rigidBody->setUserData((void*)(uintptr_t)entity);
 
@@ -96,14 +102,31 @@ namespace vray {
 		}
 
 		rigidBody->setIsDebugEnabled(true);
-		BodyTableIterator it = bodyTable.emplace(entity, BodySyncData{ rigidBody, entity }).first;
-		VR_ENGINE_LOGINFO("Hitbox created for entity " + std::to_string((uint32_t)entity));
-		return it;
+		return rigidBody;
+	}
+
+	void Rp3dPhysics::onEntityAdded(entt::registry& world, entt::entity entity) {
+		if (world.all_of<CompTransform, CompHitbox>(entity)
+			&& !world.all_of<CompRp3dBody>(entity)) {
+			
+			CompRp3dBody rp3dBody{ createPhysicsBody(entity) };
+			world.emplace<CompRp3dBody>(entity, rp3dBody);
+		}
+	}
+
+	void Rp3dPhysics::onEntityRemoved(entt::registry& world, entt::entity entity) {
+		auto* rp3dBody = world.try_get<CompRp3dBody>(entity);
+		if (rp3dBody) physicsWorld->destroyRigidBody(rp3dBody->body);
 	}
 
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : eventListener(nullptr), world(_world) {
-		dynamicGroup = world.group<CompHitbox>(entt::get<CompTransform>);
+		dynamicGroup = world.group<CompRp3dBody>(entt::get<CompTransform>);
 		physicsWorld = physicsCommon.createPhysicsWorld();
+
+		world.on_construct<CompHitbox>().connect<&Rp3dPhysics::onEntityAdded>(this);
+		world.on_construct<CompTransform>().connect<&Rp3dPhysics::onEntityAdded>(this);
+		//world.on_destroy<CompHitbox>().connect<&Rp3dPhysics::onEntityRemoved>(this);
+		//world.on_destroy<CompTransform>().connect<&Rp3dPhysics::onEntityRemoved>(this);
 		
 		physicsWorld->setIsDebugRenderingEnabled(true);
 
@@ -116,6 +139,13 @@ namespace vray {
 				rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE)));
 	}
 
+	Rp3dPhysics::~Rp3dPhysics() {
+		world.on_construct<CompHitbox>().disconnect<&Rp3dPhysics::onEntityAdded>(this);
+		world.on_construct<CompTransform>().disconnect<&Rp3dPhysics::onEntityAdded>(this);
+		//world.on_destroy<CompHitbox>().disconnect<&Rp3dPhysics::onEntityRemoved>(this);
+		//world.on_destroy<CompTransform>().disconnect<&Rp3dPhysics::onEntityRemoved>(this);
+	}
+
 	void Rp3dPhysics::setEventCallback(const EventCallback& callback) {
 		if (eventListener != nullptr) delete eventListener;
 		eventListener = new Rp3dEventListener(callback);
@@ -124,29 +154,24 @@ namespace vray {
 
 	void Rp3dPhysics::update(float deltaTime) {
 		dynamicGroup.each([this](entt::entity entity, 
-			CompHitbox& hitbox, CompTransform& transform) {
+			CompRp3dBody& body, CompTransform& transform) {
 
-			auto it = bodyTable.find(entity);
-			if (it == bodyTable.end()) it = createPhysicsBody(entity);
-
-			BodySyncData& bodySyncData = it->second;
-			if (!transform.isSync()) {
-				bodySyncData.body->setTransform({
-					glmToVec3(transform.getPosition()),
-					glmToQuat(transform.getRotation())
-				});
-				transform.setSync(true);
-			}
+			if (transform.isSync()) return;
+			
+			body.body->setTransform({ 
+				glmToVec3(transform.getPosition()), glmToQuat(transform.getRotation()) 
+			});
+			
+			transform.setSync(true);
 		});
 
 		physicsWorld->update(deltaTime);
 
-		dynamicGroup.each([this](entt::entity entity, CompHitbox& hitbox, CompTransform& transform){
+		dynamicGroup.each([this](entt::entity entity, CompRp3dBody& body, CompTransform& transform){
+			auto& hitbox = world.get<CompHitbox>(entity);
 			if (hitbox.physType == CompHitbox::PhysType::STATIC) return;
 
-			auto it = bodyTable.find(entity);
-			BodySyncData& bodySyncData = it->second;
-			const rp3d::Transform& rp3dTransform = bodySyncData.body->getTransform();
+			const rp3d::Transform& rp3dTransform = body.body->getTransform();
 
 			transform.setPosition(vec3ToGlm(rp3dTransform.getPosition()));
 			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
@@ -167,16 +192,16 @@ namespace vray {
 	}
 
 	bool Rp3dPhysics::testOverlap(entt::entity entity1, entt::entity entity2) {
-		auto it1 = bodyTable.find(entity1);
-		auto it2 = bodyTable.find(entity2);
+		auto* body1 = world.try_get<CompRp3dBody>(entity1);
+		auto* body2 = world.try_get<CompRp3dBody>(entity2);
 
 		/* TODO: Physics exception */
-		if (it1 == bodyTable.end() || it2 == bodyTable.end()) {
-			VR_ENGINE_LOGERROR("Tested entities does not have CompHitbox!");
+		if (!body1 || !body2) {
+			VR_ENGINE_LOGERROR("Tested entities does not have CompTransform and CompHitbox!");
 			return false;
 		}
 
-		return physicsWorld->testOverlap(it1->second.body, it2->second.body);
+		return physicsWorld->testOverlap(body1->body, body2->body);
 	}
 
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {

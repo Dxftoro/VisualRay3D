@@ -8,12 +8,9 @@
 
 namespace vray {
 
-	struct BodySyncData {
+	struct CompRp3dBody {
 		rp3d::RigidBody* body;
-		entt::entity entity;
 	};
-
-	using BodyTableIterator = std::unordered_map<entt::entity, BodySyncData>::iterator;
 
 	class RaycastCallback : public rp3d::RaycastCallback {
 	private:
@@ -40,19 +37,20 @@ namespace vray {
 	private:
 		rp3d::PhysicsCommon physicsCommon;
 		rp3d::PhysicsWorld* physicsWorld;
-		std::unordered_map<entt::entity, BodySyncData> bodyTable;
 		Rp3dEventListener* eventListener;
 		entt::registry& world;
 
-		using DynamicGroup = decltype(world.group<CompHitbox>(entt::get<CompTransform>));
+		using DynamicGroup = decltype(world.group<CompRp3dBody>(entt::get<CompTransform>));
 		DynamicGroup dynamicGroup;
 
 	private:
-		//void onEntityAdded(entt::registry& world, entt::entity entity);
-		BodyTableIterator createPhysicsBody(entt::entity entity);
+		rp3d::RigidBody* createPhysicsBody(entt::entity entity);
+		void onEntityAdded(entt::registry& world, entt::entity entity);
+		void onEntityRemoved(entt::registry& world, entt::entity entity);
 
 	public:
 		Rp3dPhysics(entt::registry& world);
+		~Rp3dPhysics();
 
 		void update(float deltaTime) override;
 		
