@@ -66,6 +66,7 @@ namespace vray {
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(rendererDebugCallback, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+		glDisable(GL_DEBUG_OUTPUT);
 
 		camera = new CompCamera(90,
 			currentWindow->getWidth(),
