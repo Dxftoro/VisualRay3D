@@ -300,6 +300,10 @@ private:
 			if (keyEvent.getKeyCode() == VR_KEY_ESCAPE) {
 				console->setOpened(!console->isOpened());
 			}
+			else if (keyEvent.getKeyCode() == VR_KEY_U) {
+				VR_LOGIMPORTANT("Removing teapot");
+				game.world.erase<vray::CompTransform>(teapot);
+			}
 		}
 	}
 
@@ -665,7 +669,7 @@ public:
 	~DraftGame() {}
 
 	inline void update() override {
-		auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
+		//auto& teapotTransform = game.world.get<vray::CompTransform>(teapot);
 
 		detectGround();
 		handleKeysGrounded();
