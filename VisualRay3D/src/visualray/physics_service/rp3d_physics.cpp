@@ -80,11 +80,7 @@ namespace vray {
 
 		switch (hitbox.getShapeType()) {
 		case CompHitbox::ShapeType::BOX: {
-			rp3d::BoxShape* boxShape = physicsCommon.createBoxShape(glmToVec3({
-				hitbox.getSize().x / 2,
-				hitbox.getSize().y / 2,
-				hitbox.getSize().z / 2
-			}));
+			rp3d::BoxShape* boxShape = physicsCommon.createBoxShape(glmToVec3({ hitbox.getSize() / 2.0f	}));
 			collider = rigidBody->addCollider(boxShape, rp3d::Transform::identity());
 			break;
 		}
@@ -163,7 +159,7 @@ namespace vray {
 		switch (hitbox.getShapeType()) {
 		case CompHitbox::ShapeType::BOX: {
 			auto* box = (rp3d::BoxShape*)(body.collider->getCollisionShape());
-			box->setHalfExtents(Rp3dPhysics::glmToVec3(hitbox.getSize()));
+			box->setHalfExtents(Rp3dPhysics::glmToVec3(hitbox.getSize() / 2.0f));
 			break;
 		}
 

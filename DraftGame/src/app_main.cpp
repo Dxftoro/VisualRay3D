@@ -301,8 +301,10 @@ private:
 				console->setOpened(!console->isOpened());
 			}
 			else if (keyEvent.getKeyCode() == VR_KEY_U) {
-				VR_LOGIMPORTANT("Removing teapot");
-				game.world.erase<vray::CompTransform>(teapot);
+				VR_LOGIMPORTANT("Changing teapot");
+				auto& hitbox = game.world.get<vray::CompHitbox>(teapot);
+				auto& size = hitbox.getSize();
+				hitbox.setSize(size / 2.0f);
 			}
 		}
 	}
