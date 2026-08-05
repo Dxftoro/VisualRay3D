@@ -101,57 +101,6 @@ private:
 		position.z += sin(angle) * moveSpeed * deltaTime();
 	}
 
-	/*inline void handleKeys() {
-		vray::InputService& inputService = engine.inputService;
-		glm::vec3 cameraPosition = camera->getPosition();
-		static float moveSpeed = 10.0f;
-		float currentAngle = glm::radians(camera->getRotation().x);
-
-		vray::CompTransform& teapotTransform = game.world.get<vray::CompTransform>(teapot);
-		glm::vec3 teapotPosition = teapotTransform.getPosition();
-
-		if (inputService.keyPressed(VR_KEY_W)) {
-			moveRotated(cameraPosition, currentAngle, moveSpeed);
-		}
-		if (inputService.keyPressed(VR_KEY_S)) {
-			moveRotated(cameraPosition, currentAngle + glm::pi<float>(), moveSpeed);
-		}
-		if (inputService.keyPressed(VR_KEY_A)) {
-			moveRotated(cameraPosition, currentAngle - glm::pi<float>() / 2, moveSpeed);
-		}
-		if (inputService.keyPressed(VR_KEY_D)) {
-			moveRotated(cameraPosition, currentAngle + glm::pi<float>() / 2, moveSpeed);
-		}
-		if (inputService.keyPressed(VR_KEY_Q)) {
-			cameraPosition.y += moveSpeed * deltaTime();
-		}
-		if (inputService.keyPressed(VR_KEY_E)) {
-			cameraPosition.y -= moveSpeed * deltaTime();
-		}
-
-		if (inputService.keyPressed(VR_KEY_UP)) {
-			teapotPosition.x += (moveSpeed - 1) * deltaTime();
-			teapotTransform.setPosition(teapotPosition);
-		}
-		if (inputService.keyPressed(VR_KEY_DOWN)) {
-			teapotPosition.x -= (moveSpeed - 1) * deltaTime();
-			teapotTransform.setPosition(teapotPosition);
-		}
-
-		if (inputService.keyPressed(VR_KEY_LEFT)) {
-			game.world.patch<vray::CompPointLight>(someLight, [](vray::CompPointLight& light) {
-				light.position.x += (moveSpeed - 1) * deltaTime();
-			});
-
-			vray::CompTransform& transform = game.world.get<vray::CompTransform>(someLight);
-			glm::vec3 position = transform.getPosition();
-			position.x += (moveSpeed - 1) * deltaTime();
-			transform.setPosition(position);
-		}
-
-		camera->setPosition(cameraPosition);
-	}*/
-
 	inline void handleKeysGrounded() {
 		vray::InputService& inputService = engine.inputService;
 		vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
@@ -223,7 +172,7 @@ private:
 
 	inline void detectGround() {
 		const glm::vec3& position = game.world.get<vray::CompTransform>(player).getPosition();
-		auto result = engine.physics->raycast(position + glm::vec3(0.0f, 2.0f, 0.0f), position);
+		auto result = engine.physics->raycastFront(position + glm::vec3(0.0f, 2.0f, 0.0f), position);
 		pc.onGround = (result != std::nullopt);
 	}
 
@@ -285,12 +234,20 @@ private:
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
 
-			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
-			if (!result) return;
+			VR_LOGIMPORTANT("=======================");
+			engine.physics->raycast(
+				camera->getPosition(),
+				camera->getPosition() + cameraFront * 500.0f,
+				[](const vray::RaycastResult& result) {
+					VR_LOGIMPORTANT(STR((uint32_t)result.hitEntity));
+				}
+			);
 
-			//engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
-			glm::vec3 billboardPosition = result->hitPoint + result->hitNormal * 2.0f;
-			spawnBillboard(billboardPosition, 1.0f);
+			//if (!result) return;
+
+			////engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+			//glm::vec3 billboardPosition = result->hitPoint + result->hitNormal * 2.0f;
+			//spawnBillboard(billboardPosition, 1.0f);
 		}
 	}
 
@@ -600,7 +557,9 @@ public:
 			glm::vec3 cameraFront, position;
 
 			camera->calculateFront(cameraFront);
-			auto result = engine.physics->raycast(camera->getPosition(), cameraFront, 500);
+			auto result = engine.physics->raycastFront(
+				camera->getPosition(),
+				camera->getPosition() + cameraFront * 500.0f);
 
 			if (!result) return;
 			position = result->hitPoint + result->hitNormal * 5.0f;

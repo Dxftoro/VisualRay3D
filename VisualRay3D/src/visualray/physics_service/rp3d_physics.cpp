@@ -6,12 +6,47 @@
 
 namespace vray {
 
-	rp3d::decimal RaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
-		lastRaycastResult = RaycastResult();
-		lastRaycastResult->hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
-		lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
-		lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
-		return info.hitFraction;
+	rp3d::decimal SingleRaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
+		bool isBetter = back ? (info.hitFraction > extremum) : (info.hitFraction < extremum);
+
+		if (isBetter) {
+			extremum = info.hitFraction;
+			lastRaycastResult = RaycastResult();
+			lastRaycastResult->hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
+			lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
+			lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
+		}
+
+		return (back ? rp3d::decimal(-1.0) : info.hitFraction);
+	}
+
+	rp3d::decimal MultipleRaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
+		RaycastResult result;
+		
+		result.hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
+		result.hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
+		result.hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
+
+		callback(result);
+
+		return 1.0;
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycastBack(const glm::vec3& start, const glm::vec3& end) {
+		SingleRaycastCallback callback(true);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
+		return callback.getLastResult();
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycastFront(const glm::vec3& start, const glm::vec3& end) {
+		SingleRaycastCallback callback(false);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
+		return callback.getLastResult();
+	}
+
+	void Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& end, const RaycastCallback& callback) {
+		MultipleRaycastCallback multiple(callback);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &multiple);
 	}
 
 	void Rp3dEventListener::onContact(const rp3d::CollisionCallback::CallbackData& data) {
@@ -183,7 +218,7 @@ namespace vray {
 		dynamicGroup.each([this](entt::entity entity, 
 			CompRp3dBody& body, CompHitbox& hitbox, CompTransform& transform) {
 
-			if (transform.isSync()) {
+			if (!transform.isSync()) {
 				body.body->setTransform({
 					glmToVec3(transform.getPosition()), glmToQuat(transform.getRotation())
 				});
@@ -210,18 +245,6 @@ namespace vray {
 			transform.setRotation(quatToGlm(rp3dTransform.getOrientation()));
 			transform.setSync(true);
 		});
-	}
-
-	std::optional<RaycastResult> Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& end) {
-		RaycastCallback callback;
-		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
-		return callback.getLastResult();
-	}
-
-	std::optional<RaycastResult> Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& dir, float range) {
-		RaycastCallback callback;
-		physicsWorld->raycast({ glmToVec3(start), glmToVec3(start + (dir * range)) }, &callback);
-		return callback.getLastResult();
 	}
 
 	bool Rp3dPhysics::testOverlap(entt::entity entity1, entt::entity entity2) {
