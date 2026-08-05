@@ -73,8 +73,11 @@ namespace vray {
 		virtual std::optional<RaycastResult> raycastFront(const glm::vec3& start, const glm::vec3& end) override;
 		virtual void raycast(const glm::vec3& start, const glm::vec3& end, const RaycastCallback& callback) override;
 		
-		bool testOverlap(entt::entity entity1, entt::entity entity2) override;
+		virtual void applyForce(entt::entity, const glm::vec3 force) override;
+		virtual void applyForceAtLocalPoint(entt::entity, const glm::vec3 force, const glm::vec3 point) override;
+		virtual void applyTorque(entt::entity, const glm::vec3& worlTorque) override;
 
+		bool testOverlap(entt::entity entity1, entt::entity entity2) override;
 		void setEventCallback(const EventCallback& callback) override;
 
 		rp3d::DebugRenderer& getDebugRenderer() const;
