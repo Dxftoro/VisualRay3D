@@ -207,6 +207,39 @@ namespace vray {
 		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &multiple);
 	}
 
+	void Rp3dPhysics::applyForce(entt::entity entity, const glm::vec3 force) {
+		auto* body = world.try_get<CompRp3dBody>(entity);
+
+		if (!body) {
+			VR_ENGINE_LOGERROR("applyForce: given entity has no CompHitbox!");
+			return;
+		}
+
+		body->body->applyWorldForceAtCenterOfMass(glmToVec3(force));
+	}
+
+	void Rp3dPhysics::applyForceAtPoint(entt::entity entity, const glm::vec3 force, const glm::vec3 point) {
+		auto* body = world.try_get<CompRp3dBody>(entity);
+
+		if (!body) {
+			VR_ENGINE_LOGERROR("applyForceAtLocalPoint: given entity has no CompHitbox!");
+			return;
+		}
+
+		body->body->applyWorldForceAtWorldPosition(glmToVec3(force), glmToVec3(point));
+	}
+
+	void Rp3dPhysics::applyTorque(entt::entity entity, const glm::vec3& worldTorque) {
+		auto* body = world.try_get<CompRp3dBody>(entity);
+
+		if (!body) {
+			VR_ENGINE_LOGERROR("applyTorque: given entity has no CompHitbox!");
+			return;
+		}
+
+		body->body->applyWorldTorque(glmToVec3(worldTorque));
+	}
+
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {
 		return physicsWorld->getDebugRenderer();
 	}
