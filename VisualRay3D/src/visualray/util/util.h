@@ -4,8 +4,6 @@
 
 namespace vray {
 
-	std::string sizeToString(size_t bytes);
-
 	float VRAYLIB frand(const float a, const float b);
 
 	/* Strong typedef for numeric types. Use to avoid implicit type cast on assignment */
