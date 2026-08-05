@@ -26,7 +26,7 @@
 #include "visualray/physics_service/physics.h"
 #include "visualray/layer_service/debugger.h"
 #include "visualray/layer_service/console.h"
-#include "visualray/util.h"
+#include "visualray/util/util.h"
 
 /* ------- Third-party ------- */
 #include "visualray/thirdparty/glm/glm.hpp"

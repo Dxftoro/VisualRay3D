@@ -39,7 +39,7 @@
     <ClCompile Include="src\visualray\render_service\rendering_buffer.cpp" />
     <ClCompile Include="src\visualray\render_service\texture_loader.cpp" />
     <ClCompile Include="src\visualray\render_service\vertex_array.cpp" />
-    <ClCompile Include="src\visualray\util.cpp" />
+    <ClCompile Include="src\visualray\util\util.cpp" />
     <ClCompile Include="src\visualray\vrpch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -171,7 +171,8 @@
     <ClInclude Include="src\visualray\thirdparty\EnTT\signal\sigh.hpp" />
     <ClInclude Include="src\visualray\render_service\texture_loader.h" />
     <ClInclude Include="src\visualray\render_service\vertex_array.h" />
-    <ClInclude Include="src\visualray\util.h" />
+    <ClInclude Include="src\visualray\util\lsid.h" />
+    <ClInclude Include="src\visualray\util\util.h" />
     <ClInclude Include="src\visualray\vrpch.h" />
     <ClInclude Include="src\visualray\window_service\window.h" />
     <ClInclude Include="src\visualray\world\components.h" />

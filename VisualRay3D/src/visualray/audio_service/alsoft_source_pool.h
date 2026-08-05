@@ -1,6 +1,6 @@
 #pragma once
 #include "vrpch.h"
-#include "../util.h"
+#include "../util/util.h"
 #include <AL/al.h>
 
 #define VR_ALSOFT_MAX_SOURCES	256

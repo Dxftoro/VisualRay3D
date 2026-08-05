@@ -1,6 +1,6 @@
 #pragma once
-#include "vrpch.h"
-#include "kernel.h"
+#include "../vrpch.h"
+#include "../kernel.h"
 
 namespace vray {
 
