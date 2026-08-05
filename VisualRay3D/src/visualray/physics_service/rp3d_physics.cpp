@@ -157,7 +157,6 @@ namespace vray {
 			}
 
 			if (hitbox.isDirty()) {
-				VR_ENGINE_LOGIMPORTANT("Hitbox is dirty!");
 				updateBodyData(body, hitbox);
 				hitbox.setDirty(false);
 			}

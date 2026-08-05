@@ -234,18 +234,19 @@ private:
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
 
-			VR_LOGIMPORTANT("=======================");
-			engine.physics->raycast(
-				camera->getPosition(),
-				camera->getPosition() + cameraFront * 500.0f,
-				[](const vray::RaycastResult& result) {
-					VR_LOGIMPORTANT(STR((uint32_t)result.hitEntity));
-				}
+			auto result = engine.physics->raycastFront(
+				start, start + cameraFront * 20.0f
+			);
+			
+			if (!result) return;
+
+			engine.physics->applyForceAtPoint(
+				result->hitEntity,
+				cameraFront * 200.0f / deltaTime(),
+				result->hitPoint
 			);
 
-			//if (!result) return;
-
-			////engine.physicsDebugSystem->pushDebugLine(camera->getPosition(), result->hitPoint);
+			engine.physicsDebugSystem->pushDebugLine(start, result->hitPoint);
 			//glm::vec3 billboardPosition = result->hitPoint + result->hitNormal * 2.0f;
 			//spawnBillboard(billboardPosition, 1.0f);
 		}
