@@ -12,41 +12,8 @@ namespace vray {
 		rp3d::RigidBody* body;
 		rp3d::Collider* collider;
 	};
-
-	class SingleRaycastCallback final : public rp3d::RaycastCallback {
-	private:
-		std::optional<RaycastResult> lastRaycastResult;
-		rp3d::decimal extremum;
-		bool back;
-
-	public:
-		SingleRaycastCallback(bool _back)
-		:	lastRaycastResult(std::nullopt), back(_back),
-			extremum(_back ? rp3d::decimal(1.0) : rp3d::decimal(2.0)) {}
-
-		virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) override;
-		std::optional<RaycastResult>& getLastResult() { return lastRaycastResult; }
-	};
-
-	class MultipleRaycastCallback final : public rp3d::RaycastCallback {
-	private:
-		const IPhysics::RaycastCallback& callback;
-
-	public:
-		MultipleRaycastCallback(const IPhysics::RaycastCallback& _callback) : callback(_callback) {}
-
-		virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) override;
-	};
-
-	class Rp3dEventListener final : public rp3d::EventListener {
-	private:
-		IPhysics::EventCallback callback;
-
-	public:
-		Rp3dEventListener(const IPhysics::EventCallback& _callback) : callback(_callback) {}
-		void onContact(const rp3d::CollisionCallback::CallbackData& data) override;
-		void onTrigger(const rp3d::OverlapCallback::CallbackData& data) override;
-	};
+	
+	class Rp3dEventListener;
 
 	class Rp3dPhysics final : public IPhysics {
 	private:

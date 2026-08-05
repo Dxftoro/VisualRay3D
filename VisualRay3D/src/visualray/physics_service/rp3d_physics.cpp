@@ -1,81 +1,11 @@
 #include "vrpch.h"
 #include "rp3d_physics.h"
 #include "rp3d_logger.h"
+#include "rp3d_event_listener.h"
+#include "rp3d_raycast_callback.h"
 #include "logservice.h"
-#include "../event_service/physics_events.h"
 
 namespace vray {
-
-	rp3d::decimal SingleRaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
-		bool isBetter = back ? (info.hitFraction > extremum) : (info.hitFraction < extremum);
-
-		if (isBetter) {
-			extremum = info.hitFraction;
-			lastRaycastResult = RaycastResult();
-			lastRaycastResult->hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
-			lastRaycastResult->hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
-			lastRaycastResult->hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
-		}
-
-		return (back ? rp3d::decimal(-1.0) : info.hitFraction);
-	}
-
-	rp3d::decimal MultipleRaycastCallback::notifyRaycastHit(const rp3d::RaycastInfo& info) {
-		RaycastResult result;
-		
-		result.hitEntity = (entt::entity)(uintptr_t)info.body->getUserData();
-		result.hitNormal = Rp3dPhysics::vec3ToGlm(info.worldNormal);
-		result.hitPoint = Rp3dPhysics::vec3ToGlm(info.worldPoint);
-
-		callback(result);
-
-		return 1.0;
-	}
-
-	std::optional<RaycastResult> Rp3dPhysics::raycastBack(const glm::vec3& start, const glm::vec3& end) {
-		SingleRaycastCallback callback(true);
-		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
-		return callback.getLastResult();
-	}
-
-	std::optional<RaycastResult> Rp3dPhysics::raycastFront(const glm::vec3& start, const glm::vec3& end) {
-		SingleRaycastCallback callback(false);
-		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
-		return callback.getLastResult();
-	}
-
-	void Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& end, const RaycastCallback& callback) {
-		MultipleRaycastCallback multiple(callback);
-		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &multiple);
-	}
-
-	void Rp3dEventListener::onContact(const rp3d::CollisionCallback::CallbackData& data) {
-		for (rp3d::uint32 i = 0; i < data.getNbContactPairs(); ++i) {
-			rp3d::CollisionCallback::ContactPair contactPair = data.getContactPair(i);
-
-			CollisionEvent event(
-				(entt::entity)(uintptr_t)contactPair.getBody1()->getUserData(),
-				(entt::entity)(uintptr_t)contactPair.getBody2()->getUserData(),
-				(CollisionEvent::ContactType)(int)contactPair.getEventType()
-			);
-
-			callback(event);
-		}
-	}
-
-	void Rp3dEventListener::onTrigger(const rp3d::OverlapCallback::CallbackData& data) {
-		for (rp3d::uint32 i = 0; i < data.getNbOverlappingPairs(); ++i) {
-			rp3d::OverlapCallback::OverlapPair overlapPair = data.getOverlappingPair(i);
-
-			TriggerEvent event(
-				(entt::entity)(uintptr_t)overlapPair.getBody1()->getUserData(),
-				(entt::entity)(uintptr_t)overlapPair.getBody2()->getUserData(),
-				(CollisionEvent::ContactType)(int)overlapPair.getEventType()
-			);
-
-			callback(event);
-		}
-	}
 
 	CompRp3dBody Rp3dPhysics::createPhysicsBody(entt::entity entity) {
 		auto [hitbox, transform] = world.get<CompHitbox, CompTransform>(entity);
@@ -258,6 +188,23 @@ namespace vray {
 		}
 
 		return physicsWorld->testOverlap(body1->body, body2->body);
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycastBack(const glm::vec3& start, const glm::vec3& end) {
+		SingleRaycastCallback callback(true);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
+		return callback.getLastResult();
+	}
+
+	std::optional<RaycastResult> Rp3dPhysics::raycastFront(const glm::vec3& start, const glm::vec3& end) {
+		SingleRaycastCallback callback(false);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &callback);
+		return callback.getLastResult();
+	}
+
+	void Rp3dPhysics::raycast(const glm::vec3& start, const glm::vec3& end, const RaycastCallback& callback) {
+		MultipleRaycastCallback multiple(callback);
+		physicsWorld->raycast({ glmToVec3(start), glmToVec3(end) }, &multiple);
 	}
 
 	rp3d::DebugRenderer& Rp3dPhysics::getDebugRenderer() const {
