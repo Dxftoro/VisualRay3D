@@ -230,7 +230,7 @@ private:
 			glm::vec3 cameraFront;
 			camera->calculateFront(cameraFront);
 
-			glm::vec3 start = camera->getPosition() + glm::vec3(0.0, -1.0f, 0.0f);
+			glm::vec3 start = camera->getPosition()/* + glm::vec3(0.0, -1.0f, 0.0f)*/;
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.forward * 5.0f);
 			//engine.physicsDebugSystem->pushDebugLine(start, start + pc.right * 5.0f);
 
@@ -242,7 +242,7 @@ private:
 
 			engine.physics->applyForceAtPoint(
 				result->hitEntity,
-				cameraFront * 200.0f / deltaTime(),
+				(cameraFront * 200.0f / deltaTime()) * -1.0f,
 				result->hitPoint
 			);
 
