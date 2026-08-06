@@ -65,7 +65,6 @@
     <ClInclude Include="src\visualray\event_service\keyboard_events.h" />
     <ClInclude Include="src\visualray\event_service\mouse_events.h" />
     <ClInclude Include="src\visualray\event_service\physics_events.h" />
-    <ClInclude Include="src\visualray\event_service\render_events.h" />
     <ClInclude Include="src\visualray\game.h" />
     <ClInclude Include="src\visualray\GLFW\glfw3.h" />
     <ClInclude Include="src\visualray\GLFW\glfw3native.h" />

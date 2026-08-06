@@ -38,7 +38,7 @@ namespace vray {
 				" entity2: " + std::to_string((uint32_t)entity2));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::COLLISION)
+		VR_DEFINE_EVENT_TYPE(events::COLLISION)
 	};
 
 	class VRAYLIB TriggerEvent final : public PhysicsEvent {
@@ -53,7 +53,7 @@ namespace vray {
 				" entity2: " + std::to_string((uint32_t)entity2));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::TRIGGER)
+		VR_DEFINE_EVENT_TYPE(events::TRIGGER)
 	};
 
 }

@@ -2,25 +2,26 @@
 #include "../kernel.h"
 #include "../vrpch.h"
 #include "../logservice.h"
+#include "../util/lsid.h"
 
 namespace vray {
-
 	
-	enum EventType {
-		KEY_PRESSED,
-		KEY_RELEASED,
-		MOUSE_MOVED,
-		MOUSE_SCROLLED,
-		MOUSE_CLICK,
-		MOUSE_RELEASED,
-		WINDOW_RESIZE,
-		WINDOW_CLOSE,
-		GAME_TICK,
-		GAME_UPDATE,
-		RENDER_STEP,
-		COLLISION,
-		TRIGGER,
-		LAST
+	class Eid : public lsid::Sid32 {
+	public:
+		consteval Eid(const char* input) : lsid::Sid32(input) {}
+	};
+
+	namespace events {
+		constexpr auto KEY_PRESSED		= "EVT_KEY_PRESSED";
+		constexpr auto KEY_RELEASED		= "EVT_KEY_RELEASED";
+		constexpr auto MOUSE_MOVED		= "EVT_MOUSE_MOVED";
+		constexpr auto MOUSE_SCROLLED	= "EVT_MOUSE_SCROLLED";
+		constexpr auto MOUSE_CLICK		= "EVT_MOUSE_CLICK";
+		constexpr auto MOUSE_RELEASED	= "EVT_MOUSE_RELEASED";
+		constexpr auto WINDOW_RESIZE	= "EVT_WINDOW_RESIZE";
+		constexpr auto WINDOW_CLOSE		= "EVT_WINDOW_CLOSE";
+		constexpr auto COLLISION		= "EVT_COLLISION";
+		constexpr auto TRIGGER			= "EVT_TRIGGER";
 	};
 
 	enum class EventCategory : int {
@@ -49,7 +50,7 @@ namespace vray {
 		bool handled = false;
 
 	public:
-		virtual EventType getType() const = 0;
+		virtual Eid getType() const = 0;
 		virtual EventCategory getCategories() const = 0;
 		virtual std::string getName() const = 0;
 		virtual void dump() const { VR_LOGINFO("Event dump: " + getName()); }
@@ -75,8 +76,8 @@ namespace vray {
 		}
 	};
 
-#define VR_DEFINE_EVENT_TYPE(EVENT_TYPE) static constexpr EventType getStaticType() { return EVENT_TYPE; }\
-	virtual EventType getType() const override { return getStaticType(); }\
+#define VR_DEFINE_EVENT_TYPE(EVENT_TYPE) static constexpr Eid getStaticType() { return Eid(EVENT_TYPE); }\
+	virtual Eid getType() const override { return getStaticType(); }\
 	virtual std::string getName() const override { return #EVENT_TYPE; }
 
 #define VR_DEFINE_EVENT_CATEGORY(EVENT_CATEGORY) virtual EventCategory getCategories() const override { return EVENT_CATEGORY; }

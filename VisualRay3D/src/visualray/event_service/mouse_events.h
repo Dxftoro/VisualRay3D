@@ -19,7 +19,7 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " x " + std::to_string(x) + ", y " + std::to_string(y));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::MOUSE_MOVED)
+		VR_DEFINE_EVENT_TYPE(events::MOUSE_MOVED)
 		VR_DEFINE_EVENT_CATEGORY(EventCategory::INPUT_EVENT | EventCategory::MOUSE_EVENT)
 	};
 
@@ -40,7 +40,7 @@ namespace vray {
 				" yso: " + std::to_string(yScrollOffset));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::MOUSE_SCROLLED)
+		VR_DEFINE_EVENT_TYPE(events::MOUSE_SCROLLED)
 		VR_DEFINE_EVENT_CATEGORY(EventCategory::INPUT_EVENT | EventCategory::MOUSE_EVENT)
 	};
 
@@ -63,7 +63,7 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " mbc: " + std::to_string(mouseButtonCode));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::MOUSE_CLICK)
+		VR_DEFINE_EVENT_TYPE(events::MOUSE_CLICK)
 	};
 
 	class VRAYLIB MouseReleasedEvent : public MouseButtonEvent {
@@ -74,6 +74,6 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " mbc: " + std::to_string(mouseButtonCode));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::MOUSE_RELEASED)
+		VR_DEFINE_EVENT_TYPE(events::MOUSE_RELEASED)
 	};
 }

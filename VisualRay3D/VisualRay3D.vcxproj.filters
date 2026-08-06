@@ -164,9 +164,6 @@
     <ClInclude Include="src\visualray\event_service\mouse_events.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\event_service\render_events.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="src\visualray\input_service\input_service.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

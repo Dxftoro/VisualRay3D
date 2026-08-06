@@ -30,7 +30,7 @@ namespace vray {
 				" pc: " + std::to_string(repeatCount));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::KEY_PRESSED)
+		VR_DEFINE_EVENT_TYPE(events::KEY_PRESSED)
 	};
 
 	class VRAYLIB KeyReleasedEvent : public KeyEvent {
@@ -41,7 +41,7 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " kc: " + std::to_string(keyCode));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::KEY_RELEASED)
+		VR_DEFINE_EVENT_TYPE(events::KEY_RELEASED)
 	};
 
 }

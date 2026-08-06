@@ -180,7 +180,7 @@ private:
 		static glm::vec2 mouseBase(getWindow()->getWidth() * 0.5f, getWindow()->getHeight() * 0.5f);
 		vray::InputService& inputService = engine.inputService;
 
-		if (evt.getType() == vray::EventType::MOUSE_MOVED
+		if (evt.getType() == vray::Eid(vray::events::MOUSE_MOVED)
 			&& inputService.getCursorMode() == vray::InputService::CursorMode::DISABLED) {
 			vray::MouseMovedEvent& moveEvt = dynamic_cast<vray::MouseMovedEvent&>(evt);
 			double newX = moveEvt.getX();
@@ -206,7 +206,7 @@ private:
 	inline void handleMouseUnlock(vray::Event& evt) {
 		vray::InputService& inputService = engine.inputService;
 
-		if (evt.getType() == vray::KEY_PRESSED) {
+		if (evt.getType() == vray::Eid(vray::events::KEY_PRESSED)) {
 			vray::KeyPressedEvent keyEvt = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvt.getKeyCode() != VR_KEY_TAB) return;
 
@@ -221,7 +221,7 @@ private:
 	inline void handleRaycast(vray::Event& evt) {
 		vray::InputService& inputService = engine.inputService;
 
-		if (evt.getType() == vray::MOUSE_CLICK) {
+		if (evt.getType() == vray::Eid(vray::events::MOUSE_CLICK)) {
 			vray::MouseClickEvent& mouseEvent = dynamic_cast<vray::MouseClickEvent&>(evt);
 			if (mouseEvent.getMouseButtonCode() != VR_MOUSE_BUTTON_1) return;
 
@@ -253,7 +253,7 @@ private:
 	}
 
 	inline void handleConsole(vray::Event& evt) {
-		if (evt.getType() == vray::KEY_PRESSED) {
+		if (evt.getType() == vray::Eid(vray::events::KEY_PRESSED)) {
 			vray::KeyPressedEvent& keyEvent = dynamic_cast<vray::KeyPressedEvent&>(evt);
 			if (keyEvent.getKeyCode() == VR_KEY_ESCAPE) {
 				console->setOpened(!console->isOpened());

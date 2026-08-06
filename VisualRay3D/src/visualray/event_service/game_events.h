@@ -19,7 +19,7 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " x " + std::to_string(width) + " y " + std::to_string(height));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::WINDOW_RESIZE)
+		VR_DEFINE_EVENT_TYPE(events::WINDOW_RESIZE)
 		VR_DEFINE_EVENT_CATEGORY(EventCategory::GAME_EVENT)
 	};
 
@@ -36,23 +36,8 @@ namespace vray {
 			VR_LOGINFO("Event dump: " + getName() + " " + std::to_string(shouldClose));
 		}
 
-		VR_DEFINE_EVENT_TYPE(EventType::WINDOW_CLOSE)
+		VR_DEFINE_EVENT_TYPE(events::WINDOW_CLOSE)
 		VR_DEFINE_EVENT_CATEGORY(EventCategory::GAME_EVENT)
 	};
 
-	class VRAYLIB GameTickEvent : public Event {
-	public:
-		GameTickEvent() {}
-
-		VR_DEFINE_EVENT_TYPE(EventType::GAME_TICK)
-		VR_DEFINE_EVENT_CATEGORY(EventCategory::GAME_EVENT)
-	};
-
-	class VRAYLIB GameUpdateEvent : public Event {
-	public:
-		GameUpdateEvent() {}
-
-		VR_DEFINE_EVENT_TYPE(EventType::GAME_UPDATE)
-		VR_DEFINE_EVENT_CATEGORY(EventCategory::GAME_EVENT)
-	};
 }
