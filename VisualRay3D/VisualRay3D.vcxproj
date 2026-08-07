@@ -181,7 +181,9 @@
     <ClInclude Include="src\visualray\window_service\window.h" />
     <ClInclude Include="src\visualray\world\aabb.h" />
     <ClInclude Include="src\visualray\world\components.h" />
+    <ClInclude Include="src\visualray\world\frustum.h" />
     <ClInclude Include="src\visualray\world\spatial.h" />
+    <ClInclude Include="src\visualray\world\spatial_uniform_grid.h" />
     <ClInclude Include="src\visualray\world\systems.h" />
   </ItemGroup>
   <ItemGroup>
