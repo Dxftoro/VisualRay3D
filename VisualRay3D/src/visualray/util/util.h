@@ -49,3 +49,14 @@ namespace vray {
 	};
 
 }
+
+namespace std {
+
+	template <typename T>
+	struct hash<vray::Strong<T>> {
+		size_t operator()(const vray::Strong<T>& value) const {
+			return value.get();
+		}
+	};
+
+}
