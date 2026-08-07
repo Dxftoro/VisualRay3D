@@ -6,6 +6,9 @@ namespace vray {
 
 	float VRAYLIB frand(const float a, const float b);
 
+	template <typename T>
+	constexpr auto bitsOf(T x) { return sizeof(x) * 8; }
+
 	/* Strong typedef for numeric types. Use to avoid implicit type cast on assignment */
 	template <typename T>
 	class Strong {
