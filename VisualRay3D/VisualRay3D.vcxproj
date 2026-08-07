@@ -174,11 +174,14 @@
     <ClInclude Include="src\visualray\thirdparty\EnTT\signal\sigh.hpp" />
     <ClInclude Include="src\visualray\render_service\texture_loader.h" />
     <ClInclude Include="src\visualray\render_service\vertex_array.h" />
+    <ClInclude Include="src\visualray\util\function_ref.h" />
     <ClInclude Include="src\visualray\util\lsid.h" />
     <ClInclude Include="src\visualray\util\util.h" />
     <ClInclude Include="src\visualray\vrpch.h" />
     <ClInclude Include="src\visualray\window_service\window.h" />
+    <ClInclude Include="src\visualray\world\aabb.h" />
     <ClInclude Include="src\visualray\world\components.h" />
+    <ClInclude Include="src\visualray\world\spatial.h" />
     <ClInclude Include="src\visualray\world\systems.h" />
   </ItemGroup>
   <ItemGroup>
