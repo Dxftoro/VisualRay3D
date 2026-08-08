@@ -27,7 +27,7 @@ namespace vray {
 	void UniformGrid::insert(entt::entity entity, const Volume& volume) {
 		std::vector<entt::entity>& list = cells[volume];
 		list.push_back(entity);
-		world.emplace_or_replace<CompUniformCell>(entity, volume, cells, list.size() - 1);
+		world.emplace_or_replace<CompUniformCell>(entity, volume, list.size() - 1);
 	}
 
 	void UniformGrid::insert(entt::entity entity) {
@@ -39,9 +39,9 @@ namespace vray {
 		auto& cell = world.get<CompUniformCell>(entity);
 		std::vector<entt::entity>& list = cells[cell.volume];
 
-		assert(!list.empty() || "UniformGrid::remove: Entity references to the empty list!");
-		assert(cell.index < list.size() || "UniformGrid::remove: Entity index out of bounds!");
-		assert(entity == list[cell.index] || "UniformGrid::remove: Given entity do not match a list's entity!");
+		assert(!list.empty() && "UniformGrid::remove: Entity references to the empty list!");
+		assert(cell.index < list.size() && "UniformGrid::remove: Entity index out of bounds!");
+		assert(entity == list[cell.index] && "UniformGrid::remove: Given entity do not match a list's entity!");
 
 		if (list.size() > 1) {
 			entt::entity last = list[list.size() - 1];
@@ -56,7 +56,7 @@ namespace vray {
 	void UniformGrid::remove(entt::entity entity) { remove(entity, true); }
 
 	void UniformGrid::update(entt::entity entity) {
-		assert(world.all_of<CompUniformCell>(entity) || "UniformGrid::update: Given entity has no CompUniformCell");
+		assert(world.all_of<CompUniformCell>(entity) && "UniformGrid::update: Given entity has no CompUniformCell");
 
 		Volume volume = calculateVolume(world.get<CompTransform>(entity).getPosition());
 		
