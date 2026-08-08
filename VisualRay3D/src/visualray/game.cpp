@@ -12,6 +12,8 @@
 #include "physics_service/rp3d_physics.h"
 #include "physics_service/rp3d_debug_system.h"
 
+#include "sleeping.h"
+
 namespace vray {
 	float Game::begTime = 0.0f;
 	float Game::endTime = 0.0f;
@@ -76,23 +78,34 @@ namespace vray {
 		running = true;
 		VR_ENGINE_LOGINFO("Game application started running!");
 
+		sleeping::beginTimerPrecision(1);
+		using sleeping::ms;
+
 		begTime = glfwGetTime();
 
 		int frameInterval = 1, frameNumber = 0;
 		while (running) {
-			auto frameBegin = std::chrono::high_resolution_clock::now();
-			auto frameEnd = frameBegin + std::chrono::milliseconds(1000 / fpsLimit);
+			auto frameBegin = std::chrono::steady_clock::now();
+			VR_ENGINE_LOGINFO("fpsLimit currently = " + STR(fpsLimit));
+			auto frameEnd = frameBegin + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+				std::chrono::duration<double, std::milli>(1000.0 / fpsLimit)
+			);
 
 			endTime = glfwGetTime();
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
+			auto t0 = std::chrono::steady_clock::now();
 			engineContext.physics->update(_deltaTime);
+
+
 			if (frameNumber >= frameInterval) {
 				engineContext.physicsDebugSystem->update(true);
 				frameNumber = 0;
 			}
 			else frameNumber++;
+
+			auto t1 = std::chrono::steady_clock::now();
 
 			this->update();
 			this->renderSubmit();
@@ -102,12 +115,24 @@ namespace vray {
 			engineContext.renderer->clear();
 			engineContext.renderer->update(deltaTime());
 
+			auto t2 = std::chrono::steady_clock::now();
+
 			engineContext.window->onUpdate();
 			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
 
-			std::this_thread::sleep_until(frameEnd);
+			auto t3 = std::chrono::steady_clock::now();
+
+			sleeping::sleepUntil(std::chrono::time_point_cast<std::chrono::steady_clock::duration>(frameEnd));
+
+			auto t4 = std::chrono::steady_clock::now();
+
+			VR_ENGINE_LOGINFO(
+				std::format("physics: {:.2f}ms | update+render: {:.2f}ms | swap: {:.2f}ms | sleep: {:.2f}ms | total: {:.2f}ms",
+				ms(t1 - t0), ms(t2 - t1), ms(t3 - t2), ms(t4 - t3), ms(t4 - t0)));
 		}
+
+		sleeping::beginTimerPrecision(1);
 	}
 
 	inline void Game::stop() { running = false; }

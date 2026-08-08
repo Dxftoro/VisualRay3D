@@ -120,6 +120,12 @@
     <ClCompile Include="src\visualray\physics_service\rp3d_event_listener.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\visualray\world\spatial_uniform_grid.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\sleeping.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\visualray\kernel.h">
@@ -513,6 +519,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\world\spatial_uniform_grid.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\world\volume.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\sleeping.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
