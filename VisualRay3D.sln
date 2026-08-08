@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reactphysics3d", "thirdpart
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "thirdparty\ImGui\ImGui.vcxproj", "{D7246C64-5795-4C28-9E0C-C9D655B5EC1F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpatialTest", "SpatialTest\SpatialTest.vcxproj", "{A03708FA-3F4B-458D-A2FE-99FE6DC81B29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +47,10 @@ Global
 		{D7246C64-5795-4C28-9E0C-C9D655B5EC1F}.Debug|x64.Build.0 = Debug|x64
 		{D7246C64-5795-4C28-9E0C-C9D655B5EC1F}.Release|x64.ActiveCfg = Release|x64
 		{D7246C64-5795-4C28-9E0C-C9D655B5EC1F}.Release|x64.Build.0 = Release|x64
+		{A03708FA-3F4B-458D-A2FE-99FE6DC81B29}.Debug|x64.ActiveCfg = Debug|x64
+		{A03708FA-3F4B-458D-A2FE-99FE6DC81B29}.Debug|x64.Build.0 = Debug|x64
+		{A03708FA-3F4B-458D-A2FE-99FE6DC81B29}.Release|x64.ActiveCfg = Release|x64
+		{A03708FA-3F4B-458D-A2FE-99FE6DC81B29}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
