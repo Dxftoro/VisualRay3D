@@ -240,10 +240,9 @@ private:
 			
 			if (!result) return;
 
-			engine.physics->applyForceAtPoint(
+			engine.physics->applyForce(
 				result->hitEntity,
-				(cameraFront * 200.0f / deltaTime()) * -1.0f,
-				result->hitPoint
+				(cameraFront * 200.0f / deltaTime()) * 1.0f
 			);
 
 			engine.physicsDebugSystem->pushDebugLine(start, result->hitPoint);

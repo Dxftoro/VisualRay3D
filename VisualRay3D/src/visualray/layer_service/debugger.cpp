@@ -80,17 +80,17 @@ namespace vray {
 		io.DeltaTime = (float)(newTime - time);
 		time = newTime;
 
-		ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
+		//ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
+		//ImGui::SetNextWindowSize(ImVec2(80, 50), ImGuiCond_Always);
 
-		ImGui::Begin("Debug", &open);
-		ImGui::Text("FPS: %d", fpsCounter.getFps());
+		//ImGui::Begin("Debug", &open);
+		//ImGui::Text("FPS: %d", fpsCounter.getFps());
 
-		for (auto& it : varTable) {
-			it.second.display(it.first.c_str(), it.second.data);
-		}
+		//for (auto& it : varTable) {
+		//	it.second.display(it.first.c_str(), it.second.data);
+		//}
 
-		ImGui::End();
+		//ImGui::End();
 
 		console.update();
 

@@ -86,7 +86,6 @@ namespace vray {
 		int frameInterval = 1, frameNumber = 0;
 		while (running) {
 			auto frameBegin = std::chrono::steady_clock::now();
-			VR_ENGINE_LOGINFO("fpsLimit currently = " + STR(fpsLimit));
 			auto frameEnd = frameBegin + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
 				std::chrono::duration<double, std::milli>(1000.0 / fpsLimit)
 			);
@@ -95,17 +94,12 @@ namespace vray {
 			_deltaTime = endTime - begTime;
 			begTime = endTime;
 
-			auto t0 = std::chrono::steady_clock::now();
 			engineContext.physics->update(_deltaTime);
-
-
 			if (frameNumber >= frameInterval) {
 				engineContext.physicsDebugSystem->update(true);
 				frameNumber = 0;
 			}
 			else frameNumber++;
-
-			auto t1 = std::chrono::steady_clock::now();
 
 			this->update();
 			this->renderSubmit();
@@ -115,21 +109,11 @@ namespace vray {
 			engineContext.renderer->clear();
 			engineContext.renderer->update(deltaTime());
 
-			auto t2 = std::chrono::steady_clock::now();
-
 			engineContext.window->onUpdate();
 			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
 
-			auto t3 = std::chrono::steady_clock::now();
-
 			sleeping::sleepUntil(std::chrono::time_point_cast<std::chrono::steady_clock::duration>(frameEnd));
-
-			auto t4 = std::chrono::steady_clock::now();
-
-			VR_ENGINE_LOGINFO(
-				std::format("physics: {:.2f}ms | update+render: {:.2f}ms | swap: {:.2f}ms | sleep: {:.2f}ms | total: {:.2f}ms",
-				ms(t1 - t0), ms(t2 - t1), ms(t3 - t2), ms(t4 - t3), ms(t4 - t0)));
 		}
 
 		sleeping::beginTimerPrecision(1);
