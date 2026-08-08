@@ -242,7 +242,7 @@ private:
 
 			engine.physics->applyForce(
 				result->hitEntity,
-				(cameraFront * 200.0f / deltaTime()) * 1.0f
+				((cameraFront * 200.0f / deltaTime()) * 1.0f) * (glm::length(pc.velocity) * 2.0f)
 			);
 
 			engine.physicsDebugSystem->pushDebugLine(start, result->hitPoint);
