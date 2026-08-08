@@ -45,7 +45,7 @@ namespace vray {
 
 		if (list.size() > 1) {
 			entt::entity last = list[list.size() - 1];
-			world.get<CompUniformCell>(entity).index = cell.index;
+			world.get<CompUniformCell>(last).index = cell.index;
 			list[cell.index] = last;
 		}
 
