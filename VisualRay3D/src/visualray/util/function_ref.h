@@ -21,7 +21,7 @@ namespace vray {
 			})
 		{}
 
-		R operator()(Args... args) const { return sign(callable, args); }
+		R operator()(Args... args) const { return sign(callable, args...); }
 	};
 
 }
