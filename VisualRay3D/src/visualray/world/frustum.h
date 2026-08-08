@@ -5,12 +5,10 @@
 namespace vray {
 
 	struct Frustum {
-		float near;
+		glm::vec3 position;
 		float far;
-		float left;
-		float right;
-		float top;
-		float bottom;
+		glm::vec4 planes[6];
+		glm::vec3 corners[8];
 	};
 
 }

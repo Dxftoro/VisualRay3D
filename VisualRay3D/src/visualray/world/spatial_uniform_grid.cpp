@@ -12,10 +12,38 @@ namespace vray {
 		};
 	}
 
-	bool UniformGrid::isInBox(const Aabb& aabb, const glm::vec3& point) const {
-		return	point.x >= aabb.min.x && point.x <= aabb.max.x &&
-				point.y >= aabb.min.y && point.y <= aabb.max.y &&
-				point.z >= aabb.min.z && point.z <= aabb.max.z;
+	Aabb UniformGrid::calculateAabb(const glm::vec3& position, const glm::vec3& size) const {
+		glm::vec3 halfSize = size * 0.5f;
+		return {
+			position - halfSize,
+			position + halfSize
+		};
+	}
+
+	Aabb UniformGrid::calculateFrustumAabb(const glm::vec3* corners) const {
+		Aabb result = { corners[0], corners[0] };
+
+		for (int i = 1; i < 8; ++i) {
+			result.min = glm::min(result.min, corners[i]);
+			result.max = glm::max(result.max, corners[i]);
+		}
+
+		return result;
+	}
+
+	bool UniformGrid::intersectsFrustum(const Frustum& frustum, const Aabb& aabb) const {
+		for (int i = 0; i < 6; i++) {
+			glm::vec3 normal(frustum.planes[i]);
+			glm::vec3 positive = aabb.min;
+
+			if (normal.x >= 0) positive.x = aabb.max.x;
+			if (normal.y >= 0) positive.y = aabb.max.y;
+			if (normal.z >= 0) positive.z = aabb.max.z;
+
+			if (glm::dot(normal, positive) + frustum.planes[i].w < 0) return false;
+		}
+
+		return true;
 	}
 
 	UniformGrid::UniformGrid(entt::registry& _world, float _cellSize, float _margin)
@@ -63,6 +91,68 @@ namespace vray {
 		if (volume != world.get<CompUniformCell>(entity).volume) {
 			remove(entity, false);
 			insert(entity);
+		}
+	}
+
+	void UniformGrid::queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback) {
+		Volume min = calculateVolume(aabb.min);
+		Volume max = calculateVolume(aabb.max);
+
+		for (int x = min.x; x <= max.x; x++) {
+			for (int y = min.y; y <= max.y; y++) {
+				for (int z = min.z; z <= max.z; z++) {
+					Volume volume(x, y, z);
+					auto it = cells.find(volume);
+					if (it == cells.end()) continue;
+					
+					for (entt::entity entity : it->second) callback(entity);
+				}
+			}
+		}
+	}
+
+	void UniformGrid::querySphere(const glm::vec3& center, float radius, FunctionRef<void(entt::entity)> callback) {
+		Volume min = calculateVolume(center - glm::vec3(radius));
+		Volume max = calculateVolume(center + glm::vec3(radius));
+
+		for (int x = min.x; x <= max.x; x++) {
+			for (int y = min.y; y <= max.y; y++) {
+				for (int z = min.z; z <= max.z; z++) {
+					Volume volume(x, y, z);
+					auto it = cells.find(volume);
+					if (it == cells.end()) continue;
+
+					for (entt::entity entity : it->second) {
+						const glm::vec3& position = world.get<CompTransform>(entity).getPosition();
+						if (glm::distance(center, position) <= radius) callback(entity);
+					}
+				}
+			}
+		}
+	}
+
+	void UniformGrid::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback) {
+		Aabb bounds = calculateFrustumAabb(frustum.corners);
+		Volume min = calculateVolume(bounds.min);
+		Volume max = calculateVolume(bounds.max);
+
+		for (int x = min.x; x <= max.x; x++) {
+			for (int y = min.y; y <= max.y; y++) {
+				for (int z = min.z; z <= max.z; z++) {
+					Volume volume(x, y, z);
+					auto it = cells.find(volume);
+					if (it == cells.end()) continue;
+
+					for (entt::entity entity : it->second) {
+						auto& transform = world.get<CompTransform>(entity);
+						const glm::vec3& position = transform.getPosition();
+						const glm::vec3& size = transform.getSize();
+						if (intersectsFrustum(frustum, calculateAabb(position, size))) {
+							callback(entity);
+						}
+					}
+				}
+			}
 		}
 	}
 

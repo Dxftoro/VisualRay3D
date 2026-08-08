@@ -18,8 +18,9 @@ namespace vray {
 		float cellSize, margin;
 
 		Volume calculateVolume(const glm::vec3& point) const;
-		bool isInBox(const Aabb& aabb, const glm::vec3& point) const;
-		bool contains(entt::entity entity) const;
+		Aabb calculateAabb(const glm::vec3& position, const glm::vec3& size) const;
+		Aabb calculateFrustumAabb(const glm::vec3* corners) const;
+		bool intersectsFrustum(const Frustum& frustum, const Aabb& aabb) const;
 
 	public:
 		UniformGrid(entt::registry& world, float cellSize, float margin);
