@@ -3,6 +3,7 @@
 #include <visualray.h>
 
 #include "controllers/free_camera_controller.h"
+#include "map/map_manager.h"
 
 class Spawner;
 class PlayerController;
@@ -15,6 +16,7 @@ private:
 	vray::CompCamera* camera;
 	entt::entity player;
 
+	MapManager maps;
 	Spawner* spawner;
 	PlayerController* playerController;
 	FreeCameraController freeCamera;

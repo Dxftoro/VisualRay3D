@@ -1,4 +1,5 @@
 #include "spawner.h"
+#include "components.h"
 
 entt::entity Spawner::spawnModel(const glm::vec3& pos, const std::string& resourceName) {
 	entt::entity ent = game.world.create();
@@ -82,5 +83,75 @@ void Spawner::spawnPlatformGrid(const glm::vec3& center, const glm::vec2& _cellS
 		else cellPosition.x += cellSize;
 
 		spawnPlatform(cellPosition, _cellSize);
+	}
+}
+
+entt::entity Spawner::spawnElement(const glm::vec3& position, const glm::vec3& size, const std::string& filename) {
+	entt::entity entity = game.world.create();
+
+	vray::CompTransform transform;
+	transform.setPosition(position);
+	transform.setSize(size);
+
+	vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get(filename));
+
+	game.world.emplace<vray::CompTransform>(entity, transform);
+	game.world.emplace<vray::CompRenderable>(entity, renderable);
+
+	game.world.emplace<CompMapPart>(entity);
+	return entity;
+}
+
+void Spawner::spawnMapBlock(BType btype, const glm::vec3& position, const glm::vec3& lightColor) {
+	switch (btype) {
+	case BType::HULL: {
+		spawnElement(position, {2.0f, 0.3f, 2.0f}, "default");
+		spawnElement({ position.x, position.y + 1.7f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
+		break;
+	}
+	case BType::BLOCK: {
+		spawnElement({position.x, position.y + 1.15f, position.z}, { 2.0f, 2.0f, 2.0f }, "stone_bricks");
+		break;
+	}
+	case BType::LIGHT: {
+		spawnElement(position, { 2.0f, 0.3f, 2.0f }, "default");
+		spawnLight({ position.x, position.y + 2.4f, position.y}, lightColor);
+		break;
+	}
+	case BType::SPAWN: {
+		entt::entity element = spawnElement(position, { 2.0f, 0.3f, 2.0f }, "default");
+		spawnElement({ position.x, position.y + 1.7f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
+		game.world.emplace<CompMapSpawn>(element);
+		break;
+	}
+	default: return;
+	}
+}
+
+void Spawner::spawnMap(const Map* map, const glm::vec3& lightColor) {
+	auto& typeMap = map->getTypeMap();
+	if (typeMap.empty()) {
+		VR_LOGERROR("Map is empty!");
+		return;
+	}
+
+	auto get = [&typeMap, map](int i, int j) -> BType {
+		return typeMap[i * map->getWidth() + j];
+	};
+
+	const glm::vec3 cellStartPosition = {
+		-(2.0f * (map->getWidth() * 0.5f)) + 1.0f,
+		0.0f,
+		-(2.0f * (map->getHeight() * 0.5f)) + 1.0f
+	};
+
+	glm::vec3 cellPosition = cellStartPosition;
+
+	for (int i = 0; i < map->getWidth(); i++) {
+		for (int j = 0; j < map->getHeight(); j++) {
+			spawnMapBlock(get(i, j), cellPosition, lightColor);
+			cellPosition.x += 2.0f;
+		}
+		cellPosition.z += 2.0f;
 	}
 }

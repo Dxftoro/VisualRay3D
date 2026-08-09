@@ -42,8 +42,10 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnPlatformGrid({ 0.0f, 0.0f, 0.0f }, { 2.0f, 0.3 }, 20);
-	spawner->spawnLight({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+	spawner->spawnMap(maps.get("test"), { 0.0f, 1.0f, 1.0f });
+
+	//spawner->spawnPlatformGrid({ 0.0f, 0.0f, 0.0f }, { 2.0f, 0.3 }, 20);
+	//spawner->spawnLight({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 }
 
 SpatialTest::~SpatialTest() {
@@ -69,6 +71,8 @@ void SpatialTest::loadAssets() {
 	game.meshes.load("models/cube.obj", "cube");
 	game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 	game.textures.load("textures/default.png", "default");
+
+	maps.load("maps/test.txt", "test");
 }
 
 VR_IMPLEMENT_GAME(SpatialTest);

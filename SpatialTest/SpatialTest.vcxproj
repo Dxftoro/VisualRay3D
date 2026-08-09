@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -137,12 +137,17 @@
   <ItemGroup>
     <ClCompile Include="src\controllers\free_camera_controller.cpp" />
     <ClCompile Include="src\controllers\player_controller.cpp" />
+    <ClCompile Include="src\map\map.cpp" />
     <ClCompile Include="src\spawner.cpp" />
     <ClCompile Include="src\sp_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\components.h" />
     <ClInclude Include="src\controllers\free_camera_controller.h" />
     <ClInclude Include="src\controllers\player_controller.h" />
+    <ClInclude Include="src\map\btype.h" />
+    <ClInclude Include="src\map\map.h" />
+    <ClInclude Include="src\map\map_manager.h" />
     <ClInclude Include="src\spatial_test.h" />
     <ClInclude Include="src\spawner.h" />
   </ItemGroup>
