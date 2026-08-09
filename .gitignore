@@ -2,9 +2,15 @@
 .vs/
 bin/
 bin-int/
-Devshit/models/
+Dummy/models/
 packages/
 Tests/
+
+# SpatialTest project
+SpatialTest/models/
+SpatialTest/shaders/
+SpatialTest/sounds/
+SpatialTest/textures/
 
 # Files
 *.user
