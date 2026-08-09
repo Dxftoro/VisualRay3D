@@ -110,7 +110,7 @@ void SpatialTest::onEvent(vray::Event& evt) {
 		if (!toggle && evt.getKeyCode() == VR_KEY_W) {
 			toggle = true;
 			prev = game.world.get<vray::CompTransform>(player).getPosition();
-			VR_LOGIMPORTANT(glm::to_string(prev));
+			//VR_LOGIMPORTANT(glm::to_string(prev));
 		}
 		return toggle;
 	});
@@ -119,7 +119,7 @@ void SpatialTest::onEvent(vray::Event& evt) {
 		if (evt.getKeyCode() == VR_KEY_W) {
 			toggle = false;
 			glm::vec3 curr = game.world.get<vray::CompTransform>(player).getPosition();
-			VR_LOGIMPORTANT(glm::to_string(prev) + " " + glm::to_string(curr) + " " + STR(glm::distance(prev, curr)));
+			//VR_LOGIMPORTANT(glm::to_string(prev) + " " + glm::to_string(curr) + " " + STR(glm::distance(prev, curr)));
 		}
 		return toggle;
 	});
