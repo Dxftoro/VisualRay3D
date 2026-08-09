@@ -2,5 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\sp_main.cpp" />
+    <ClCompile Include="src\controllers\free_camera_controller.cpp" />
+    <ClCompile Include="src\spawner.cpp" />
+    <ClCompile Include="src\controllers\player_controller.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controllers\free_camera_controller.h" />
+    <ClInclude Include="src\spawner.h" />
+    <ClInclude Include="src\controllers\player_controller.h" />
+    <ClInclude Include="src\spatial_test.h" />
   </ItemGroup>
 </Project>

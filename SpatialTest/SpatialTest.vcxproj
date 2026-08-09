@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\DraftGame\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\DraftGame\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -135,7 +135,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\free_camera_controller.cpp" />
+    <ClCompile Include="src\controllers\player_controller.cpp" />
+    <ClCompile Include="src\spawner.cpp" />
     <ClCompile Include="src\sp_main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\controllers\free_camera_controller.h" />
+    <ClInclude Include="src\controllers\player_controller.h" />
+    <ClInclude Include="src\spatial_test.h" />
+    <ClInclude Include="src\spawner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VisualRay3D\VisualRay3D.vcxproj">
+      <Project>{82cbe796-1937-41cc-b3f0-7a85de81f8cf}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
