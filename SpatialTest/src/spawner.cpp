@@ -95,8 +95,15 @@ entt::entity Spawner::spawnElement(const glm::vec3& position, const glm::vec3& s
 
 	vray::CompRenderable renderable(game.meshes.get("cube"), game.textures.get(filename));
 
+	vray::CompHitbox hitbox(
+		vray::CompHitbox::ShapeType::BOX,
+		vray::CompHitbox::PhysType::STATIC,
+		transform.getSize()
+	);
+
 	game.world.emplace<vray::CompTransform>(entity, transform);
 	game.world.emplace<vray::CompRenderable>(entity, renderable);
+	game.world.emplace<vray::CompHitbox>(entity, hitbox);
 
 	game.world.emplace<CompMapPart>(entity);
 	return entity;
@@ -106,21 +113,21 @@ void Spawner::spawnMapBlock(BType btype, const glm::vec3& position, const glm::v
 	switch (btype) {
 	case BType::HULL: {
 		spawnElement(position, {2.0f, 0.3f, 2.0f}, "default");
-		spawnElement({ position.x, position.y + 1.7f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
+		spawnElement({ position.x, position.y + 3.5f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
 		break;
 	}
 	case BType::BLOCK: {
-		spawnElement({position.x, position.y + 1.15f, position.z}, { 2.0f, 2.0f, 2.0f }, "stone_bricks");
+		spawnElement({position.x, position.y + 1.6f, position.z}, { 2.0f, 3.5f, 2.0f }, "stone_bricks");
 		break;
 	}
 	case BType::LIGHT: {
 		spawnElement(position, { 2.0f, 0.3f, 2.0f }, "default");
-		spawnLight({ position.x, position.y + 2.4f, position.y}, lightColor);
+		spawnLight({ position.x, position.y + 2.6f, position.y}, lightColor);
 		break;
 	}
 	case BType::SPAWN: {
 		entt::entity element = spawnElement(position, { 2.0f, 0.3f, 2.0f }, "default");
-		spawnElement({ position.x, position.y + 1.7f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
+		spawnElement({ position.x, position.y + 2.5f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
 		game.world.emplace<CompMapSpawn>(element);
 		break;
 	}
@@ -136,7 +143,7 @@ void Spawner::spawnMap(const Map* map, const glm::vec3& lightColor) {
 	}
 
 	auto get = [&typeMap, map](int i, int j) -> BType {
-		return typeMap[i * map->getWidth() + j];
+		return typeMap[j * map->getWidth() + i];
 	};
 
 	const glm::vec3 cellStartPosition = {
@@ -152,6 +159,7 @@ void Spawner::spawnMap(const Map* map, const glm::vec3& lightColor) {
 			spawnMapBlock(get(i, j), cellPosition, lightColor);
 			cellPosition.x += 2.0f;
 		}
+		cellPosition.x = cellStartPosition.x;
 		cellPosition.z += 2.0f;
 	}
 }

@@ -1,4 +1,5 @@
 #include "map.h"
+#include <visualray/logservice.h>
 
 BType resolveBType(char symbol) {
 	switch (symbol) {

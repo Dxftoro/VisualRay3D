@@ -4,6 +4,7 @@
 #include "spatial_test.h"
 #include "spawner.h"
 #include "controllers/player_controller.h"
+#include "components.h"
 
 SpatialTest::SpatialTest()
 :	Game(vray::WindowParams("Spatial test", 1290, 723)),
@@ -24,7 +25,7 @@ SpatialTest::SpatialTest()
 	vray::CompTransform playerTransform;
 	playerTransform.setPosition({ 0.0f, 40.0f, 0.0f });
 
-	game.world.emplace<vray::CompTransform>(player, playerTransform);
+	auto& transform = game.world.emplace<vray::CompTransform>(player, playerTransform);
 
 	camera = &game.world.emplace<vray::CompCamera>(
 		player,
@@ -44,6 +45,11 @@ SpatialTest::SpatialTest()
 
 	spawner->spawnMap(maps.get("test"), { 0.0f, 1.0f, 1.0f });
 
+	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
+		spawns.push_back(entity);
+	});
+
+	respawn();
 	//spawner->spawnPlatformGrid({ 0.0f, 0.0f, 0.0f }, { 2.0f, 0.3 }, 20);
 	//spawner->spawnLight({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 }
@@ -51,6 +57,16 @@ SpatialTest::SpatialTest()
 SpatialTest::~SpatialTest() {
 	delete spawner;
 	delete playerController;
+}
+
+void SpatialTest::respawn() {
+	if (spawns.empty()) return;
+
+	entt::entity spawn = spawns[rand() % spawns.size()];
+	auto& position = game.world.get<vray::CompTransform>(spawn).getPosition();
+	auto& transform = game.world.get<vray::CompTransform>(player);
+
+	transform.setPosition(position + glm::vec3(0.0f, 0.15f, 0.0f));
 }
 
 void SpatialTest::update() {
@@ -72,6 +88,7 @@ void SpatialTest::loadAssets() {
 	game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 	game.textures.load("textures/default.png", "default");
 
+	VR_LOGINFO("Loading maps");
 	maps.load("maps/test.txt", "test");
 }
 

@@ -20,8 +20,10 @@ private:
 	Spawner* spawner;
 	PlayerController* playerController;
 	FreeCameraController freeCamera;
+	std::vector<entt::entity> spawns;
 
 	void loadAssets();
+	void respawn();
 
 public:
 	SpatialTest();
