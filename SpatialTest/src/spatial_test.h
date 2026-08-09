@@ -23,6 +23,7 @@ private:
 	std::vector<entt::entity> spawns;
 
 	void loadAssets();
+	void setupCommands();
 	void respawn();
 
 public:

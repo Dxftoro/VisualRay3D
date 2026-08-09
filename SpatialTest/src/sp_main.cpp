@@ -16,6 +16,7 @@ SpatialTest::SpatialTest()
 
 	try {
 		loadAssets();
+		setupCommands();
 	}
 	catch (std::exception& exc) {
 		VR_ENGINE_LOGERROR(exc.what());
@@ -61,15 +62,12 @@ SpatialTest::~SpatialTest() {
 
 void SpatialTest::respawn() {
 	if (spawns.empty()) return;
-
 	entt::entity spawn = spawns[rand() % spawns.size()];
 	auto& position = game.world.get<vray::CompTransform>(spawn).getPosition();
-	auto& transform = game.world.get<vray::CompTransform>(player);
-
-	transform.setPosition(position + glm::vec3(0.0f, 0.15f, 0.0f));
+	playerController->moveTo(position + glm::vec3(0.0f, 0.15f, 0.0f));
 }
 
-void SpatialTest::update() {
+void SpatialTest::update() {	
 	playerController->update(deltaTime());
 
 	if (!console->isOpened() && !playerController->isEnabled()) freeCamera.update(camera);
@@ -81,6 +79,65 @@ void SpatialTest::update() {
 
 void SpatialTest::onEvent(vray::Event& evt) {
 	if (!console->isOpened()) freeCamera.rotate(camera, evt);
+
+	vray::EventDispatcher dispatcher(evt);
+	dispatcher.fire<vray::KeyPressedEvent>([this](vray::KeyPressedEvent evt) {
+		if (evt.getKeyCode() != VR_KEY_R) return false;
+		respawn();
+		return true;
+	});
+
+	dispatcher.fire<vray::KeyPressedEvent>([this](vray::KeyPressedEvent evt) {
+		if (evt.getKeyCode() == VR_KEY_ESCAPE) {
+			console->setOpened(!console->isOpened());
+			return true;
+		}
+		else if (evt.getKeyCode() == VR_KEY_TAB) {
+			vray::InputService::CursorMode cursorMode = engine.inputService.getCursorMode();
+			if (cursorMode == vray::InputService::CursorMode::DISABLED)
+				engine.inputService.setCursorMode(vray::InputService::CursorMode::NORMAL);
+			else
+				engine.inputService.setCursorMode(vray::InputService::CursorMode::DISABLED);
+			return true;
+		}
+		return false;
+	});
+
+	static bool toggle = false;
+	static glm::vec3 prev = glm::vec3(0.0f);
+
+	dispatcher.fire<vray::KeyPressedEvent>([this](vray::KeyPressedEvent evt) {
+		if (!toggle && evt.getKeyCode() == VR_KEY_W) {
+			toggle = true;
+			prev = game.world.get<vray::CompTransform>(player).getPosition();
+			VR_LOGIMPORTANT(glm::to_string(prev));
+		}
+		return toggle;
+	});
+
+	dispatcher.fire<vray::KeyReleasedEvent>([this](vray::KeyReleasedEvent evt) {
+		if (evt.getKeyCode() == VR_KEY_W) {
+			toggle = false;
+			glm::vec3 curr = game.world.get<vray::CompTransform>(player).getPosition();
+			VR_LOGIMPORTANT(glm::to_string(prev) + " " + glm::to_string(curr) + " " + STR(glm::distance(prev, curr)));
+		}
+		return toggle;
+	});
+}
+
+void SpatialTest::setupCommands() {
+	console->addCommand("aabbs", [this](const std::vector<std::string>& args) {
+		if (args.size() <= 1) {
+			console->write("No such args!");
+			return;
+		}
+
+		bool enabled = (args[1] == "1") ? true : false;
+		if (!engine.physicsDebugSystem) {
+			return;
+		}
+		engine.physicsDebugSystem->setEnabled(enabled);
+	});
 }
 
 void SpatialTest::loadAssets() {

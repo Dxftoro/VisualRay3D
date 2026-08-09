@@ -39,7 +39,7 @@ void PlayerController::airAccelerate(const glm::vec3& wishDir, float wishSpeed, 
 }
 
 void PlayerController::frict(float deltaTime) {
-	float speed = glm::length(velocity);
+	float speed = glm::length(glm::vec3(velocity.x, 0.0f, velocity.z));
 	if (speed < 0.01f) {
 		velocity.x = 0.0f;
 		velocity.z = 0.0f;
@@ -97,17 +97,18 @@ void PlayerController::handleKeys(float deltaTime) {
 	if (inputService.keyPressed(VR_KEY_D)) sideMove += 1.0f;
 
 	calculateDirections(camera);
-	glm::vec3 wishVel = (forward * forwardMove) + (right * sideMove); wishVel.y = 0.0f;
+	
+	glm::vec3 wishVel = (forward * forwardMove) + (right * sideMove);
+	wishVel.y = 0.0f;
+	
 	glm::vec3 wishDir = glm::vec3(0.0f);
-	float wishSpeed = glm::length(wishVel);
 
-	if (wishSpeed > maxSpeed) {
-		wishVel *= maxSpeed / wishSpeed;
+	float inputLen = glm::length(wishVel);
+	float wishSpeed = 0.0f;
+
+	if (inputLen > 0.0001f) {
+		wishDir = wishVel / inputLen;
 		wishSpeed = maxSpeed;
-	}
-
-	if (wishSpeed > 0.0001f) {
-		wishDir = glm::normalize(wishVel);
 	}
 
 	frict(deltaTime);
@@ -127,8 +128,18 @@ void PlayerController::handleKeys(float deltaTime) {
 	else verticalVelocity = 0.0f;
 
 	playerSpeed = glm::length(velocity);
-	velocity.y = verticalVelocity * deltaTime;
-	position += velocity;
+	velocity.y = verticalVelocity;
+	position += velocity * deltaTime;
 
 	transform.setPosition(position);
+}
+
+void PlayerController::moveTo(const glm::vec3& position) {
+	vray::GameContext& game = ctx->getGameContext();
+
+	velocity = glm::vec3(0.0f);
+	verticalVelocity = 0.0f;
+
+	auto& transform = game.world.get<vray::CompTransform>(player);
+	transform.setPosition(position + glm::vec3(0.0f, 0.15f, 0.0f));
 }

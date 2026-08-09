@@ -40,6 +40,7 @@ public:
 	void jump();
 	void fall(float deltaTime);
 	void update(float deltaTime);
+	void moveTo(const glm::vec3& position);
 
 	void setEnabled(bool enabled) { this->enabled = enabled; }
 	bool isEnabled() const { return enabled; }
