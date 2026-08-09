@@ -117,7 +117,7 @@ void Spawner::spawnMapBlock(BType btype, const glm::vec3& position, const glm::v
 		break;
 	}
 	case BType::BLOCK: {
-		spawnElement({position.x, position.y + 1.6f, position.z}, { 2.0f, 3.5f, 2.0f }, "stone_bricks");
+		spawnElement({position.x, position.y + 1.65f, position.z}, { 2.0f, 3.5f, 2.0f }, "stone_bricks");
 		break;
 	}
 	case BType::LIGHT: {
@@ -127,7 +127,7 @@ void Spawner::spawnMapBlock(BType btype, const glm::vec3& position, const glm::v
 	}
 	case BType::SPAWN: {
 		entt::entity element = spawnElement(position, { 2.0f, 0.3f, 2.0f }, "default");
-		spawnElement({ position.x, position.y + 2.5f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
+		spawnElement({ position.x, position.y + 3.5f, position.z }, { 2.0f, 0.3f, 2.0f }, "default");
 		game.world.emplace<CompMapSpawn>(element);
 		break;
 	}
