@@ -7,10 +7,16 @@ namespace vray {
 	class SpatialSystem {
 	private:
 		ISpatial* backend;
+		entt::registry& world;
+
+		void onEntityAdded(entt::registry& world, entt::entity entity);
+		void onEntityRemoved(entt::registry& world, entt::entity entity);
 
 	public:
 		SpatialSystem(entt::registry& world);
 		~SpatialSystem();
+
+		void update();
 
 		void queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback);
 		void queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback);
