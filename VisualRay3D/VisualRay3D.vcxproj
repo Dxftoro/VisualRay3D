@@ -52,7 +52,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\visualray\world\components.cpp" />
-    <ClCompile Include="src\visualray\world\spatial_uniform_grid.cpp" />
+    <ClCompile Include="src\visualray\spatial_service\spatial_uniform_grid.cpp" />
     <ClCompile Include="src\visualray\world\systems.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,7 @@
     <ClInclude Include="src\visualray\render_service\rendering_buffer.h" />
     <ClInclude Include="src\visualray\render_service\render_request.h" />
     <ClInclude Include="src\visualray\sleeping.h" />
+    <ClInclude Include="src\visualray\spatial_service\spatial_system.h" />
     <ClInclude Include="src\visualray\thirdparty\EnTT\config\config.h" />
     <ClInclude Include="src\visualray\thirdparty\EnTT\config\macro.h" />
     <ClInclude Include="src\visualray\thirdparty\EnTT\config\version.h" />
@@ -182,13 +183,13 @@
     <ClInclude Include="src\visualray\util\util.h" />
     <ClInclude Include="src\visualray\vrpch.h" />
     <ClInclude Include="src\visualray\window_service\window.h" />
-    <ClInclude Include="src\visualray\world\aabb.h" />
+    <ClInclude Include="src\visualray\spatial_service\aabb.h" />
     <ClInclude Include="src\visualray\world\components.h" />
-    <ClInclude Include="src\visualray\world\frustum.h" />
-    <ClInclude Include="src\visualray\world\spatial.h" />
-    <ClInclude Include="src\visualray\world\spatial_uniform_grid.h" />
+    <ClInclude Include="src\visualray\spatial_service\frustum.h" />
+    <ClInclude Include="src\visualray\spatial_service\spatial.h" />
+    <ClInclude Include="src\visualray\spatial_service\spatial_uniform_grid.h" />
     <ClInclude Include="src\visualray\world\systems.h" />
-    <ClInclude Include="src\visualray\world\volume.h" />
+    <ClInclude Include="src\visualray\spatial_service\volume.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">

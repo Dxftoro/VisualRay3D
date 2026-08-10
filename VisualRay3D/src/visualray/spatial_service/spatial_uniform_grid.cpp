@@ -1,6 +1,6 @@
 #include "vrpch.h"
 #include "spatial_uniform_grid.h"
-#include "components.h"
+#include "../world/components.h"
 
 namespace vray {
 

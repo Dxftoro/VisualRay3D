@@ -120,7 +120,7 @@
     <ClCompile Include="src\visualray\physics_service\rp3d_event_listener.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\world\spatial_uniform_grid.cpp">
+    <ClCompile Include="src\visualray\spatial_service\spatial_uniform_grid.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\sleeping.cpp">
@@ -509,22 +509,25 @@
     <ClInclude Include="src\visualray\util\function_ref.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\spatial.h">
+    <ClInclude Include="src\visualray\spatial_service\spatial.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\aabb.h">
+    <ClInclude Include="src\visualray\spatial_service\aabb.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\frustum.h">
+    <ClInclude Include="src\visualray\spatial_service\frustum.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\spatial_uniform_grid.h">
+    <ClInclude Include="src\visualray\spatial_service\spatial_uniform_grid.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\volume.h">
+    <ClInclude Include="src\visualray\spatial_service\volume.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\sleeping.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\spatial_service\spatial_system.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
