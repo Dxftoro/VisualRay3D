@@ -144,8 +144,6 @@ void SpatialTest::loadAssets() {
 	game.meshes.load("models/cube.obj", "cube");
 	game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 	game.textures.load("textures/default.png", "default");
-
-	VR_LOGINFO("Loading maps");
 	maps.load("maps/test.txt", "test");
 }
 
