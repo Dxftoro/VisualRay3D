@@ -156,6 +156,18 @@
       <Project>{82cbe796-1937-41cc-b3f0-7a85de81f8cf}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\billboard.frag" />
+    <None Include="shaders\billboard.geom" />
+    <None Include="shaders\billboard.vert" />
+    <None Include="shaders\debug.frag" />
+    <None Include="shaders\debug.vert" />
+    <None Include="shaders\distortion.vert" />
+    <None Include="shaders\phong.frag" />
+    <None Include="shaders\phong.vert" />
+    <None Include="shaders\triangle.frag" />
+    <None Include="shaders\triangle.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

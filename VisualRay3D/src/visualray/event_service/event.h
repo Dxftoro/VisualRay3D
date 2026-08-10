@@ -22,6 +22,7 @@ namespace vray {
 		constexpr auto WINDOW_CLOSE		= "EVT_WINDOW_CLOSE";
 		constexpr auto COLLISION		= "EVT_COLLISION";
 		constexpr auto TRIGGER			= "EVT_TRIGGER";
+		constexpr auto CAMERA_CHANGED	= "EVT_CAMERA_CHANGED";
 	};
 
 	enum class EventCategory : int {

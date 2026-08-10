@@ -4,17 +4,19 @@
 
 namespace vray {
 
-	class Renderer;
-	class Event;
+	class Game;
 
 	class VRAYLIB CameraSystem {
 	private:
-		Renderer* renderer;
+		vray::Game* ctx;
+		CompCamera* camera;
+		bool cameraChanged;
 
 	public:
-		CameraSystem(Renderer* _renderer) : renderer(_renderer) {}
-		void setActiveCamera(CompCamera* camera);
+		CameraSystem(vray::Game* _ctx) : ctx(_ctx), camera(nullptr) {}
 
+		void setActiveCamera(CompCamera* camera);
+		CompCamera* getActiveCamera() const { return camera; }
 		CompCamera createCamera(float fovDegrees, float near, float far);
 	};
 

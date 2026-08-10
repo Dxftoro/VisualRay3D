@@ -1,3 +1,4 @@
+#include "vrpch.h"
 #include "spatial_system.h"
 #include "spatial_uniform_grid.h"
 #include "../world/components.h"
