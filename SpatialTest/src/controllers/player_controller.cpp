@@ -6,10 +6,8 @@ PlayerController::PlayerController(vray::Game* _ctx, entt::entity _player)
 }
 
 void PlayerController::calculateDirections(vray::CompCamera* camera) {
-	float yaw = glm::radians(camera->getRotation().x);
-
-	forward = glm::vec3(cos(yaw), 0.0f, sin(yaw)); // !!!
-	right = glm::vec3(-sin(yaw), 0.0f, cos(yaw));
+	camera->calculateForward(forward);
+	camera->calculateRight(right);
 }
 
 void PlayerController::accelerate(const glm::vec3& wishDir, float wishSpeed, float deltaTime) {
