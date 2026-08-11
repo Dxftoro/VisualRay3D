@@ -97,7 +97,7 @@ namespace vray {
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
 
-			billboardSystem.init(cameraSystem);
+			billboardSystem.init(&cameraSystem);
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
