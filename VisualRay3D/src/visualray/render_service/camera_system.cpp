@@ -47,8 +47,10 @@ namespace vray {
 			glm::vec3(0.0f, 1.0f, 0.0f)
 		);
 
-		vray::CameraChangedEvent event(this->camera);
-		ctx->onEvent(event);
+		if (!initialCamera) {
+			vray::CameraChangedEvent event(this->camera);
+			ctx->onEvent(event);
+		}
 	}
 
 	void CameraSystem::setViewMatrix(const glm::mat4& viewMatrix) {

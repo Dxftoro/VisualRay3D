@@ -37,7 +37,6 @@ namespace vray {
 		rotation(0.0f),
 		active(false),
 		viewDirty(true) {
-		VR_ENGINE_LOGIMPORTANT("CAMERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 	}
 
 	void CompCamera::setPosition(const glm::vec3& position) {

@@ -28,6 +28,10 @@ SpatialTest::SpatialTest()
 
 	auto& transform = game.world.emplace<vray::CompTransform>(player, playerTransform);
 
+	freeCamera.setGame(this);
+	freeCamera.setLocked(true);
+	freeCamera.setMoveSpeed(1.0f);
+
 	camera = &game.world.emplace<vray::CompCamera>(
 		player,
 		engine.cameraSystem.createCamera(100.0f, 0.1f, 300.0f)
@@ -37,10 +41,6 @@ SpatialTest::SpatialTest()
 
 	playerController = new PlayerController(this, player);
 	playerController->setEnabled(true);
-
-	freeCamera.setGame(this);
-	freeCamera.setLocked(true);
-	freeCamera.setMoveSpeed(1.0f);
 
 	spawner = new Spawner(game);
 
@@ -144,8 +144,8 @@ void SpatialTest::loadAssets() {
 	game.meshes.load("models/cube.obj", "cube");
 	game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 	game.textures.load("textures/default.png", "default");
-	maps.load("maps/test.txt", "light");
-	maps.load("maps/test.txt", "heavy");
+	maps.load("maps/light.txt", "light");
+	maps.load("maps/heavy.txt", "heavy");
 }
 
 VR_IMPLEMENT_GAME(SpatialTest);
