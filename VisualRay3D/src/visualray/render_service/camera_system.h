@@ -19,6 +19,8 @@ namespace vray {
 		CameraSystem(vray::Game* _ctx);
 		~CameraSystem();
 
+		void init();
+
 		void setActiveCamera(CompCamera* camera);
 		void setViewMatrix(const glm::mat4& viewMatrix);
 		void setProjectionMatrix(const glm::mat4& projectionMatrix);

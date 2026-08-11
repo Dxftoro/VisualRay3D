@@ -44,7 +44,7 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnMap(maps.get("test"), { 0.0f, 1.0f, 1.0f });
+	spawner->spawnMap(maps.get("light"), { 0.0f, 1.0f, 1.0f });
 
 	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
 		spawns.push_back(entity);
@@ -144,7 +144,8 @@ void SpatialTest::loadAssets() {
 	game.meshes.load("models/cube.obj", "cube");
 	game.textures.load("textures/KAMEN.JPG", "stone_bricks");
 	game.textures.load("textures/default.png", "default");
-	maps.load("maps/test.txt", "test");
+	maps.load("maps/test.txt", "light");
+	maps.load("maps/test.txt", "heavy");
 }
 
 VR_IMPLEMENT_GAME(SpatialTest);

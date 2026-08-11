@@ -31,6 +31,9 @@ namespace vray {
 			std::bind(&Game::onEventInternal, this, std::placeholders::_1)
 		);
 
+		engineContext.cameraSystem = CameraSystem(this);
+		engineContext.cameraSystem.init();
+
 		engineContext.inputService = InputService(engineContext.window.get());
 		engineContext.debugger = new Debugger(engineContext.window.get());
 
@@ -48,7 +51,6 @@ namespace vray {
 		);
 
 		engineContext.physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
-		engineContext.cameraSystem = CameraSystem(this);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));

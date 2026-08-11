@@ -6,20 +6,23 @@
 namespace vray {
 
 	CameraSystem::CameraSystem(vray::Game* _ctx)
-	:	ctx(_ctx), initialCamera(true),
+		: ctx(_ctx), initialCamera(true), camera(nullptr),
 		viewMatrix(glm::identity<glm::mat4>()),
 		projectionMatrix(glm::identity<glm::mat4>()) {
+	}
 
+	CameraSystem::~CameraSystem() {
+		if (initialCamera && camera != nullptr) delete camera;
+	}
+
+	void CameraSystem::init() {
+		if (!initialCamera) return;
 		camera = new CompCamera(90, 0.1f, 300.0f);
 		setActiveCamera(camera);
 	}
 
-	CameraSystem::~CameraSystem() {
-		if (initialCamera) delete camera;
-	}
-
 	void CameraSystem::setActiveCamera(CompCamera* camera) {
-		if (initialCamera) {
+		if (initialCamera && camera != nullptr) {
 			delete this->camera;
 			this->camera = nullptr;
 			initialCamera = false;
