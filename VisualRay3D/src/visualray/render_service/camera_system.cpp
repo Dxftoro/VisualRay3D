@@ -17,35 +17,37 @@ namespace vray {
 
 	void CameraSystem::init() {
 		if (!initialCamera) return;
-		camera = new CompCamera(90, 0.1f, 300.0f);
-		setActiveCamera(camera);
+		setActiveCamera(nullptr);
 	}
 
 	void CameraSystem::setActiveCamera(CompCamera* camera) {
-		if (initialCamera && camera != nullptr) {
+		if (initialCamera && this->camera != nullptr) {
 			delete this->camera;
 			this->camera = nullptr;
 			initialCamera = false;
+		}
+		else if (camera == nullptr) {
+			camera = new CompCamera(90, 0.1f, 300.0f);
 		}
 
 		this->camera = camera;
 		Window* window = ctx->getWindow();
 
 		projectionMatrix = glm::perspectiveFov(
-			glm::radians(camera->getFov()),
+			glm::radians(this->camera->getFov()),
 			(float)window->getWidth(),
 			(float)window->getHeight(),
-			camera->getNear(),
-			camera->getFar()
+			this->camera->getNear(),
+			this->camera->getFar()
 		);
 
 		viewMatrix = glm::lookAt(
-			camera->getPosition(),
+			this->camera->getPosition(),
 			glm::vec3(0.0f),
 			glm::vec3(0.0f, 1.0f, 0.0f)
 		);
 
-		vray::CameraChangedEvent event(camera);
+		vray::CameraChangedEvent event(this->camera);
 		ctx->onEvent(event);
 	}
 
