@@ -71,7 +71,6 @@ namespace vray {
 
 		void init(CameraSystem* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }
-		void setCamera(CompCamera* camera) { this->camera = camera; }
 		void update();
 		
 		BatchTableIterator createBatch(Texture* texture);
