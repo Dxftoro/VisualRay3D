@@ -56,8 +56,8 @@ namespace vray {
 		world.erase<CompTransformMatrices>(entity);
 	}
 
-	Renderer::Renderer(Window* _currentWindow, entt::registry& world)
-		: currentWindow(_currentWindow), initialCamera(true), lightSystem(world), billboardSystem(world) {
+	Renderer::Renderer(Window* _currentWindow, CameraSystem& cameraSystem, entt::registry& world)
+		: currentWindow(_currentWindow), cameraSystem(cameraSystem), lightSystem(world), billboardSystem(world) {
 
 		if (!gladLoadGL()) {
 			throw std::runtime_error("Can't load OpenGL!");
@@ -67,10 +67,6 @@ namespace vray {
 		glDebugMessageCallback(rendererDebugCallback, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 		glDisable(GL_DEBUG_OUTPUT);
-
-		camera = new CompCamera(90,
-			currentWindow->getWidth(),
-			currentWindow->getHeight(), 0.1f, 300.0f);
 
 		material = {
 			.ka = glm::vec3(0.1f),
@@ -98,30 +94,15 @@ namespace vray {
 			lightSystem.initBuffer(program);
 			uboMaterial = program.createUniformBuffer("MaterialData", &material, sizeof(material));
 
-			//glBindBuffer(GL_UNIFORM_BUFFER, uboMaterial.getHandle());
-			//	char* lightData = (char*)glMapBuffer(GL_UNIFORM_BUFFER, GL_READ_ONLY);
-			//	char* lsData = lightData		// ka
-			//		+ sizeof(glm::vec3) + 4 +	// kd
-			//		+ sizeof(glm::vec3) + 4 +	// ks
-			//		+ sizeof(glm::vec3);		// sh
-			//	float* ls = (float*)lsData;
-			//	VR_ENGINE_LOGINFO("Light la: " + std::to_string(*ls));
-
-			//	glUnmapBuffer(GL_UNIFORM_BUFFER);
-			//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
 			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
 			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
 
-			billboardSystem.init(camera);
+			billboardSystem.init(cameraSystem);
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());
 			std::terminate();
 		}
-
-		//uboLight.printUniformData();
-		//uboMaterial.printUniformData();
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_ALPHA_TEST);
@@ -144,15 +125,12 @@ namespace vray {
 
 		setClearColor(glm::vec4(0.2f));
 
-		//VR_ENGINE_LOGWARN("Setting data to UBOs");
-		//uboMaterial.setData(&material, sizeof(material));
-
 		world.on_construct<CompTransform>().connect<onTransformAdded>();
 		world.on_destroy<CompTransform>().connect<onTransformRemoved>();
 	}
 
 	Renderer::~Renderer() {
-		if (camera && initialCamera) delete camera;
+		/* Another empty destructor */
 	}
 
 	void Renderer::setClearColor(const glm::vec4& color) {
@@ -166,16 +144,16 @@ namespace vray {
 	void Renderer::update(float deltaTime) {
 		try {
 			program.use();
-			program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
-			program.setUniform(uViewMatrix, camera->getViewMatrix());
+			program.setUniform(uProjectionMatrix, cameraSystem.getProjectionMatrix());
+			program.setUniform(uViewMatrix, cameraSystem.getViewMatrix());
 
 			lightSystem.update();
 
 			flush();
 
 			debugProgram.use();
-			debugProgram.setUniform(uDebugProjectionMatrix, camera->getProjectionMatrix());
-			debugProgram.setUniform(uDebugViewMatrix, camera->getViewMatrix());
+			debugProgram.setUniform(uDebugProjectionMatrix, cameraSystem.getProjectionMatrix());
+			debugProgram.setUniform(uDebugViewMatrix, cameraSystem.getViewMatrix());
 
 			glBindVertexArray(debugVao);
 			glDrawArrays(GL_LINES, 0, debugVertexCount);
@@ -193,7 +171,7 @@ namespace vray {
 	}
 
 	void Renderer::flush() {
-		const glm::mat4& viewMatrix = camera->getViewMatrix();
+		const glm::mat4& viewMatrix = cameraSystem.getViewMatrix();
 
 		uboMaterial.bind();
 
@@ -202,7 +180,7 @@ namespace vray {
 			CompTransform* transform = request.transform;
 			CompTransformMatrices* matrices = request.matrices;
 
-			if (camera->isViewDirty() || transform->isDirty()) {
+			if (cameraSystem.getActiveCamera()->isViewDirty() || transform->isDirty()) {
 				updateTransform(request.renderable, transform, matrices);
 				matrices->normal = glm::mat3(
 					glm::transpose(
@@ -228,7 +206,7 @@ namespace vray {
 
 		uboMaterial.unbind();
 
-		camera->setViewDirty(false);
+		cameraSystem.getActiveCamera()->setViewDirty(false);
 	}
 
 	bool Renderer::onWindowResize(WindowResizeEvent& evt) {
@@ -237,18 +215,9 @@ namespace vray {
 		
 		if (!width || !height) return true;
 
-		camera->setProjectionBorders(width, height);
+		cameraSystem.setProjectionBorders(width, height);
 		glViewport(0, 0, width, height);
 		return true;
-	}
-
-	void Renderer::setCamera(CompCamera* camera) {
-		if (initialCamera) {
-			delete this->camera;
-			initialCamera = false;
-		}
-		this->camera = camera;
-		billboardSystem.setCamera(camera);
 	}
 
 	void Renderer::updateDebugPrimitives(const std::vector<float>& vertexData,

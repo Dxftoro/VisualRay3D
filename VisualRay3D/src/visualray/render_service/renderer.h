@@ -13,6 +13,7 @@
 #include "render_request.h"
 #include "light_system.h"
 #include "billboard_system.h"
+#include "camera_system.h"
 
 #define VR_RENDERER_MAX_DEBUG_LINES     1000
 
@@ -24,8 +25,8 @@ namespace vray {
     class Renderer {
     private:
         std::queue<RenderRequest> renderQueue;
-        CompCamera* camera;
         Window* currentWindow;
+        CameraSystem& cameraSystem;
         GlslProgram program, debugProgram;
 
         GlslUniform uProjectionMatrix,
@@ -43,10 +44,8 @@ namespace vray {
         LightSystem lightSystem;
         BillboardSystem billboardSystem;
 
-        bool initialCamera;
-
     public:
-        Renderer(Window* currentWindow, entt::registry& world);
+        Renderer(Window* currentWindow, CameraSystem& cameraSystem, entt::registry& world);
         ~Renderer();
 
         void clear();
@@ -57,9 +56,7 @@ namespace vray {
         bool onWindowResize(WindowResizeEvent& evt);
 
         void setClearColor(const glm::vec4& color);
-        void setCamera(CompCamera* camera);
         void setTestTexture(Texture* texture) { billboardSystem.setTexture(texture); }
-        CompCamera* getCamera() const { return camera; }
         Window* getCurrentWindow() const { return currentWindow; }
 
         void updateDebugPrimitives(const std::vector<float>& vertexData,
