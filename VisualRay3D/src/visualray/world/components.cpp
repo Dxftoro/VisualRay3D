@@ -56,6 +56,16 @@ namespace vray {
 		front = glm::normalize(front);
 	}
 
+	void CompCamera::calculateForward(glm::vec3 & forward) const {
+		float yaw = glm::radians(rotation.x);
+		forward = glm::vec3(cos(yaw), 0.0f, sin(yaw));
+	}
+
+	void CompCamera::calculateRight(glm::vec3& right) const {
+		float yaw = glm::radians(rotation.x);
+		right = glm::vec3(-sin(yaw), 0.0f, cos(yaw));
+	}
+
 	void CompHitbox::setSize(const glm::vec3& size) {
 		this->size = size;
 		dirty = true;

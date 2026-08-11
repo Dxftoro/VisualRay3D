@@ -93,6 +93,8 @@ namespace vray {
 		float getFar() const { return far; }
 
 		void calculateFront(glm::vec3& inFront) const;
+		void calculateForward(glm::vec3& inForward) const;
+		void calculateRight(glm::vec3& inRight) const;
 
 		bool isActive() const { return active; }
 		bool isViewDirty() const { return viewDirty; }
