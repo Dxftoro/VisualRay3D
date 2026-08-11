@@ -10,10 +10,11 @@ namespace vray {
 	private:
 		vray::Game* ctx;
 		CompCamera* camera;
-		glm::mat4 viewMatrix, projectionMatrix;
+		glm::mat4 viewMatrix, projectionMatrix, projectionViewCache;
 		bool initialCamera;
 
 		void updateView();
+		void updateProjectionViewCache();
 
 	public:
 		CameraSystem(vray::Game* _ctx);
@@ -28,6 +29,7 @@ namespace vray {
 
 		const glm::mat4& getViewMatrix();
 		const glm::mat4& getProjectionMatrix() const;
+		const glm::mat4& getProjectionViewCache();
 		CompCamera* getActiveCamera() const { return camera; }
 
 		CompCamera createCamera(float fovDegrees, float near, float far);

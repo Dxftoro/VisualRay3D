@@ -83,8 +83,7 @@ namespace vray {
 		program.validate();
 
 		uCameraPosition = program.getUniform("uCameraPosition");
-		uProjectionMatrix = program.getUniform("uProjectionMatrix");
-		uViewMatrix = program.getUniform("uViewMatrix");
+		uProjectionView = program.getUniform("uProjectionView");
 
 		//glm::vec3 position = { -10.0, 10.0, 0.0 };
 	}
@@ -92,8 +91,7 @@ namespace vray {
 	void BillboardSystem::update() {
 		program.use();
 		program.setUniform(uCameraPosition, cameraSystem->getActiveCamera()->getPosition());
-		program.setUniform(uProjectionMatrix, cameraSystem->getProjectionMatrix());
-		program.setUniform(uViewMatrix, cameraSystem->getViewMatrix());
+		program.setUniform(uProjectionView, cameraSystem->getProjectionViewCache());
 
 		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboardData& billboard) {
 			auto it = batchTable.find(billboard.getTexture());

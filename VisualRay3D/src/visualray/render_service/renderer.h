@@ -34,7 +34,7 @@ namespace vray {
                     uModelMatrix,
                     uNormalMatrix;
 
-        GlslUniform uDebugProjectionMatrix, uDebugViewMatrix;
+        GlslUniform uDebugProjectionViewMatrix;
         uint32_t debugVao, debugVbo, debugVertexCount;
 
         CompVisualMaterial material;

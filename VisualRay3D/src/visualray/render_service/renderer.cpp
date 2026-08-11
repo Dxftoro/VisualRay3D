@@ -94,8 +94,7 @@ namespace vray {
 			lightSystem.initBuffer(program);
 			uboMaterial = program.createUniformBuffer("MaterialData", &material, sizeof(material));
 
-			uDebugProjectionMatrix	= debugProgram.getUniform("projectionMatrix");
-			uDebugViewMatrix		= debugProgram.getUniform("viewMatrix");
+			uDebugProjectionViewMatrix	= debugProgram.getUniform("projectionViewMatrix");
 
 			billboardSystem.init(&cameraSystem);
 		}
@@ -152,8 +151,7 @@ namespace vray {
 			flush();
 
 			debugProgram.use();
-			debugProgram.setUniform(uDebugProjectionMatrix, cameraSystem.getProjectionMatrix());
-			debugProgram.setUniform(uDebugViewMatrix, cameraSystem.getViewMatrix());
+			debugProgram.setUniform(uDebugProjectionViewMatrix, cameraSystem.getProjectionViewCache());
 
 			glBindVertexArray(debugVao);
 			glDrawArrays(GL_LINES, 0, debugVertexCount);

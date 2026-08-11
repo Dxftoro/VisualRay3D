@@ -8,7 +8,8 @@ namespace vray {
 	CameraSystem::CameraSystem(vray::Game* _ctx)
 		: ctx(_ctx), initialCamera(true), camera(nullptr),
 		viewMatrix(glm::identity<glm::mat4>()),
-		projectionMatrix(glm::identity<glm::mat4>()) {
+		projectionMatrix(glm::identity<glm::mat4>()),
+		projectionViewCache(glm::identity<glm::mat4>()){
 	}
 
 	CameraSystem::~CameraSystem() {
@@ -81,6 +82,15 @@ namespace vray {
 		return projectionMatrix;
 	}
 
+	const glm::mat4& CameraSystem::getProjectionViewCache() {
+		if (camera->isViewDirty()) {
+			updateView();
+			updateProjectionViewCache();
+		}
+		
+		return projectionViewCache;
+	}
+
 	void CameraSystem::updateView() {
 		glm::vec3 front;
 		camera->calculateFront(front);
@@ -89,6 +99,10 @@ namespace vray {
 			camera->getPosition() + front,
 			glm::vec3(0.0f, 1.0f, 0.0f)
 		);
+	}
+
+	void CameraSystem::updateProjectionViewCache() {
+		projectionViewCache = projectionMatrix * viewMatrix;
 	}
 
 }

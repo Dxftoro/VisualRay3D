@@ -48,7 +48,7 @@ namespace vray {
 		Texture* texture;
 
 		GlslProgram program;
-		GlslUniform uCameraPosition, uProjectionMatrix, uViewMatrix;
+		GlslUniform uCameraPosition, uProjectionView;
 		
 		std::unordered_map<Texture*, BillboardBatch> batchTable;
 
