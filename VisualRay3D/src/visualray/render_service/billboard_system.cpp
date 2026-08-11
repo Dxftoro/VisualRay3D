@@ -1,5 +1,6 @@
 #include "vrpch.h"
 #include "billboard_system.h"
+#include "camera_system.h"
 #include "logservice.h"
 
 #include <glad/glad.h>
@@ -43,7 +44,11 @@ namespace vray {
 	//};
 
 	BillboardSystem::BillboardSystem(entt::registry& _world)
-		: world(_world), camera(nullptr), texture(nullptr), lastExisting(entt::null), somethingDeleted(false) {
+	:	world(_world),
+		cameraSystem(nullptr),
+		texture(nullptr),
+		lastExisting(entt::null),
+		somethingDeleted(false) {
 
 		billboardGroup = world.group<CompBillboardIndex>(entt::get<CompBillboardData>);
 		world.on_construct<CompBillboard>().connect<&BillboardSystem::onBillboardAdded>();
@@ -68,8 +73,8 @@ namespace vray {
 		world.erase<CompBillboardData>(entity);
 	}
 
-	void BillboardSystem::init(CompCamera* camera) {
-		this->camera = camera;
+	void BillboardSystem::init(CameraSystem* cameraSystem) {
+		this->cameraSystem = cameraSystem;
 
 		program.compileShader("shaders\\billboard.vert", ShaderType::VERTEX);
 		program.compileShader("shaders\\billboard.geom", ShaderType::GEOMETRY);
@@ -86,9 +91,9 @@ namespace vray {
 
 	void BillboardSystem::update() {
 		program.use();
-		program.setUniform(uCameraPosition, camera->getPosition());
-		program.setUniform(uProjectionMatrix, camera->getProjectionMatrix());
-		program.setUniform(uViewMatrix, camera->getViewMatrix());
+		program.setUniform(uCameraPosition, cameraSystem->getActiveCamera()->getPosition());
+		program.setUniform(uProjectionMatrix, cameraSystem->getProjectionMatrix());
+		program.setUniform(uViewMatrix, cameraSystem->getViewMatrix());
 
 		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboardData& billboard) {
 			auto it = batchTable.find(billboard.getTexture());

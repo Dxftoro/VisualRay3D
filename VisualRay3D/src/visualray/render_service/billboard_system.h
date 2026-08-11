@@ -10,6 +10,9 @@
 #define VR_RENDERER_BILLBOARD_NEW		SIZE_MAX
 
 namespace vray {
+
+	class CameraSystem;
+
 	/*	FIXME: GlslFlexibleBuffer resizing copies it's data to the HOST memory
 		which makes a recently spawned billboards to not render at all!
 
@@ -41,7 +44,7 @@ namespace vray {
 
 	class BillboardSystem {
 	private:
-		CompCamera* camera;
+		CameraSystem* cameraSystem;
 		Texture* texture;
 
 		GlslProgram program;
@@ -66,7 +69,7 @@ namespace vray {
 		BillboardSystem(entt::registry& world);
 		~BillboardSystem();
 
-		void init(CompCamera* camera) throw(GlslException);
+		void init(CameraSystem* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }
 		void setCamera(CompCamera* camera) { this->camera = camera; }
 		void update();
