@@ -3,7 +3,7 @@
 
 #include "thirdparty/EnTT/entt.hpp"
 #include "world/components.h"
-#include "world/systems.h"
+#include "render_service/camera_system.h"
 #include "window_service/window.h"
 #include "input_service/input_service.h"
 

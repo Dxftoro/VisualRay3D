@@ -36,7 +36,7 @@ namespace vray {
 
 		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable, CompTransformMatrices>);
 		
-		engineContext.renderer = new Renderer(engineContext.window.get(), gameContext.world);
+		engineContext.renderer = new Renderer(engineContext.window.get(), engineContext.cameraSystem, gameContext.world);
 		Renderer* renderer = engineContext.renderer;
 
 		engineContext.audio = new AlsoftAudio(gameContext.world);
@@ -48,7 +48,7 @@ namespace vray {
 		);
 
 		engineContext.physicsDebugSystem = new Rp3dDebugSystem(dynamic_cast<Rp3dPhysics*>(physics), renderer);
-		engineContext.cameraSystem = CameraSystem(renderer);
+		engineContext.cameraSystem = CameraSystem(this);
 
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_VENDOR));
 		VR_ENGINE_LOGINFO((const char*)glGetString(GL_RENDERER));
