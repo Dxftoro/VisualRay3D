@@ -1,5 +1,5 @@
 #pragma once
-#include "components.h"
+#include "../world/components.h"
 #include "kernel.h"
 
 namespace vray {

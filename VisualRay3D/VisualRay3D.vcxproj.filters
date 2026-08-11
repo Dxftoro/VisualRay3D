@@ -60,7 +60,7 @@
     <ClCompile Include="src\visualray\world\components.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\world\systems.cpp">
+    <ClCompile Include="src\visualray\render_service\camera_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\physics_service\rp3d_physics.cpp">
@@ -437,7 +437,7 @@
     <ClInclude Include="src\visualray\world\components.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\world\systems.h">
+    <ClInclude Include="src\visualray\render_service\camera_system.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\managers\resource.h">

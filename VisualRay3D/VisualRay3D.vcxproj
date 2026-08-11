@@ -54,7 +54,7 @@
     </ClCompile>
     <ClCompile Include="src\visualray\world\components.cpp" />
     <ClCompile Include="src\visualray\spatial_service\spatial_uniform_grid.cpp" />
-    <ClCompile Include="src\visualray\world\systems.cpp" />
+    <ClCompile Include="src\visualray\render_service\camera_system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\visualray.h" />
@@ -190,7 +190,7 @@
     <ClInclude Include="src\visualray\spatial_service\frustum.h" />
     <ClInclude Include="src\visualray\spatial_service\spatial.h" />
     <ClInclude Include="src\visualray\spatial_service\spatial_uniform_grid.h" />
-    <ClInclude Include="src\visualray\world\systems.h" />
+    <ClInclude Include="src\visualray\render_service\camera_system.h" />
     <ClInclude Include="src\visualray\spatial_service\volume.h" />
   </ItemGroup>
   <ItemGroup>
