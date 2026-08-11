@@ -8,13 +8,13 @@ namespace vray {
 	SpatialSystem::SpatialSystem(entt::registry& _world) : backend(nullptr), world(_world) {
 		backend = new UniformGrid(world, 5.0f, 1.0f);
 
-		world.on_construct<CompTransform>().connect<SpatialSystem::onEntityAdded>(this);
-		world.on_destroy<CompTransform>().connect<SpatialSystem::onEntityRemoved>(this);
+		world.on_construct<CompTransform>().connect<&SpatialSystem::onEntityAdded>(this);
+		world.on_destroy<CompTransform>().connect<&SpatialSystem::onEntityRemoved>(this);
 	}
 
 	SpatialSystem::~SpatialSystem() {
-		world.on_construct<CompTransform>().disconnect<SpatialSystem::onEntityAdded>(this);
-		world.on_destroy<CompTransform>().disconnect<SpatialSystem::onEntityRemoved>(this);
+		world.on_construct<CompTransform>().disconnect<&SpatialSystem::onEntityAdded>(this);
+		world.on_destroy<CompTransform>().disconnect<&SpatialSystem::onEntityRemoved>(this);
 
 		if (backend) delete backend;
 	}
