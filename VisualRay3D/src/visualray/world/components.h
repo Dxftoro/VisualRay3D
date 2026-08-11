@@ -73,33 +73,26 @@ namespace vray {
 	struct VRAYLIB CompCamera {
 	private:
 		bool active, viewDirty;
-
-		/* Observing data */
-		glm::mat4 viewMatrix, projectionMatrix;
-
-		/* Camera body data */
 		glm::vec3 position, rotation;
 		float fov, near, far;
 
 		void updateView();
 
 	public:
-		CompCamera(float fov, float width, float height, float near, float far);
+		CompCamera(float fov, float near, float far);
 		~CompCamera() {}
 
-		void setViewMatrix(const glm::mat4& viewMatrix);
-		void setProjectionMatrix(const glm::mat4& projectionMatrix) { this->projectionMatrix = projectionMatrix; }
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
-		void setProjectionBorders(float width, float height);
 		void setViewDirty(bool viewDirty) { this->viewDirty = viewDirty; }
 
-		const glm::mat4& getViewMatrix();
-		const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }
 		const glm::vec3& getPosition() const { return position; }
 		const glm::vec3& getRotation() const { return rotation; }
+		float getFov() const { return fov; }
+		float getNear() const { return near; }
+		float getFar() const { return far; }
 
-		void calculateFront(glm::vec3& inFront);
+		void calculateFront(glm::vec3& inFront) const;
 
 		bool isActive() const { return active; }
 		bool isViewDirty() const { return viewDirty; }

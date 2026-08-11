@@ -31,42 +31,25 @@ namespace vray {
 		sync = false;
 	}
 
-	CompCamera::CompCamera(float _fov, float width, float height, float _near, float _far)
-		:	fov(_fov), near(_near), far(_far),
-			projectionMatrix(glm::perspectiveFov(glm::radians(_fov), width, height, _near, _far)),
-			position(0.0f, 0.0f, 5.0f), rotation(0.0f), active(false), viewDirty(true) {
-
-		viewMatrix = glm::lookAt(position, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	CompCamera::CompCamera(float _fov, float _near, float _far)
+	:	fov(_fov), near(_near), far(_far),
+		position(0.0f, 0.0f, 5.0f),
+		rotation(0.0f),
+		active(false),
+		viewDirty(true) {
 	}
 
-	void CompCamera::updateView() {
-		glm::vec3 front;
-		calculateFront(front);
-		viewMatrix = glm::lookAt(position, position + front, glm::vec3(0.0f, 1.0f, 0.0f)); // !!!
-	}
-
-	void CompCamera::setViewMatrix(const glm::mat4& viewMatrix) {
-		this->viewMatrix = viewMatrix;
-	}
 	void CompCamera::setPosition(const glm::vec3& position) {
 		this->position = position;
 		this->viewDirty = true;
 	}
+
 	void CompCamera::setRotation(const glm::vec3& rotation) {
 		this->rotation = rotation;
 		this->viewDirty = true;
 	}
 
-	void CompCamera::setProjectionBorders(float width, float height) {
-		projectionMatrix = glm::perspectiveFov(glm::radians(fov), width, height, near, far);
-	}
-
-	const glm::mat4& CompCamera::getViewMatrix() {
-		updateView();
-		return viewMatrix;
-	}
-
-	void CompCamera::calculateFront(glm::vec3& front) {
+	void CompCamera::calculateFront(glm::vec3& front) const {
 		front.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
 		front.y = sin(glm::radians(rotation.y));
 		front.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
