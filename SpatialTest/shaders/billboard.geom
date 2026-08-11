@@ -7,7 +7,7 @@ layout (max_vertices = 4) out;
 in float vSize[];
 out vec2 TexCoords;
 
-uniform mat4 projectionView;
+uniform mat4 uProjectionView;
 uniform vec3 uCameraPosition;
 
 void main() {
@@ -19,19 +19,19 @@ void main() {
 	
 	float size =  vSize[0]; //3.0;
 
-	gl_Position = projectionView * vec4(current - (right - up) * size, 1.0);
+	gl_Position = uProjectionView * vec4(current - (right - up) * size, 1.0);
 	TexCoords = vec2(0.0, 0.0);
 	EmitVertex();
 
-	gl_Position = projectionView * vec4(current - (right + up) * size, 1.0);
+	gl_Position = uProjectionView * vec4(current - (right + up) * size, 1.0);
 	TexCoords = vec2(0.0, 1.0);
 	EmitVertex();
 
-	gl_Position = projectionView * vec4(current + (right + up) * size, 1.0);
+	gl_Position = uProjectionView * vec4(current + (right + up) * size, 1.0);
 	TexCoords = vec2(1.0, 0.0);
 	EmitVertex();
 
-	gl_Position = projectionView * vec4(current + (right - up) * size, 1.0);
+	gl_Position = uProjectionView * vec4(current + (right - up) * size, 1.0);
 	TexCoords = vec2(1.0, 1.0);
 	EmitVertex();
 
