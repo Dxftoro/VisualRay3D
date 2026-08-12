@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include "../logservice.h"
 
 namespace vray {
 
@@ -13,7 +14,7 @@ namespace vray {
 		R(*sign)(void*, Args...);
 
 	public:
-		template <typename F>
+		template <typename F, typename = std::enable_if_t<!std::is_same_v<std::decay_t<F>, FunctionRef>>>
 		FunctionRef(F&& func)
 		:	callable(const_cast<void*>(static_cast<const void*>(&func))),
 			sign([](void* clb, Args... args) -> R {
