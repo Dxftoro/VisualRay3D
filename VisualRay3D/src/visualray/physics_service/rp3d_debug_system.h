@@ -10,6 +10,7 @@ namespace vray {
 		Rp3dPhysics* physics;
 		Renderer* renderer;
 
+		bool enabled;
 		unsigned int i;
 		std::vector<float> vertexData;
 		std::vector<int> elements;

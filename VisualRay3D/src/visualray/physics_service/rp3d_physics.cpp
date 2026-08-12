@@ -94,7 +94,7 @@ namespace vray {
 		world.on_destroy<CompHitbox>().connect<&Rp3dPhysics::onEntityRemoved>(this);
 		world.on_destroy<CompTransform>().connect<&Rp3dPhysics::onEntityRemoved>(this);
 		
-		physicsWorld->setIsDebugRenderingEnabled(true);
+		physicsWorld->setIsDebugRenderingEnabled(false);
 
 		rp3d::DebugRenderer& debugRenderer = physicsWorld->getDebugRenderer();
 
@@ -152,7 +152,7 @@ namespace vray {
 				body.body->setTransform({
 					glmToVec3(transform.getPosition()), glmToQuat(transform.getRotation())
 				});
-
+				
 				transform.setSync(true);
 			}
 
