@@ -12,6 +12,7 @@ namespace vray {
 		CompCamera* camera;
 		glm::mat4 viewMatrix, projectionMatrix, projectionViewCache;
 		bool initialCamera;
+		bool projectionViewDirty;
 
 		void updateView();
 		void updateProjectionViewCache();
@@ -33,6 +34,8 @@ namespace vray {
 		CompCamera* getActiveCamera() const { return camera; }
 
 		CompCamera createCamera(float fovDegrees, float near, float far);
+
+		void resetDirty();
 	};
 
 }

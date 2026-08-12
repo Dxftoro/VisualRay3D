@@ -88,10 +88,10 @@ namespace vray {
 		//glm::vec3 position = { -10.0, 10.0, 0.0 };
 	}
 
-	void BillboardSystem::update() {
+	void BillboardSystem::update(const glm::mat4& projectionViewMatrix) {
 		program.use();
 		program.setUniform(uCameraPosition, cameraSystem->getActiveCamera()->getPosition());
-		program.setUniform(uProjectionView, cameraSystem->getProjectionViewCache());
+		program.setUniform(uProjectionView, projectionViewMatrix);
 
 		billboardGroup.each([this](entt::entity, CompBillboardIndex& billboardIndex, CompBillboardData& billboard) {
 			auto it = batchTable.find(billboard.getTexture());

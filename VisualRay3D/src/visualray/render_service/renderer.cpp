@@ -141,6 +141,8 @@ namespace vray {
 	}
 
 	void Renderer::update(float deltaTime) {
+		const glm::mat4& projectionViewMatrix = cameraSystem.getProjectionViewCache();
+
 		try {
 			program.use();
 			program.setUniform(uProjectionMatrix, cameraSystem.getProjectionMatrix());
@@ -151,12 +153,12 @@ namespace vray {
 			flush();
 
 			debugProgram.use();
-			debugProgram.setUniform(uDebugProjectionViewMatrix, cameraSystem.getProjectionViewCache());
+			debugProgram.setUniform(uDebugProjectionViewMatrix, projectionViewMatrix);
 
 			glBindVertexArray(debugVao);
 			glDrawArrays(GL_LINES, 0, debugVertexCount);
 
-			billboardSystem.update();
+			billboardSystem.update(projectionViewMatrix);
 		}
 		catch (std::runtime_error exc) {
 			VR_ENGINE_LOGERROR(exc.what());

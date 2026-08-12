@@ -13,8 +13,9 @@ namespace vray {
 
 		frustumCache.position = glm::vec3(0.0f);
 		frustumCache.far = 300.0f;
-		std::fill_n(frustumCache.planes, 6, 0.0f);
-		std::fill_n(frustumCache.corners, 8, 0.0f);
+
+		for (int i = 0; i < 6; i++) frustumCache.planes[i] = glm::vec4(0.0f);
+		for (int i = 0; i < 8; i++) frustumCache.corners[i] = glm::vec3(0.0f);
 	}
 
 	void RenderSubmitSystem::update(SpatialSystem& spatialSystem, CameraSystem& cameraSystem) {
@@ -22,6 +23,13 @@ namespace vray {
 		if (cameraSystem.getActiveCamera()->isViewDirty()) {
 			updateFrustum(cameraSystem, projectionView);
 		}
+
+		//auto visibleView = world.view<CompTransform, CompRenderable, CompTransformMatrices>();
+		//visibleView.each([this]
+		//(entt::entity entity, CompTransform& transform, CompRenderable& renderable, CompTransformMatrices& matrices) {
+		//	RenderRequest request(&renderable, &transform, &matrices, 4U);
+		//	renderer->submit(std::move(request));
+		//});
 
 		spatialSystem.queryFrustum(frustumCache, [this](entt::entity entity) {
 			if (!world.all_of<CompTransform, CompRenderable, CompTransformMatrices>(entity)) return;

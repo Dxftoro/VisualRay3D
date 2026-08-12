@@ -103,6 +103,11 @@ namespace vray {
 
 	void CameraSystem::updateProjectionViewCache() {
 		projectionViewCache = projectionMatrix * viewMatrix;
+		projectionViewDirty = false;
+	}
+
+	void CameraSystem::resetDirty() {
+		projectionViewDirty = true;
 	}
 
 }

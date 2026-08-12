@@ -71,7 +71,7 @@ namespace vray {
 
 		void init(CameraSystem* camera) throw(GlslException);
 		void setTexture(Texture* texture) { this->texture = texture; }
-		void update();
+		void update(const glm::mat4& projectionViewMatrix);
 		
 		BatchTableIterator createBatch(Texture* texture);
 	};
