@@ -10,18 +10,21 @@ namespace vray {
 		this->position = position;
 		dirty = true;
 		sync = false;
+		dspatial = true;
 	}
 
 	void CompTransform::setRotation(const glm::vec3& rotation) {
 		this->rotation = glm::quat(rotation);
 		dirty = true;
 		sync = false;
+		dspatial = true;
 	}
 
 	void CompTransform::setRotation(const glm::quat& rotation) {
 		this->rotation = rotation;
 		dirty = true;
 		sync = false;
+		dspatial = true;
 	}
 
 	void CompTransform::setSize(const glm::vec3& size) { 
@@ -29,6 +32,7 @@ namespace vray {
 		this->size = size;
 		dirty = true;
 		sync = false;
+		dspatial = true;
 	}
 
 	CompCamera::CompCamera(float _fov, float _near, float _far)

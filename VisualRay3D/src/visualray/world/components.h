@@ -17,7 +17,7 @@ namespace vray {
 	struct VRAYLIB CompTransform {
 	private:
 		/* TODO: Remake as bit-mask */
-		mutable bool dirty, sync;
+		mutable bool dirty, sync, dspatial;
 
 		glm::vec3 position;
 		glm::quat rotation;
@@ -39,14 +39,16 @@ namespace vray {
 		const glm::vec3& getPosition() const { return position; }
 		const glm::quat& getRotation() const { return rotation; }
 		const glm::vec3& getSize() const { return size; }
-		bool isDirty() const { return dirty; };
+		bool isDirty() const { return dirty; }
 		bool isSync() const { return sync; }
+		bool isDSpatial() const { return dspatial; }
 
 		void setPosition(const glm::vec3& position);
 		void setRotation(const glm::vec3& rotation);
 		void setRotation(const glm::quat& rotation);
 		void setSize(const glm::vec3& size);
 		void setDirty(bool dirty) { this->dirty = dirty; }
+		void setDSpatial(bool dspatial) { this->dspatial = dspatial; }
 		void setSync(bool sync) { this->sync = sync; };
 	};
 
