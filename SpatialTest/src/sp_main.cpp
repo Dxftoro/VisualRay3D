@@ -6,6 +6,10 @@
 #include "controllers/player_controller.h"
 #include "components.h"
 
+struct CompPlayerTag {
+	bool dummy;
+};
+
 SpatialTest::SpatialTest()
 :	Game(vray::WindowParams("Spatial test", 1290, 723)),
 	engine(getEngineContext()),
@@ -23,6 +27,9 @@ SpatialTest::SpatialTest()
 	}
 
 	player = game.world.create();
+
+	game.world.emplace<CompPlayerTag>(player);
+
 	vray::CompTransform playerTransform;
 	playerTransform.setPosition({ 0.0f, 40.0f, 0.0f });
 
@@ -34,7 +41,7 @@ SpatialTest::SpatialTest()
 
 	camera = &game.world.emplace<vray::CompCamera>(
 		player,
-		engine.cameraSystem.createCamera(100.0f, 0.1f, 300.0f)
+		engine.cameraSystem.createCamera(100.0f, 0.1f, 70.0f)
 	);
 
 	engine.cameraSystem.setActiveCamera(camera);
@@ -44,15 +51,19 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnMap(maps.get("light"), { 0.0f, 1.0f, 1.0f });
+	spawner->spawnMap(maps.get("heavy"), { 0.0f, 1.0f, 1.0f });
 
 	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
 		spawns.push_back(entity);
 	});
 
+	// 2774 containts CompMapPart on heavy
+	//
+	//size_t partCount = game.world.view<vray::CompHitbox>().size();
+	//VR_LOGIMPORTANT(STR(partCount));
+	//__debugbreak();
+
 	respawn();
-	//spawner->spawnPlatformGrid({ 0.0f, 0.0f, 0.0f }, { 2.0f, 0.3 }, 20);
-	//spawner->spawnLight({ 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
 }
 
 SpatialTest::~SpatialTest() {
