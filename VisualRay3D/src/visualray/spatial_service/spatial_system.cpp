@@ -6,7 +6,7 @@
 namespace vray {
 
 	SpatialSystem::SpatialSystem(entt::registry& _world) : backend(nullptr), world(_world) {
-		backend = new UniformGrid(world, 5.0f, 1.0f);
+		backend = new UniformGrid(world, 30.0f, 1.0f);
 
 		world.on_construct<CompTransform>().connect<&SpatialSystem::onEntityAdded>(this);
 		world.on_destroy<CompTransform>().connect<&SpatialSystem::onEntityRemoved>(this);
@@ -20,7 +20,11 @@ namespace vray {
 	}
 
 	void SpatialSystem::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback) {
+		auto start = std::chrono::high_resolution_clock::now();
 		backend->queryFrustum(frustum, callback);
+		auto end = std::chrono::high_resolution_clock::now();
+		auto micros = std::chrono::duration_cast<std::chrono::duration<float>>(end - start).count();
+		VR_ENGINE_LOGIMPORTANT("Time elapsed: " + STR(micros) + "s ");
 	}
 
 	void SpatialSystem::queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback) {
@@ -40,9 +44,17 @@ namespace vray {
 	}
 
 	void SpatialSystem::update() {
-		world.view<CompTransform>().each([this](entt::entity entity, CompTransform& transform) {
-			if (transform.isDirty()) backend->update(entity);
+		size_t i = 0;
+
+		world.view<CompTransform>().each([this, &i](entt::entity entity, CompTransform& transform) {
+			if (transform.isDSpatial()) {
+				backend->update(entity);
+				i++;
+				transform.setDSpatial(false);
+			}
 		});
+
+		VR_ENGINE_LOGIMPORTANT("Backend calls: " + STR(i));
 	}
 
 }

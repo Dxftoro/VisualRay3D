@@ -136,12 +136,18 @@ namespace vray {
 		Volume min = calculateVolume(bounds.min);
 		Volume max = calculateVolume(bounds.max);
 
+		size_t cellCount = (size_t)(max.x - min.x + 1) * (max.y - min.y + 1) * (max.z - min.z + 1);
+		size_t accepted = 0;
+		//assert(cellCount < 1'000'000 && "UniformGrid::queryFrustum: suspiciously huge cell range, check frustum data!");
+
 		for (int x = min.x; x <= max.x; x++) {
 			for (int y = min.y; y <= max.y; y++) {
 				for (int z = min.z; z <= max.z; z++) {
 					Volume volume(x, y, z);
 					auto it = cells.find(volume);
 					if (it == cells.end()) continue;
+
+					accepted++;
 
 					for (entt::entity entity : it->second) {
 						auto& transform = world.get<CompTransform>(entity);
@@ -154,6 +160,8 @@ namespace vray {
 				}
 			}
 		}
+
+		VR_ENGINE_LOGINFO("Cell count per query: " + STR(cellCount) + " accepted: " + STR(accepted));
 	}
 
 }
