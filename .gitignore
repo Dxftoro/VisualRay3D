@@ -10,6 +10,8 @@ Tests/
 SpatialTest/models/
 SpatialTest/sounds/
 SpatialTest/textures/
+SpatialTest/maps/test.txt
+SpatialTest/imgui.ini
 
 # Files
 *.user
