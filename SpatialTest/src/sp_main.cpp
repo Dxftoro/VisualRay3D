@@ -51,7 +51,7 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnMap(maps.get("heavy"), { 0.0f, 1.0f, 1.0f });
+	spawner->spawnMap(maps.get("light"), { 0.0f, 1.0f, 1.0f });
 
 	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
 		spawns.push_back(entity);
