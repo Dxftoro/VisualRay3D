@@ -19,12 +19,12 @@ namespace vray {
 		if (backend) delete backend;
 	}
 
-	void SpatialSystem::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback) {
-		auto start = std::chrono::high_resolution_clock::now();
+	void SpatialSystem::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity, CompTransform&)> callback) {
+		//auto start = std::chrono::high_resolution_clock::now();
 		backend->queryFrustum(frustum, callback);
-		auto end = std::chrono::high_resolution_clock::now();
-		auto micros = std::chrono::duration_cast<std::chrono::duration<float>>(end - start).count();
-		VR_ENGINE_LOGIMPORTANT("Time elapsed: " + STR(micros) + "s ");
+		//auto end = std::chrono::high_resolution_clock::now();
+		//auto micros = std::chrono::duration_cast<std::chrono::duration<float>>(end - start).count();
+		//VR_ENGINE_LOGIMPORTANT("Time elapsed: " + STR(micros) + "s ");
 	}
 
 	void SpatialSystem::queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback) {
@@ -54,7 +54,7 @@ namespace vray {
 			}
 		});
 
-		VR_ENGINE_LOGIMPORTANT("Backend calls: " + STR(i));
+		//VR_ENGINE_LOGIMPORTANT("Backend calls: " + STR(i));
 	}
 
 }

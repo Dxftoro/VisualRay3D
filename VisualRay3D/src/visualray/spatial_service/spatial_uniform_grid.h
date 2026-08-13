@@ -28,7 +28,7 @@ namespace vray {
 		virtual void insert(entt::entity entity) override;
 		virtual void remove(entt::entity entity) override;
 		virtual void update(entt::entity entity) override;
-		virtual void queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback) override;
+		virtual void queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity, CompTransform&)> callback) override;
 		virtual void queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback) override;
 		virtual void querySphere(const glm::vec3& position, float radius, FunctionRef<void(entt::entity)> callback) override;
 		

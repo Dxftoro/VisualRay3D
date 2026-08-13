@@ -131,7 +131,7 @@ namespace vray {
 		}
 	}
 
-	void UniformGrid::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity)> callback) {
+	void UniformGrid::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity, CompTransform&)> callback) {
 		Aabb bounds = calculateFrustumAabb(frustum.corners);
 		Volume min = calculateVolume(bounds.min);
 		Volume max = calculateVolume(bounds.max);
@@ -154,14 +154,14 @@ namespace vray {
 						const glm::vec3& position = transform.getPosition();
 						const glm::vec3& size = transform.getSize();
 						if (intersectsFrustum(frustum, calculateAabb(position, size))) {
-							callback(entity);
+							callback(entity, transform);
 						}
 					}
 				}
 			}
 		}
 
-		VR_ENGINE_LOGINFO("Cell count per query: " + STR(cellCount) + " accepted: " + STR(accepted));
+		//VR_ENGINE_LOGINFO("Cell count per query: " + STR(cellCount) + " accepted: " + STR(accepted));
 	}
 
 }
