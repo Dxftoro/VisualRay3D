@@ -51,7 +51,7 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnMap(maps.get("light"), { 0.0f, 1.0f, 1.0f });
+	spawner->spawnMap(maps.get("test"), { 0.0f, 1.0f, 1.0f });
 
 	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
 		spawns.push_back(entity);
@@ -149,6 +149,29 @@ void SpatialTest::setupCommands() {
 		}
 		engine.physicsDebugSystem->setEnabled(enabled);
 	});
+
+	console->addCommand("map", [this](const std::vector<std::string>& args) {
+		if (args.size() <= 1) {
+			console->write("No such args!");
+			return;
+		}
+
+		if (!game.world.view<CompMapSpawn>().empty()) {
+			game.world.view<CompMapSpawn>().each([this](entt::entity entity, CompMapSpawn& spawn) {
+				game.world.destroy(entity);
+			});
+
+			spawns.clear();
+		}
+
+		spawner->spawnMap(maps.get(args[1]), {0.0f, 1.0f, 1.0f});
+
+		game.world.view<CompMapSpawn>().each([this](entt::entity entity, CompMapSpawn& spawn) {
+			spawns.push_back(entity);
+		});
+
+		respawn();
+	});
 }
 
 void SpatialTest::loadAssets() {
@@ -157,6 +180,7 @@ void SpatialTest::loadAssets() {
 	game.textures.load("textures/default.png", "default");
 	maps.load("maps/light.txt", "light");
 	maps.load("maps/heavy.txt", "heavy");
+	maps.load("maps/test.txt", "test");
 }
 
 VR_IMPLEMENT_GAME(SpatialTest);
