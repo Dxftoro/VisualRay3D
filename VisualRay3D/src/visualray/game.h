@@ -1,13 +1,11 @@
 #pragma once
 #include "kernel.h"
 
-#include "thirdparty/EnTT/entt.hpp"
-#include "world/components.h"
 #include "render_service/camera_system.h"
 #include "window_service/window.h"
 #include "input_service/input_service.h"
+#include "spatial_service/spatial_system.h"
 
-#include "event_service/event.h"
 #include "event_service/game_events.h"
 #include "managers/resource_manager.h"
 
@@ -37,13 +35,14 @@ namespace vray {
 
 	struct VRAYLIB GameContext {
 		entt::registry world;
+		SpatialSystem space;
 		ResourceManager<Mesh> meshes;
 		ResourceManager<Texture> textures;
 		ResourceManager<Sound> sounds;
 
 		GameContext(const GameContext&) = delete;
 		GameContext& operator=(const GameContext&) = delete;
-		GameContext() = default;
+		GameContext() : space(world) {}
 	};
 
 	class VRAYLIB Game {
@@ -58,12 +57,7 @@ namespace vray {
 		GameContext gameContext;
 
 		bool onWindowClosing(WindowCloseEvent& evt);
-		void renderSubmit();
 		void onEventInternal(Event& evt);
-
-		using VisibleGroup = decltype(gameContext.world.group<CompTransform>(
-				entt::get<CompRenderable, CompTransformMatrices>));
-		VisibleGroup visibleGroup;
 
 	public:
 		Game(const WindowParams& windowParams);

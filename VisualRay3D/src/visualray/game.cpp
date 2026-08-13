@@ -4,9 +4,10 @@
 #include <GLFW/glfw3.h>
 #include <reactphysics3d/reactphysics3d.h>
 
+#include "render_service/render_submit_system.h"
+
 #include "event_service/game_events.h"
 #include "layer_service/debugger.h"
-#include "render_service/render_request.h"
 
 #include "audio_service/alsoft_audio.h"
 #include "physics_service/rp3d_physics.h"
@@ -36,8 +37,6 @@ namespace vray {
 
 		engineContext.inputService = InputService(engineContext.window.get());
 		engineContext.debugger = new Debugger(engineContext.window.get());
-
-		visibleGroup = gameContext.world.group<CompTransform>(entt::get<CompRenderable, CompTransformMatrices>);
 		
 		engineContext.renderer = new Renderer(engineContext.window.get(), engineContext.cameraSystem, gameContext.world);
 		Renderer* renderer = engineContext.renderer;
@@ -80,6 +79,8 @@ namespace vray {
 		running = true;
 		VR_ENGINE_LOGINFO("Game application started running!");
 
+		RenderSubmitSystem renderSubmitSystem(engineContext.renderer, gameContext.world);
+
 		sleeping::beginTimerPrecision(1);
 		using sleeping::ms;
 
@@ -104,7 +105,9 @@ namespace vray {
 			else frameNumber++;
 
 			this->update();
-			this->renderSubmit();
+
+			gameContext.space.update();
+			renderSubmitSystem.update(gameContext.space, engineContext.cameraSystem);
 
 			engineContext.audio->update();
 
@@ -114,6 +117,8 @@ namespace vray {
 			engineContext.window->onUpdate();
 			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
+
+			//engineContext.cameraSystem.resetDirty();
 
 			sleeping::sleepUntil(std::chrono::time_point_cast<std::chrono::steady_clock::duration>(frameEnd));
 		}
@@ -127,14 +132,6 @@ namespace vray {
 		running = false;
 		engineContext.window->setClosed(true);
 		return true;
-	}
-
-	void Game::renderSubmit() {
-		visibleGroup.each([this]
-		(entt::entity entity, CompTransform& transform, CompRenderable& renderable, CompTransformMatrices& matrices) {
-			RenderRequest request(&renderable, &transform, &matrices, 4U);
-			engineContext.renderer->submit(std::move(request));
-		});
 	}
 
 	void Game::onEventInternal(Event& evt) {
