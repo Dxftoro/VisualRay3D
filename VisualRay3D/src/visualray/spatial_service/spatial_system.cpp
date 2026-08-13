@@ -57,4 +57,9 @@ namespace vray {
 		//VR_ENGINE_LOGIMPORTANT("Backend calls: " + STR(i));
 	}
 
+	void SpatialSystem::destroy(entt::entity entity) {
+		backend->remove(entity);
+		world.destroy(entity);
+	}
+
 }
