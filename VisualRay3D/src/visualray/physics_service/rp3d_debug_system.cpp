@@ -15,10 +15,6 @@ namespace vray {
 	}
 
 	void Rp3dDebugSystem::update(bool enabled) {
-		if (enabled) return;
-
-		pushUserVertexData();
-
 		if (this->enabled) {
 			rp3d::DebugRenderer& debugRenderer = physics->getDebugRenderer();
 			debugRenderer.computeDebugRenderingPrimitives(*physics->getPhysicsWorld());
@@ -42,6 +38,7 @@ namespace vray {
 			debugRenderer.reset();
 		}
 
+		pushUserVertexData();
 		renderer->updateDebugPrimitives(vertexData, elements);
 
 		vertexData.clear();
