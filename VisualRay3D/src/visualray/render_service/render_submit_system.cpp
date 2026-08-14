@@ -31,11 +31,13 @@ namespace vray {
 		//	renderer->submit(std::move(request));
 		//});
 
-		spatialSystem.queryFrustum(frustumCache, [this](entt::entity entity) {
-			if (!world.all_of<CompTransform, CompRenderable, CompTransformMatrices>(entity)) return;
-			auto [transform, renderable, matrices] = world.get<CompTransform, CompRenderable, CompTransformMatrices>(entity);
-			RenderRequest request(&renderable, &transform, &matrices, 4U);
-			renderer->submit(std::move(request));
+		spatialSystem.queryFrustum(frustumCache, [this](entt::entity entity, CompTransform& transform) {
+			auto [renderable, matrices] = world.try_get<CompRenderable, CompTransformMatrices>(entity);
+
+			if (renderable) {
+				RenderRequest request(renderable, &transform, matrices, 4U);
+				renderer->submit(std::move(request));
+			}
 		});
 	}
 

@@ -53,7 +53,7 @@ namespace vray {
 	}
 
 	void onTransformRemoved(entt::registry& world, const entt::entity entity) {
-		world.erase<CompTransformMatrices>(entity);
+		world.remove<CompTransformMatrices>(entity);
 	}
 
 	Renderer::Renderer(Window* _currentWindow, CameraSystem& cameraSystem, entt::registry& world)

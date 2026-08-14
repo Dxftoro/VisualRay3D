@@ -40,7 +40,7 @@ namespace vray {
 	}
 
 	void SpatialSystem::onEntityRemoved(entt::registry& world, entt::entity entity) {
-		backend->remove(entity);
+		//backend->remove(entity);
 	}
 
 	void SpatialSystem::update() {
