@@ -72,21 +72,24 @@ void PlayerController::update(float deltaTime) {
 
 	/* Detecting ground */
 	const glm::vec3& position = game.world.get<vray::CompTransform>(player).getPosition();
-	auto result = engine.physics->raycastFront(position + glm::vec3(0.0f, 2.0f, 0.0f), position);
+	auto result = engine.physics->raycastFront(position + glm::vec3(0.0f, 0.5f, 0.0f), position);
 	onGround = (result != std::nullopt);
+
+	vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
 
 	/* Handling keys */
 	handleKeys(deltaTime);
+	handleWalls(position);
+
+	glm::vec3 newPosition = position + velocity * deltaTime;
+	transform.setPosition(newPosition);
 }
 
 void PlayerController::handleKeys(float deltaTime) {
 	vray::EngineContext& engine = ctx->getEngineContext();
 	vray::GameContext& game = ctx->getGameContext();
 	vray::InputService& inputService = engine.inputService;
-	vray::CompTransform& transform = game.world.get<vray::CompTransform>(player);
 	vray::CompCamera* camera = &game.world.get<vray::CompCamera>(player);
-
-	glm::vec3 position = transform.getPosition();
 
 	float forwardMove = 0.0f, sideMove = 0.0f;
 	if (inputService.keyPressed(VR_KEY_W)) forwardMove += 1.0f;
@@ -127,9 +130,23 @@ void PlayerController::handleKeys(float deltaTime) {
 
 	playerSpeed = glm::length(velocity);
 	velocity.y = verticalVelocity;
-	position += velocity * deltaTime;
+}
 
-	transform.setPosition(position);
+void PlayerController::handleWalls(const glm::vec3& position) {
+	vray::EngineContext& engine = ctx->getEngineContext();
+
+	glm::vec3 start = position + glm::vec3(0.0f, 0.5f, 0.0f);
+	glm::vec3 end = start + glm::normalize(velocity) * 0.5f;
+
+	auto result = engine.physics->raycastFront(
+		start, end
+	);
+
+	if (result) {
+		velocity -= result->hitNormal * glm::dot(velocity, result->hitNormal);
+		//VR_LOGINFO("DASDASDASDASDASDASD");
+		//engine.physicsDebugSystem->pushDebugLine(start, result->hitPoint);
+	}
 }
 
 void PlayerController::moveTo(const glm::vec3& position) {

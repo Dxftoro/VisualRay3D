@@ -98,6 +98,21 @@ void SpatialTest::onEvent(vray::Event& evt) {
 		return true;
 	});
 
+	dispatcher.fire<vray::MouseClickEvent>([this](vray::MouseClickEvent evt) {
+		glm::vec3 cameraFront;
+		camera->calculateFront(cameraFront);
+		glm::vec3 start = camera->getPosition();
+		auto result = engine.physics->raycastFront(
+			start, start + cameraFront * 20.0f
+		);
+
+		if (result) {
+			engine.physicsDebugSystem->pushDebugLine(start, result->hitPoint);
+		}
+
+		return true;
+	});
+
 	dispatcher.fire<vray::KeyPressedEvent>([this](vray::KeyPressedEvent evt) {
 		if (evt.getKeyCode() == VR_KEY_ESCAPE) {
 			console->setOpened(!console->isOpened());

@@ -29,6 +29,7 @@ private:
 	float gravity = 20.32f;
 
 	void handleKeys(float deltaTime);
+	void handleWalls(const glm::vec3& position);
 
 public:
 	PlayerController(vray::Game* ctx, entt::entity player);
