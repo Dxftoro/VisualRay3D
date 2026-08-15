@@ -24,6 +24,9 @@ namespace vray {
 		void querySphere(const glm::vec3& position, float radius, FunctionRef<void(entt::entity)> callback);
 
 		void destroy(entt::entity entity);
+
+		template <typename T>
+		T getBackend() const { return dynamic_cast<T*>(backend); }
 	};
 
 }
