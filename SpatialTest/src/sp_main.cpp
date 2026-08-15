@@ -93,7 +93,7 @@ void SpatialTest::onEvent(vray::Event& evt) {
 
 	vray::EventDispatcher dispatcher(evt);
 	dispatcher.fire<vray::KeyPressedEvent>([this](vray::KeyPressedEvent evt) {
-		if (evt.getKeyCode() != VR_KEY_R) return false;
+		if (evt.getKeyCode() != VR_KEY_R || console->isOpened()) return false;
 		respawn();
 		return true;
 	});

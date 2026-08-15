@@ -15,7 +15,7 @@ namespace vray {
 	private:
 		entt::dense_map<Volume, std::vector<entt::entity>, VolumeHash> cells;
 		entt::registry& world;
-		float cellSize, margin;
+		float cellSize;
 
 		Volume calculateVolume(const glm::vec3& point) const;
 		Aabb calculateAabb(const glm::vec3& position, const glm::vec3& size) const;
@@ -23,7 +23,7 @@ namespace vray {
 		bool intersectsFrustum(const Frustum& frustum, const Aabb& aabb) const;
 
 	public:
-		UniformGrid(entt::registry& world, float cellSize, float margin);
+		UniformGrid(entt::registry& world, float cellSize);
 
 		virtual void insert(entt::entity entity) override;
 		virtual void remove(entt::entity entity) override;
@@ -37,7 +37,6 @@ namespace vray {
 		void insert(entt::entity entity, const Volume& volume);
 
 		float getCellSize() const { return cellSize; }
-		float getMargin() const { return margin; }
 	};
 
 }

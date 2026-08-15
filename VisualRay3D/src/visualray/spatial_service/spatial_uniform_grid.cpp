@@ -46,10 +46,9 @@ namespace vray {
 		return true;
 	}
 
-	UniformGrid::UniformGrid(entt::registry& _world, float _cellSize, float _margin)
+	UniformGrid::UniformGrid(entt::registry& _world, float _cellSize)
 	:	world(_world),
-		cellSize(_cellSize),
-		margin(_margin) {
+		cellSize(_cellSize) {
 	}
 
 	void UniformGrid::insert(entt::entity entity, const Volume& volume) {
