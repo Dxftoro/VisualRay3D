@@ -6,6 +6,7 @@
     <ClCompile Include="src\spawner.cpp" />
     <ClCompile Include="src\controllers\player_controller.cpp" />
     <ClCompile Include="src\map\map.cpp" />
+    <ClCompile Include="src\controllers\input_wrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\controllers\free_camera_controller.h" />
@@ -16,6 +17,7 @@
     <ClInclude Include="src\map\map.h" />
     <ClInclude Include="src\map\btype.h" />
     <ClInclude Include="src\components.h" />
+    <ClInclude Include="src\controllers\input_wrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\billboard.frag" />

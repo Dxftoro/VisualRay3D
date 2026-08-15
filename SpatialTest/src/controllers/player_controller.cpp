@@ -2,7 +2,7 @@
 #include <visualray.h>
 
 PlayerController::PlayerController(vray::Game* _ctx, entt::entity _player)
-	: ctx(_ctx), player(_player) {
+	: ctx(_ctx), wrapper(_ctx), player(_player) {
 }
 
 void PlayerController::calculateDirections(vray::CompCamera* camera) {
@@ -88,14 +88,13 @@ void PlayerController::update(float deltaTime) {
 void PlayerController::handleKeys(float deltaTime) {
 	vray::EngineContext& engine = ctx->getEngineContext();
 	vray::GameContext& game = ctx->getGameContext();
-	vray::InputService& inputService = engine.inputService;
 	vray::CompCamera* camera = &game.world.get<vray::CompCamera>(player);
 
 	float forwardMove = 0.0f, sideMove = 0.0f;
-	if (inputService.keyPressed(VR_KEY_W)) forwardMove += 1.0f;
-	if (inputService.keyPressed(VR_KEY_S)) forwardMove -= 1.0f;
-	if (inputService.keyPressed(VR_KEY_A)) sideMove -= 1.0f;
-	if (inputService.keyPressed(VR_KEY_D)) sideMove += 1.0f;
+	if (wrapper.keyPressed(VR_KEY_W)) forwardMove += 1.0f;
+	if (wrapper.keyPressed(VR_KEY_S)) forwardMove -= 1.0f;
+	if (wrapper.keyPressed(VR_KEY_A)) sideMove -= 1.0f;
+	if (wrapper.keyPressed(VR_KEY_D)) sideMove += 1.0f;
 
 	calculateDirections(camera);
 	
@@ -120,7 +119,7 @@ void PlayerController::handleKeys(float deltaTime) {
 		airAccelerate(wishDir, wishSpeed, deltaTime);
 	}
 
-	if (inputService.keyPressed(VR_KEY_SPACE) && onGround) {
+	if (wrapper.keyPressed(VR_KEY_SPACE) && onGround) {
 		jump();
 	}
 	if (!onGround) {

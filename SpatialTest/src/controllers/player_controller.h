@@ -2,6 +2,8 @@
 #include <visualray/thirdparty/glm/glm.hpp>
 #include <visualray/thirdparty/EnTT/entt.hpp>
 
+#include "input_wrapper.h"
+
 namespace vray {
 	struct CompCamera;
 	class Game;
@@ -10,6 +12,7 @@ namespace vray {
 class PlayerController {
 private:
 	vray::Game* ctx;
+	InputWrapper wrapper;
 	entt::entity player;
 
 	glm::vec3 velocity = glm::vec3(0.0f);
