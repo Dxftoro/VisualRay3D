@@ -85,6 +85,11 @@ namespace vray {
 		}
 	}
 
+	void Rp3dPhysics::onBodyRemoved(entt::registry& world, entt::entity entity) {
+		auto& rp3dBody = world.get<CompRp3dBody>(entity);
+		physicsWorld->destroyRigidBody(rp3dBody.body);
+	}
+
 	Rp3dPhysics::Rp3dPhysics(entt::registry& _world) : eventListener(nullptr), world(_world) {
 		dynamicGroup = world.group<CompRp3dBody>(entt::get<CompHitbox, CompTransform>);
 		physicsWorld = physicsCommon.createPhysicsWorld();
@@ -93,6 +98,7 @@ namespace vray {
 		world.on_construct<CompTransform>().connect<&Rp3dPhysics::onEntityAdded>(this);
 		world.on_destroy<CompHitbox>().connect<&Rp3dPhysics::onEntityRemoved>(this);
 		world.on_destroy<CompTransform>().connect<&Rp3dPhysics::onEntityRemoved>(this);
+		world.on_destroy<CompRp3dBody>().connect<&Rp3dPhysics::onBodyRemoved>(this);
 		
 		physicsWorld->setIsDebugRenderingEnabled(false);
 
@@ -110,6 +116,7 @@ namespace vray {
 		world.on_construct<CompTransform>().disconnect<&Rp3dPhysics::onEntityAdded>(this);
 		world.on_destroy<CompHitbox>().disconnect<&Rp3dPhysics::onEntityRemoved>(this);
 		world.on_destroy<CompTransform>().disconnect<&Rp3dPhysics::onEntityRemoved>(this);
+		world.on_destroy<CompRp3dBody>().disconnect<&Rp3dPhysics::onBodyRemoved>(this);
 	}
 
 	void Rp3dPhysics::setEventCallback(const EventCallback& callback) {

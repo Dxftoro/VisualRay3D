@@ -29,6 +29,7 @@ namespace vray {
 		CompRp3dBody createPhysicsBody(entt::entity entity);
 		void onEntityAdded(entt::registry& world, entt::entity entity);
 		void onEntityRemoved(entt::registry& world, entt::entity entity);
+		void onBodyRemoved(entt::registry& world, entt::entity entity);
 
 	public:
 		Rp3dPhysics(entt::registry& world);
