@@ -18,27 +18,9 @@ namespace vray {
 			VR_LOGERROR(errorMessage);
 			throw std::runtime_error(errorMessage);
 		}
-
-		glGenTextures(1, &handle);
-		glBindTexture(GL_TEXTURE_2D, handle);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-			cCount == 4 ? GL_RGBA : GL_RGB,
-			GL_UNSIGNED_BYTE, colorData);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		pixels = std::vector<unsigned char>(colorData, colorData + width * height * cCount);
 		stbi_image_free(colorData);
 	}
-
-	Texture::~Texture() { glDeleteTextures(1, &handle); }
-
-	void Texture::bind() const { glBindTexture(GL_TEXTURE_2D, handle); }
-
-	void Texture::unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 }
