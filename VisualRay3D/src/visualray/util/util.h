@@ -17,6 +17,7 @@ namespace vray {
 
 	public:
 		explicit constexpr Strong(T _value) : value(_value) {}
+		constexpr Strong(const Strong<T>& other) : value(other.value) {}
 		
 		explicit operator T() const { return value; }
 		Strong& operator=(T value) {

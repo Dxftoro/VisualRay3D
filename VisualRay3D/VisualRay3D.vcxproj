@@ -97,6 +97,7 @@
     <ClInclude Include="src\visualray\render_service\glsl_flexible_buffer.h" />
     <ClInclude Include="src\visualray\render_service\glsl_program.h" />
     <ClInclude Include="src\visualray\render_service\glsl_uniform_buffer.h" />
+    <ClInclude Include="src\visualray\render_service\gpu_handle.h" />
     <ClInclude Include="src\visualray\render_service\light_system.h" />
     <ClInclude Include="src\visualray\render_service\renderer.h" />
     <ClInclude Include="src\visualray\render_service\renderer_callbacks.h" />
