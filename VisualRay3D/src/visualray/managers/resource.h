@@ -17,6 +17,8 @@ namespace vray {
 
 	class VRAYLIB Mesh : public Resource {
 	private:
+		std::vector<float> vertexData;
+		std::vector<int> elements;
 		glm::vec3 baseSize, aabbMin, aabbMax;
 		MeshId handle;
 

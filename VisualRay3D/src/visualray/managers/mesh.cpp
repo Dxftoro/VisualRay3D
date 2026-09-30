@@ -65,7 +65,8 @@ namespace vray {
 	:	Resource(false),
 		baseSize(0.0f),
 		aabbMin(FLT_MAX),
-		aabbMax(-FLT_MAX) {
+		aabbMax(-FLT_MAX),
+		handle(MeshId::invalid().get()) {
 
 		std::ifstream fin(filename);
 		if (!fin) {
@@ -88,8 +89,6 @@ namespace vray {
 		}
 		if (!warningMessage.empty()) VR_LOGWARN(warningMessage);
 
-		std::vector<float> vertexData;
-		std::vector<int> elements;
 		std::unordered_map<Vertex, int> vertexMap;
 
 		for (const tinyobj::shape_t& shape : shapes) {
@@ -135,41 +134,6 @@ namespace vray {
 		}
 
 		baseSize = aabbMax - aabbMin; // !!!
-
-		BufferLayout layout({
-			{ "VertexPosition",		BufferObjectType::FLOAT3 },
-			{ "VertexNormal",		BufferObjectType::FLOAT3 },
-			{ "VertexTexCoords",	BufferObjectType::FLOAT2 }
-		});
-
-		vertexArray = new VertexArray();
-		vertexArray->bind();
-
-		VertexBuffer* vertexBuffer = new VertexBuffer(vertexData.data(),
-			vertexData.size() * sizeof(float), layout);
-		ElementBuffer* elementBuffer = new ElementBuffer(elements.data(),
-			elements.size() * sizeof(int));
-
-		vertexArray->addVertexBuffer(vertexBuffer);
-		vertexArray->setElementBuffer(elementBuffer);
-
-		vertexArray->unbind();
-	}
-
-	Mesh::Mesh(const Mesh& mesh) : Resource(true) {
-		this->vertexArray = mesh.vertexArray;
-	}
-
-	Mesh& Mesh::operator=(const Mesh& mesh) {
-		if (this != &mesh) {
-			this->vertexArray = mesh.vertexArray;
-			copy = true;
-		}
-		return *this;
-	}
-
-	Mesh::~Mesh() {
-		if (!copy) { delete vertexArray; }
 	}
 
 }
