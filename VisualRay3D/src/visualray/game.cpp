@@ -119,6 +119,7 @@ namespace vray {
 			engineContext.window->swapBuffers();
 
 			//engineContext.cameraSystem.resetDirty();
+			handleUnloaded();
 
 			sleeping::sleepUntil(std::chrono::time_point_cast<std::chrono::steady_clock::duration>(frameEnd));
 		}
@@ -148,6 +149,16 @@ namespace vray {
 
 	void Game::setClearColor(const glm::vec4& color) {
 		engineContext.renderer->setClearColor(color);
+	}
+
+	void Game::handleUnloaded() {
+		for (MeshId id : gameContext.meshes.getFreed()) {
+
+		}
+
+		for (TextureId id : gameContext.textures.getFreed()) {
+
+		}
 	}
 
 	float Game::deltaTime() { return _deltaTime; }

@@ -81,6 +81,7 @@
     <ClInclude Include="src\visualray\layer_service\fps_counter.h" />
     <ClInclude Include="src\visualray\logger.h" />
     <ClInclude Include="src\visualray\logservice.h" />
+    <ClInclude Include="src\visualray\managers\gpu_forwarder.h" />
     <ClInclude Include="src\visualray\managers\resource.h" />
     <ClInclude Include="src\visualray\managers\resource_manager.h" />
     <ClInclude Include="src\visualray\physics_service\ode_physics.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="src\visualray\render_service\glsl_program.h" />
     <ClInclude Include="src\visualray\render_service\glsl_uniform_buffer.h" />
     <ClInclude Include="src\visualray\render_service\gpu_handle.h" />
+    <ClInclude Include="src\visualray\render_service\gpu_resource_manager.h" />
     <ClInclude Include="src\visualray\render_service\light_system.h" />
     <ClInclude Include="src\visualray\render_service\renderer.h" />
     <ClInclude Include="src\visualray\render_service\renderer_callbacks.h" />

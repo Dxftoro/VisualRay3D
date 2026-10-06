@@ -10,7 +10,7 @@
 namespace vray {
 
 	Texture::Texture(const std::string& filename)
-		: width(0), height(0), cCount(0), handle(TextureId::invalid().get()) {
+		: width(0), height(0), cCount(0), handle(GpuHandle::invalid().get()) {
 		unsigned char* colorData = stbi_load(filename.c_str(), &width, &height, &cCount, 0);
 
 		if (colorData == nullptr) {

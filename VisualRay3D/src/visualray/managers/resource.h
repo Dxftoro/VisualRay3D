@@ -20,28 +20,24 @@ namespace vray {
 		std::vector<float> vertexData;
 		std::vector<int> elements;
 		glm::vec3 baseSize, aabbMin, aabbMax;
-		MeshId handle;
+		GpuHandle handle;
 
 	public:
 		Mesh(const std::string& filename);
-		~Mesh();
-
-		Mesh(const Mesh&);
-		Mesh& operator=(const Mesh&);
 
 		const glm::vec3 getBaseSize() const { return baseSize; }
 		const glm::vec3 getAabbMin() const { return aabbMin; }
 		const glm::vec3 getAaabbMax() const { return aabbMax; }
-		MeshId getHandle() const { return handle; }
+		GpuHandle getHandle() const { return handle; }
 
-		void setHandle(MeshId handle) { this->handle = handle; }
+		void setHandle(GpuHandle handle) { this->handle = handle; }
 	};
 
 	class VRAYLIB Texture : public Resource {
 	private:
 		std::vector<unsigned char> pixels;
 		int width, height, cCount;
-		TextureId handle;
+		GpuHandle handle;
 
 	public:
 		Texture(const std::string& filename);
@@ -49,10 +45,10 @@ namespace vray {
 		int getWidth() const { return width; }
 		int getHeight() const { return height; }
 		int getChannelCount() const { return cCount; }
-		TextureId getHandle() const { return handle; }
+		GpuHandle getHandle() const { return handle; }
 		std::vector<unsigned char>& getPixels() { return pixels; }
 
-		void setHandle(TextureId handle) { this->handle = handle; }
+		void setHandle(GpuHandle handle) { this->handle = handle; }
 	};
 
 	class VRAYLIB Sound : public Resource {

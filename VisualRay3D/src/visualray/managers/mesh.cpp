@@ -66,7 +66,7 @@ namespace vray {
 		baseSize(0.0f),
 		aabbMin(FLT_MAX),
 		aabbMax(-FLT_MAX),
-		handle(MeshId::invalid().get()) {
+		handle(GpuHandle::invalid().get()) {
 
 		std::ifstream fin(filename);
 		if (!fin) {

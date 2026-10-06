@@ -6,7 +6,7 @@ namespace vray {
 
 	template <typename T>
 	class ResourceManager {
-	private:
+	protected:
 		static_assert(std::is_base_of_v<Resource, T>, "T must be inherited from Resource!");
 		std::unordered_map<std::string, std::unique_ptr<T>> resourceMap;
 

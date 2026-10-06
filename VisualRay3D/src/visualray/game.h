@@ -8,6 +8,7 @@
 
 #include "event_service/game_events.h"
 #include "managers/resource_manager.h"
+#include "managers/gpu_forwarder.h"
 
 namespace vray {
 
@@ -36,8 +37,8 @@ namespace vray {
 	struct VRAYLIB GameContext {
 		entt::registry world;
 		SpatialSystem space;
-		ResourceManager<Mesh> meshes;
-		ResourceManager<Texture> textures;
+		MeshManager meshes;
+		TextureManager textures;
 		ResourceManager<Sound> sounds;
 
 		GameContext(const GameContext&) = delete;
@@ -58,6 +59,7 @@ namespace vray {
 
 		bool onWindowClosing(WindowCloseEvent& evt);
 		void onEventInternal(Event& evt);
+		void handleUnloaded();
 
 	public:
 		Game(const WindowParams& windowParams);
