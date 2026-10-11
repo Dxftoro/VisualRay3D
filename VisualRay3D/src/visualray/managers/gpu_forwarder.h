@@ -14,7 +14,7 @@ namespace vray {
 	public:
 		GpuForwarder() {}
 
-		void unload(T* resource) { freed.push_back(resource->getHandle()); }
+		void unforward(T* resource) { freed.push_back(resource->getHandle()); }
 		std::vector<GpuHandle>& getFreed() { return freed; }
 	};
 

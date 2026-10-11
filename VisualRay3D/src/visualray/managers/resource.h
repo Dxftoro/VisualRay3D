@@ -28,6 +28,8 @@ namespace vray {
 		const glm::vec3 getBaseSize() const { return baseSize; }
 		const glm::vec3 getAabbMin() const { return aabbMin; }
 		const glm::vec3 getAaabbMax() const { return aabbMax; }
+		std::vector<float>& getVertexData() { return vertexData; }
+		std::vector<int>& getElements() { return elements; }
 		GpuHandle getHandle() const { return handle; }
 
 		void setHandle(GpuHandle handle) { this->handle = handle; }
