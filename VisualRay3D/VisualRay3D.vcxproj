@@ -110,6 +110,7 @@
     <ClInclude Include="src\visualray\render_service\renderer.h" />
     <ClInclude Include="src\visualray\render_service\renderer_callbacks.h" />
     <ClInclude Include="src\visualray\render_service\rendering_buffer.h" />
+    <ClInclude Include="src\visualray\render_service\render_queue.h" />
     <ClInclude Include="src\visualray\render_service\render_request.h" />
     <ClInclude Include="src\visualray\render_service\render_submit_system.h" />
     <ClInclude Include="src\visualray\sleeping.h" />

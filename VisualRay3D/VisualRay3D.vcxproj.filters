@@ -569,6 +569,9 @@
     <ClInclude Include="src\visualray\render_service\gpu_mesh_manager.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\visualray\render_service\render_queue.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
