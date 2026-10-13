@@ -106,15 +106,16 @@
     <ClInclude Include="src\visualray\render_service\gpu_mesh_loader.h" />
     <ClInclude Include="src\visualray\render_service\gpu_mesh_manager.h" />
     <ClInclude Include="src\visualray\render_service\gpu_resource_manager.h" />
+    <ClInclude Include="src\visualray\render_service\gpu_resource_managers.h" />
     <ClInclude Include="src\visualray\render_service\gpu_texture.h" />
     <ClInclude Include="src\visualray\render_service\gpu_texture_manager.h" />
     <ClInclude Include="src\visualray\render_service\light_system.h" />
+    <ClInclude Include="src\visualray\render_service\mesh_system.h" />
     <ClInclude Include="src\visualray\render_service\renderer.h" />
     <ClInclude Include="src\visualray\render_service\renderer_callbacks.h" />
     <ClInclude Include="src\visualray\render_service\rendering_buffer.h" />
     <ClInclude Include="src\visualray\render_service\render_lists.h" />
     <ClInclude Include="src\visualray\render_service\render_list.h" />
-    <ClInclude Include="src\visualray\render_service\render_request.h" />
     <ClInclude Include="src\visualray\render_service\render_requests.h" />
     <ClInclude Include="src\visualray\render_service\render_submit_system.h" />
     <ClInclude Include="src\visualray\sleeping.h" />

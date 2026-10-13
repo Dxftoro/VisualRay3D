@@ -1,66 +1,37 @@
 #pragma once
 
-#include "../vrpch.h"
-#include "../kernel.h"
-#include "../event_service/game_events.h"
-#include "../window_service/window.h"
-#include "../world/components.h"
-#include "../thirdparty/EnTT/entt.hpp"
 #include "../thirdparty/glm/glm.hpp"
 
-//#include "vertex_array.h"
-#include "glsl_program.h"
-#include "render_request.h"
-#include "light_system.h"
-#include "billboard_system.h"
+#include "render_lists.h"
+#include "gpu_resource_managers.h"
 #include "camera_system.h"
 
 #define VR_RENDERER_MAX_DEBUG_LINES     1000
 
 namespace vray {
 
-    /* Forward declarations */
-    class GlslUniformBuffer;
+	class Renderer {
+	private:
+		RenderLists renderLists;
+		GpuResourceManagers managers;
+		CameraSystem& cameraSystem;
 
-    class Renderer {
-    private:
-        std::queue<RenderRequest> renderQueue;
-        Window* currentWindow;
-        CameraSystem& cameraSystem;
-        GlslProgram program, debugProgram;
+	public:
+		Renderer(CameraSystem& cameraSystem);
+		~Renderer();
 
-        GlslUniform uProjectionMatrix,
-                    uViewMatrix, 
-                    uModelMatrix,
-                    uNormalMatrix;
+		void clear();
+		void update(float deltaTime);
+		void submit(const MeshRequest& request);
+		void submit(const BillboardRequest& request);
+		void flush();
 
-        GlslUniform uDebugProjectionViewMatrix;
-        uint32_t debugVao, debugVbo, debugVertexCount;
+		bool onWindowResize(WindowResizeEvent& evt);
 
-        CompVisualMaterial material;
-        CompPointLight light;
+		void setClearColor(const glm::vec4& color);
 
-        GlslUniformBuffer uboLight, uboMaterial;
-        LightSystem lightSystem;
-        BillboardSystem billboardSystem;
-
-    public:
-        Renderer(Window* currentWindow, CameraSystem& cameraSystem, entt::registry& world);
-        ~Renderer();
-
-        void clear();
-        void update(float deltaTime);
-        void submit(RenderRequest&& query);
-        inline void flush();
-
-        bool onWindowResize(WindowResizeEvent& evt);
-
-        void setClearColor(const glm::vec4& color);
-        void setTestTexture(Texture* texture) { billboardSystem.setTexture(texture); }
-        Window* getCurrentWindow() const { return currentWindow; }
-
-        void updateDebugPrimitives(const std::vector<float>& vertexData,
-            const std::vector<int>& elements);
-    };
+		void updateDebugPrimitives(const std::vector<float>& vertexData,
+			const std::vector<int>& elements);
+	};
 
 }

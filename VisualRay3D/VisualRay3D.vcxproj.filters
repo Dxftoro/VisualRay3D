@@ -218,9 +218,6 @@
     <ClInclude Include="src\visualray\util\util.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\render_service\render_request.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="src\visualray\thirdparty\EnTT\config\config.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -582,6 +579,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\render_service\gpu_texture_manager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\render_service\mesh_system.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\render_service\gpu_resource_managers.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
