@@ -40,6 +40,7 @@
     <ClCompile Include="src\visualray\render_service\gpu_mesh_manager.cpp" />
     <ClCompile Include="src\visualray\render_service\gpu_texture_manager.cpp" />
     <ClCompile Include="src\visualray\render_service\light_system.cpp" />
+    <ClCompile Include="src\visualray\render_service\mesh_system.cpp" />
     <ClCompile Include="src\visualray\render_service\renderer.cpp" />
     <ClCompile Include="src\visualray\render_service\rendering_buffer.cpp" />
     <ClCompile Include="src\visualray\render_service\render_submit_system.cpp" />

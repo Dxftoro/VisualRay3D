@@ -24,7 +24,6 @@ namespace vray {
 		void update(float deltaTime);
 		void submit(const MeshRequest& request);
 		void submit(const BillboardRequest& request);
-		void flush();
 
 		bool onWindowResize(WindowResizeEvent& evt);
 

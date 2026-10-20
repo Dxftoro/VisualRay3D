@@ -39,7 +39,10 @@ namespace vray {
 	}
 
 	void Renderer::update(float deltaTime) {
+		/* Update mesh system */
+		/* Clear mesh list */
 
+		renderLists.meshes.clear();
 	}
 
 	void Renderer::submit(const MeshRequest& request) {
@@ -59,10 +62,6 @@ namespace vray {
 
 	void Renderer::submit(const BillboardRequest& request) {
 		renderLists.billboards.submit(request);
-	}
-
-	void Renderer::flush() {
-
 	}
 
 	bool Renderer::onWindowResize(WindowResizeEvent& evt) {
