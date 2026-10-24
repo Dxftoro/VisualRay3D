@@ -146,21 +146,14 @@ namespace vray {
 		float shininess;
 	};
 
-	struct VRAYLIB CompPointLight { bool dummy; };
-
-	struct VRAYLIB CompPointLightData {
+	struct VRAYLIB CompPointLight {
 		glm::vec4 position;
 		alignas(16) glm::vec3 la;
 		alignas(16) glm::vec3 ld;
 		alignas(16) glm::vec3 ls;
+		float range;
 
 		void mergeColor(const glm::vec3& color);
-	};
-
-	struct VRAYLIB CompPointLightIndex {
-		int index = -1;
-		bool dirty = true;
-		bool deleted = false;
 	};
 
 	struct VRAYLIB CompBillboard { bool dummy; };
