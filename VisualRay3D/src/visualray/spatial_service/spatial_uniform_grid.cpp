@@ -4,14 +4,6 @@
 
 namespace vray {
 
-	Volume UniformGrid::calculateVolume(const glm::vec3& point) const {
-		return {
-			(int)(std::floor(point.x / cellSize)),
-			(int)(std::floor(point.y / cellSize)),
-			(int)(std::floor(point.z / cellSize))
-		};
-	}
-
 	Aabb UniformGrid::calculateAabb(const glm::vec3& position, const glm::vec3& size) const {
 		glm::vec3 halfSize = size * 0.5f;
 		return {
@@ -58,7 +50,7 @@ namespace vray {
 	}
 
 	void UniformGrid::insert(entt::entity entity) {
-		Volume volume = calculateVolume(world.get<CompTransform>(entity).getPosition());
+		Volume volume = calculateVolume(world.get<CompTransform>(entity).getPosition(), cellSize);
 		insert(entity, volume);
 	}
 
@@ -85,7 +77,7 @@ namespace vray {
 	void UniformGrid::update(entt::entity entity) {
 		assert(world.all_of<CompUniformCell>(entity) && "UniformGrid::update: Given entity has no CompUniformCell");
 
-		Volume volume = calculateVolume(world.get<CompTransform>(entity).getPosition());
+		Volume volume = calculateVolume(world.get<CompTransform>(entity).getPosition(), cellSize);
 		
 		if (volume != world.get<CompUniformCell>(entity).volume) {
 			remove(entity, false);
@@ -94,8 +86,8 @@ namespace vray {
 	}
 
 	void UniformGrid::queryAabb(const Aabb& aabb, FunctionRef<void(entt::entity)> callback) {
-		Volume min = calculateVolume(aabb.min);
-		Volume max = calculateVolume(aabb.max);
+		Volume min = calculateVolume(aabb.min, cellSize);
+		Volume max = calculateVolume(aabb.max, cellSize);
 
 		for (int x = min.x; x <= max.x; x++) {
 			for (int y = min.y; y <= max.y; y++) {
@@ -111,8 +103,8 @@ namespace vray {
 	}
 
 	void UniformGrid::querySphere(const glm::vec3& center, float radius, FunctionRef<void(entt::entity)> callback) {
-		Volume min = calculateVolume(center - glm::vec3(radius));
-		Volume max = calculateVolume(center + glm::vec3(radius));
+		Volume min = calculateVolume(center - glm::vec3(radius), cellSize);
+		Volume max = calculateVolume(center + glm::vec3(radius), cellSize);
 
 		for (int x = min.x; x <= max.x; x++) {
 			for (int y = min.y; y <= max.y; y++) {
@@ -132,8 +124,8 @@ namespace vray {
 
 	void UniformGrid::queryFrustum(const Frustum& frustum, FunctionRef<void(entt::entity, CompTransform&)> callback) {
 		Aabb bounds = calculateFrustumAabb(frustum.corners);
-		Volume min = calculateVolume(bounds.min);
-		Volume max = calculateVolume(bounds.max);
+		Volume min = calculateVolume(bounds.min, cellSize);
+		Volume max = calculateVolume(bounds.max, cellSize);
 
 		size_t cellCount = (size_t)(max.x - min.x + 1) * (max.y - min.y + 1) * (max.z - min.z + 1);
 		size_t accepted = 0;
