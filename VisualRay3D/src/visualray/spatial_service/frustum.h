@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../thirdparty/glm/glm.hpp"
+#include "aabb.h"
 
 namespace vray {
 
@@ -10,5 +11,8 @@ namespace vray {
 		glm::vec4 planes[6];
 		glm::vec3 corners[8];
 	};
+
+	Aabb calculateFrustumAabb(const glm::vec3* corners);
+	bool intersectsFrustum(const Frustum& frustum, const Aabb& aabb);
 
 }

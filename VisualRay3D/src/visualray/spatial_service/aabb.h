@@ -10,4 +10,6 @@ namespace vray {
 		Aabb expandByMargin(float margin) { return { min * margin, max * margin }; }
 	};
 
+	Aabb calculateAabb(const glm::vec3& position, const glm::vec3& size);
+
 }

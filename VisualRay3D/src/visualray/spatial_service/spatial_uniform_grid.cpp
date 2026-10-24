@@ -4,40 +4,6 @@
 
 namespace vray {
 
-	Aabb UniformGrid::calculateAabb(const glm::vec3& position, const glm::vec3& size) const {
-		glm::vec3 halfSize = size * 0.5f;
-		return {
-			position - halfSize,
-			position + halfSize
-		};
-	}
-
-	Aabb UniformGrid::calculateFrustumAabb(const glm::vec3* corners) const {
-		Aabb result = { corners[0], corners[0] };
-
-		for (int i = 1; i < 8; ++i) {
-			result.min = glm::min(result.min, corners[i]);
-			result.max = glm::max(result.max, corners[i]);
-		}
-
-		return result;
-	}
-
-	bool UniformGrid::intersectsFrustum(const Frustum& frustum, const Aabb& aabb) const {
-		for (int i = 0; i < 6; i++) {
-			glm::vec3 normal(frustum.planes[i]);
-			glm::vec3 positive = aabb.min;
-
-			if (normal.x >= 0) positive.x = aabb.max.x;
-			if (normal.y >= 0) positive.y = aabb.max.y;
-			if (normal.z >= 0) positive.z = aabb.max.z;
-
-			if (glm::dot(normal, positive) + frustum.planes[i].w < 0) return false;
-		}
-
-		return true;
-	}
-
 	UniformGrid::UniformGrid(entt::registry& _world, float _cellSize)
 	:	world(_world),
 		cellSize(_cellSize) {

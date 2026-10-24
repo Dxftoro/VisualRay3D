@@ -17,8 +17,6 @@ namespace vray {
 		entt::registry& world;
 		float cellSize;
 
-		Aabb calculateAabb(const glm::vec3& position, const glm::vec3& size) const;
-		Aabb calculateFrustumAabb(const glm::vec3* corners) const;
 		bool intersectsFrustum(const Frustum& frustum, const Aabb& aabb) const;
 
 	public:
