@@ -6,7 +6,7 @@ namespace vray {
 
 	class GlslProgram;
 	class GlslUniformBuffer {
-	private:
+	protected:
 		GLuint handle;
 		GLuint binding;
 		GLuint program;

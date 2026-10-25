@@ -11,6 +11,7 @@ namespace vray {
 
 	void LightGrid::insert(entt::entity entity, const Volume& volume) {
 		LightCell& cell = cells[volume];
+		cell.push(entity);
 
 		world.emplace_or_replace<CompLightGridCell>(entity, CompLightGridCell{
 			.volume = volume,

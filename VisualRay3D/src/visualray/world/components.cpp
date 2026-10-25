@@ -85,12 +85,6 @@ namespace vray {
 		dirty = true;
 	}
 
-	void CompPointLightData::mergeColor(const glm::vec3& color) {
-		la *= color;
-		ld *= color;
-		ls *= color;
-	}
-
 	void CompBillboardData::setPosition(const glm::vec3& position) {
 		this->position = position;
 		dirty = true;

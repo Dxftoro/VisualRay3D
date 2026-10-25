@@ -5,26 +5,19 @@
 #include "glsl_program.h"
 #include "glsl_uniform_buffer.h"
 
-#define VR_RENDERER_MAX_LIGHTS		16
-#define VR_RENDERER_LIGHT_NEW		-1
-
 namespace vray {
 
 	class LightSystem {
-	private:
-		struct LightBuffer {
-			int lightCount;
-			CompPointLightData lights[VR_RENDERER_MAX_LIGHTS];
-		};
-
-		entt::entity bufferedEntites[VR_RENDERER_MAX_LIGHTS];
-		int lastLightIndex;
-
-		GlslUniformBuffer lightUniformBuffer;
-		
+	private:		
 		entt::registry& world;
-		using LightGroup = decltype(world.group<CompPointLightIndex>(entt::get<CompPointLightData>));
-		LightGroup lightGroup;
+		
+		using DirectionalGroup = decltype(world.group<CompDirectionalLight>(entt::get<CompTransform>));
+		using PointGroup = decltype(world.group<CompPointLight>(entt::get<CompTransform>));
+		using SpotGroup = decltype(world.group<CompSpotLight>(entt::get<CompTransform>));
+
+		DirectionalGroup directionalGroup;
+		PointGroup pointGroup;
+		SpotGroup spotGroup;
 
 	private:
 		static void onLightAdded(entt::registry& world, const entt::entity entity);
@@ -38,8 +31,6 @@ namespace vray {
 		void initBuffer(GlslProgram& program);
 		//void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
 		void update();
-
-		void setLightData(CompPointLightData& light, int index);
 	};
 
 }

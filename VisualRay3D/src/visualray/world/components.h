@@ -147,13 +147,20 @@ namespace vray {
 	};
 
 	struct VRAYLIB CompPointLight {
-		glm::vec4 position;
-		alignas(16) glm::vec3 la;
-		alignas(16) glm::vec3 ld;
-		alignas(16) glm::vec3 ls;
+		glm::vec3 color;
+		float intensity;
 		float range;
+	};
 
-		void mergeColor(const glm::vec3& color);
+	struct VRAYLIB CompSpotLight {
+		glm::vec3 color;
+		float intensity;
+		float cutOff;
+	};
+
+	struct VRAYLIB CompDirectionalLight {
+		glm::vec3 direction;
+		float intensity;
 	};
 
 	struct VRAYLIB CompBillboard { bool dummy; };
