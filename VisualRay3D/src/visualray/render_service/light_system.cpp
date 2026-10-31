@@ -14,7 +14,19 @@ namespace vray {
 	}
 
 	void LightSystem::updateDirectional() {
+		int count = 0;
+		directionalGroup.each([this, &count](CompDirectionalLight& light, CompTransform& transform) {
+			if (count >= MAX_DIRECTIONAL_LIGHTS) return;
 
+			GpuDirectionalLight gpuLight = {
+				.color = glm::vec4(light.color, light.intensity),
+				.direction = transform.getRotation() * FORWARD_DIRECTION
+			};
+
+			
+
+			count++;
+		});
 	}
 
 	void LightSystem::updatePoint() {

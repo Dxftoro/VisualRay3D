@@ -21,6 +21,10 @@ namespace vray {
 		PointGroup pointGroup;
 		SpotGroup spotGroup;
 
+	/* Constants: */
+	private:
+		static constexpr auto FORWARD_DIRECTION = glm::vec3(0.0f, 0.0f, 1.0f);
+
 	public:
 		LightSystem(entt::registry& world);
 
