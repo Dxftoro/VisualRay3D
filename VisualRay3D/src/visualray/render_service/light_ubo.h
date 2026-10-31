@@ -33,9 +33,13 @@ namespace vray {
 		unsigned int add(GpuPointLight light);
 		unsigned int add(GpuSpotLight light);
 
-		GpuDirectionalLight getDirectionalLight(unsigned int index);
-		GpuPointLight getPointLights(unsigned int index);
-		GpuSpotLight getSpotLight(unsigned int index);
+		void removeDirectional(unsigned int index);
+		void removePoint(unsigned int index);
+		void removeSpot(unsigned int index);
+
+		GpuDirectionalLight getDirectional(unsigned int index);
+		GpuPointLight getPoint(unsigned int index);
+		GpuSpotLight getSpot(unsigned int index);
 
 		void forward();
 	};

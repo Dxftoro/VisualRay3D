@@ -33,15 +33,33 @@ namespace vray {
 		return layout.spotCount++;
 	}
 
-	GpuDirectionalLight LightUbo::getDirectionalLight(unsigned int index) {
+	void LightUbo::removeDirectional(unsigned int index) {
+		layout.directionalCount--;
+		if (!layout.directionalCount) return;
+		layout.directionalLights[index] = layout.directionalLights[layout.directionalCount];
+	}
+
+	void LightUbo::removePoint(unsigned int index) {
+		layout.pointCount--;
+		if (!layout.pointCount) return;
+		layout.pointLights[index] = layout.pointLights[layout.pointCount];
+	}
+
+	void LightUbo::removeSpot(unsigned int index) {
+		layout.spotCount--;
+		if (!layout.spotCount) return;
+		layout.spotLights[index] = layout.spotLights[layout.spotCount];
+	}
+
+	GpuDirectionalLight LightUbo::getDirectional(unsigned int index) {
 		return layout.directionalLights[index];
 	}
 
-	GpuPointLight LightUbo::getPointLights(unsigned int index) {
+	GpuPointLight LightUbo::getPoint(unsigned int index) {
 		return layout.pointLights[index];
 	}
 
-	GpuSpotLight LightUbo::getSpotLight(unsigned int index) {
+	GpuSpotLight LightUbo::getSpot(unsigned int index) {
 		return layout.spotLights[index];
 	}
 
