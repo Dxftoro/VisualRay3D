@@ -144,12 +144,6 @@
     <ClCompile Include="src\visualray\render_service\mesh_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\render_service\light_grid.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="src\visualray\render_service\light_cell.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="src\visualray\spatial_service\volume.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -606,12 +600,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\render_service\gpu_resource_managers.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="src\visualray\render_service\light_grid.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="src\visualray\render_service\light_cell.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\render_service\gpu_lights.h">

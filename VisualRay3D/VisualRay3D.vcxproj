@@ -39,8 +39,6 @@
     <ClCompile Include="src\visualray\render_service\gpu_mesh_loader.cpp" />
     <ClCompile Include="src\visualray\render_service\gpu_mesh_manager.cpp" />
     <ClCompile Include="src\visualray\render_service\gpu_texture_manager.cpp" />
-    <ClCompile Include="src\visualray\render_service\light_cell.cpp" />
-    <ClCompile Include="src\visualray\render_service\light_grid.cpp" />
     <ClCompile Include="src\visualray\render_service\light_system.cpp" />
     <ClCompile Include="src\visualray\render_service\light_ubo.cpp" />
     <ClCompile Include="src\visualray\render_service\mesh_system.cpp" />
@@ -117,8 +115,6 @@
     <ClInclude Include="src\visualray\render_service\gpu_resource_managers.h" />
     <ClInclude Include="src\visualray\render_service\gpu_texture.h" />
     <ClInclude Include="src\visualray\render_service\gpu_texture_manager.h" />
-    <ClInclude Include="src\visualray\render_service\light_cell.h" />
-    <ClInclude Include="src\visualray\render_service\light_grid.h" />
     <ClInclude Include="src\visualray\render_service\light_system.h" />
     <ClInclude Include="src\visualray\render_service\light_ubo.h" />
     <ClInclude Include="src\visualray\render_service\mesh_system.h" />
