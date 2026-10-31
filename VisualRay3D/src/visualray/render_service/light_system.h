@@ -3,13 +3,15 @@
 
 #include "../world/components.h"
 #include "glsl_program.h"
-#include "glsl_uniform_buffer.h"
+#include "light_ubo.h"
 
 namespace vray {
 
 	class LightSystem {
 	private:		
+		LightUbo lightUbo;
 		entt::registry& world;
+		bool lightsChanged;
 		
 		using DirectionalGroup = decltype(world.group<CompDirectionalLight>(entt::get<CompTransform>));
 		using PointGroup = decltype(world.group<CompPointLight>(entt::get<CompTransform>));
@@ -19,17 +21,14 @@ namespace vray {
 		PointGroup pointGroup;
 		SpotGroup spotGroup;
 
-	private:
-		static void onLightAdded(entt::registry& world, const entt::entity entity);
-		static void onLightUpdated(entt::registry& world, const entt::entity entity);
-		void onLightRemoved(entt::registry& world, const entt::entity entity);
-
 	public:
 		LightSystem(entt::registry& world);
-		~LightSystem() {}
 
-		void initBuffer(GlslProgram& program);
-		//void handleDeleted(entt::entity entity, CompPointLightIndex& lightIndex);
+		void init(GlslProgram& program);
+		
+		void updateDirectional();
+		void updatePoint();
+		void updateSpot();
 		void update();
 	};
 
