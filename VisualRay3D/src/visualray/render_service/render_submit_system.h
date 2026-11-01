@@ -20,6 +20,7 @@ namespace vray {
 		RenderSubmitSystem(Renderer* renderer, entt::registry& world);
 
 		void update(SpatialSystem& spatialSystem, CameraSystem& cameraSystem);
+		const Frustum& getFrustumChache() const { return frustumCache; }
 	};
 
 }

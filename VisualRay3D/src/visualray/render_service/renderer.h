@@ -1,10 +1,14 @@
 #pragma once
 
 #include "../thirdparty/glm/glm.hpp"
+#include "../thirdparty/EnTT/entt.hpp"
 
+#include "../spatial_service/frustum.h"
 #include "render_lists.h"
 #include "gpu_resource_managers.h"
 #include "camera_system.h"
+#include "mesh_system.h"
+#include "light_system.h"
 
 #define VR_RENDERER_MAX_DEBUG_LINES     1000
 
@@ -14,21 +18,21 @@ namespace vray {
 	private:
 		RenderLists renderLists;
 		GpuResourceManagers managers;
+		LightSystem lightSystem;
+		MeshSystem meshSystem;
 		CameraSystem& cameraSystem;
 
+		void clear();
+
 	public:
-		Renderer(CameraSystem& cameraSystem);
+		Renderer(entt::registry& world, CameraSystem& cameraSystem);
 		~Renderer();
 
-		void clear();
-		void update(float deltaTime);
+		void update(const Frustum& frustum, float deltaTime);
 		void submit(const MeshRequest& request);
 		void submit(const BillboardRequest& request);
-
-		bool onWindowResize(WindowResizeEvent& evt);
-
+		void setViewport(int widht, int height);
 		void setClearColor(const glm::vec4& color);
-
 		void updateDebugPrimitives(const std::vector<float>& vertexData,
 			const std::vector<int>& elements);
 	};

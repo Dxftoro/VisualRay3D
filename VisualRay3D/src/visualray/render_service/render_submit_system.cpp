@@ -1,8 +1,8 @@
 #include "vrpch.h"
 #include "render_submit_system.h"
 #include "renderer.h"
-#include "render_request.h"
 #include "../world/components.h"
+#include "render_requests.h"
 
 #include <thirdparty/glm/gtc/matrix_access.hpp>
 
@@ -35,8 +35,11 @@ namespace vray {
 			auto [renderable, matrices] = world.try_get<CompRenderable, CompTransformMatrices>(entity);
 
 			if (renderable) {
-				RenderRequest request(renderable, &transform, matrices, 4U);
-				renderer->submit(std::move(request));
+				renderer->submit(MeshRequest{
+					.renderable = renderable,
+					.transform = &transform,
+					.matrices = matrices
+				});
 			}
 		});
 	}

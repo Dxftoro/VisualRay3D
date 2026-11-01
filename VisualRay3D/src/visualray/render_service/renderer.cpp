@@ -14,7 +14,9 @@
 
 namespace vray {
 
-	Renderer::Renderer(CameraSystem& _cameraSystem) : cameraSystem(_cameraSystem) {
+	Renderer::Renderer(entt::registry& world, CameraSystem& _cameraSystem)
+	:	lightSystem(world), cameraSystem(_cameraSystem), meshSystem(managers, renderLists.meshes) {
+
 		if (!gladLoadGL()) {
 			VR_ENGINE_LOGERROR("Can't load OpenGL");
 			throw std::runtime_error("Can't load OpenGL!");
@@ -38,10 +40,12 @@ namespace vray {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Renderer::update(float deltaTime) {
+	void Renderer::update(const Frustum& frustum, float deltaTime) {
 		/* Update mesh system */
 		/* Clear mesh list */
 
+		lightSystem.update(frustum);
+		meshSystem.update(cameraSystem.getProjectionMatrix(), cameraSystem.getViewMatrix());
 		renderLists.meshes.clear();
 	}
 
@@ -64,24 +68,20 @@ namespace vray {
 		renderLists.billboards.submit(request);
 	}
 
-	bool Renderer::onWindowResize(WindowResizeEvent& evt) {
-		int width = evt.getWidth();
-		int height = evt.getHeight();
-		
-		if (!width || !height) return true;
-
+	void Renderer::setViewport(int width, int height) {		
+		if (!width || !height) return;
 		cameraSystem.setProjectionBorders(width, height);
 		glViewport(0, 0, width, height);
-		return true;
+		return;
 	}
 
 	void Renderer::updateDebugPrimitives(const std::vector<float>& vertexData,
 		const std::vector<int>& elements) {
 
-		glBindBuffer(GL_ARRAY_BUFFER, debugVbo);
-		glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
-			vertexData.data(), GL_DYNAMIC_DRAW);
+		//glBindBuffer(GL_ARRAY_BUFFER, debugVbo);
+		//glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float),
+		//	vertexData.data(), GL_DYNAMIC_DRAW);
 
-		debugVertexCount = elements.size();
+		//debugVertexCount = elements.size();
 	}
 }

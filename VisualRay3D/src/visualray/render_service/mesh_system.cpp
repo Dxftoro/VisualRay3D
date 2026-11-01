@@ -37,7 +37,7 @@ namespace vray {
 		}
 	}
 
-	void MeshSystem::update(const glm::mat4& projection, const glm::mat4& view, bool viewDirty) {
+	void MeshSystem::update(const glm::mat4& projection, const glm::mat4& view) {
 		ctx.uboMaterial.bind();
 
 		for (auto& request : meshList) {

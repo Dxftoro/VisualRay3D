@@ -16,7 +16,7 @@ namespace vray {
 	struct GpuSpotLight {
 		glm::vec4 position;					/* x, y, z and w as range */
 		glm::vec4 color;					/* r, g, b, and a as intensity */
-		glm::vec4 direction;				/* x, y, z and w as cutOff angle */
+		glm::vec4 direction;				/* x, y, z and w as cutOff COSINE */
 	};
 
 }

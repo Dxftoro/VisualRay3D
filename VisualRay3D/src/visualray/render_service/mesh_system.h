@@ -25,7 +25,7 @@ namespace vray {
 	public:
 		MeshSystem(GpuResourceManagers& managers, MeshList& _meshList);
 
-		void update(const glm::mat4& projection, const glm::mat4& view, bool viewDirty);
+		void update(const glm::mat4& projection, const glm::mat4& view);
 	};
 
 }
