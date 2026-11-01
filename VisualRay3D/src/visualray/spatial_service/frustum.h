@@ -13,6 +13,12 @@ namespace vray {
 	};
 
 	Aabb calculateFrustumAabb(const glm::vec3* corners);
+
+	/* Frustum vs AABB */
 	bool intersectsFrustum(const Frustum& frustum, const Aabb& aabb);
+
+
+	/* Frustum vs sphere */
+	bool intersectsFrustum(const Frustum& frustum, const glm::vec3& center, float radius);
 
 }

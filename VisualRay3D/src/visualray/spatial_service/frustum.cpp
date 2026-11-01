@@ -29,4 +29,13 @@ namespace vray {
 		return true;
 	}
 
+	bool intersectsFrustum(const Frustum& frustum, const glm::vec3& center, float radius) {
+		for (int i = 0; i < 6; i++) {
+			float distance = glm::dot(glm::vec3(frustum.planes[i]), center) + frustum.planes[i].w;
+			if (distance < -radius) return false;
+		}
+
+		return true;
+	}
+
 }
