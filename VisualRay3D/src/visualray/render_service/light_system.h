@@ -4,6 +4,7 @@
 #include "../world/components.h"
 #include "glsl_program.h"
 #include "light_ubo.h"
+#include "../spatial_service/frustum.h"
 
 namespace vray {
 
@@ -23,7 +24,7 @@ namespace vray {
 
 	/* Constants: */
 	private:
-		static constexpr auto FORWARD_DIRECTION = glm::vec3(0.0f, 0.0f, 1.0f);
+		static constexpr auto FORWARD_DIRECTION = glm::vec3(0.0f, 0.0f, -1.0f);
 
 	public:
 		LightSystem(entt::registry& world);
@@ -31,9 +32,9 @@ namespace vray {
 		void init(GlslProgram& program);
 		
 		void updateDirectional();
-		void updatePoint();
-		void updateSpot();
-		void update();
+		void updatePoint(const Frustum& frustum);
+		void updateSpot(const Frustum& frustum);
+		void update(const Frustum& frustum);
 	};
 
 }

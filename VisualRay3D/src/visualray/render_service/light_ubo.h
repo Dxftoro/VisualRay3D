@@ -40,10 +40,18 @@ namespace vray {
 		void removeDirectional(unsigned int index);
 		void removePoint(unsigned int index);
 		void removeSpot(unsigned int index);
+		void clearDirectional();
+		void clearPoint();
+		void clearSpot();
+		void clearAll();
 
 		GpuDirectionalLight getDirectional(unsigned int index) const;
 		GpuPointLight getPoint(unsigned int index) const;
 		GpuSpotLight getSpot(unsigned int index) const;
+
+		unsigned int getDirectionalCount() const { return layout.directionalCount; }
+		unsigned int getPointCount() const { return layout.pointCount; }
+		unsigned int getSpotCount() const { return layout.spotCount; }
 
 		void forward();
 	};

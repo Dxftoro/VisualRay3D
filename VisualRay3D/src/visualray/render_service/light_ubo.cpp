@@ -66,6 +66,24 @@ namespace vray {
 		if (layout.spotCount) layout.spotLights[index] = layout.spotLights[layout.spotCount];
 	}
 
+	void LightUbo::clearDirectional() {
+		layout.directionalCount = 0;
+	}
+
+	void LightUbo::clearPoint() {
+		layout.pointCount = 0;
+	}
+
+	void LightUbo::clearSpot() {
+		layout.spotCount = 0;
+	}
+
+	void LightUbo::clearAll() {
+		clearDirectional();
+		clearPoint();
+		clearSpot();
+	}
+
 	GpuDirectionalLight LightUbo::getDirectional(unsigned int index) const {
 		return layout.directionalLights[index];
 	}

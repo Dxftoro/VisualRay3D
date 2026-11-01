@@ -156,6 +156,7 @@ namespace vray {
 		glm::vec3 color;
 		float intensity;
 		float cutOff;
+		float range;
 	};
 
 	struct VRAYLIB CompDirectionalLight {
