@@ -14,6 +14,7 @@
     <ClCompile Include="src\visualray\audio_service\alsoft_audio.cpp" />
     <ClCompile Include="src\visualray\audio_service\alsoft_source_pool.cpp" />
     <ClCompile Include="src\visualray\audio_service\audio_exception.cpp" />
+    <ClCompile Include="src\visualray\dirty_system.cpp" />
     <ClCompile Include="src\visualray\game.cpp" />
     <ClCompile Include="src\visualray\input_service\input_service.cpp" />
     <ClCompile Include="src\visualray\layer_service\console.cpp" />
@@ -44,7 +45,7 @@
     <ClCompile Include="src\visualray\render_service\mesh_system.cpp" />
     <ClCompile Include="src\visualray\render_service\renderer.cpp" />
     <ClCompile Include="src\visualray\render_service\rendering_buffer.cpp" />
-    <ClCompile Include="src\visualray\render_service\render_submit_system.cpp" />
+    <ClCompile Include="src\visualray\render_submit_system.cpp" />
     <ClCompile Include="src\visualray\render_service\texture_loader.cpp" />
     <ClCompile Include="src\visualray\render_service\vertex_array.cpp" />
     <ClCompile Include="src\visualray\sleeping.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="src\visualray\audio_service\alsoft_source_pool.h" />
     <ClInclude Include="src\visualray\audio_service\audio.h" />
     <ClInclude Include="src\visualray\audio_service\audio_exception.h" />
+    <ClInclude Include="src\visualray\dirty_system.h" />
     <ClInclude Include="src\visualray\entry_point.h" />
     <ClInclude Include="src\visualray\event_service\camera_events.h" />
     <ClInclude Include="src\visualray\event_service\event.h" />
@@ -124,7 +126,7 @@
     <ClInclude Include="src\visualray\render_service\render_lists.h" />
     <ClInclude Include="src\visualray\render_service\render_list.h" />
     <ClInclude Include="src\visualray\render_service\render_requests.h" />
-    <ClInclude Include="src\visualray\render_service\render_submit_system.h" />
+    <ClInclude Include="src\visualray\render_submit_system.h" />
     <ClInclude Include="src\visualray\sleeping.h" />
     <ClInclude Include="src\visualray\spatial_service\spatial_system.h" />
     <ClInclude Include="src\visualray\thirdparty\EnTT\config\config.h" />

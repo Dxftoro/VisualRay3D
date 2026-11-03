@@ -2,9 +2,9 @@
 #include "game.h"
 
 #include <GLFW/glfw3.h>
-#include <reactphysics3d/reactphysics3d.h>
 
-#include "render_service/render_submit_system.h"
+#include "render_submit_system.h"
+#include "dirty_system.h"
 
 #include "event_service/game_events.h"
 #include "layer_service/debugger.h"
@@ -38,7 +38,7 @@ namespace vray {
 		engineContext.inputService = InputService(engineContext.window.get());
 		engineContext.debugger = new Debugger(engineContext.window.get());
 		
-		engineContext.renderer = new Renderer(engineContext.window.get(), engineContext.cameraSystem, gameContext.world);
+		engineContext.renderer = new Renderer(gameContext.world, engineContext.cameraSystem);
 		Renderer* renderer = engineContext.renderer;
 
 		engineContext.audio = new AlsoftAudio(gameContext.world);
@@ -79,7 +79,13 @@ namespace vray {
 		running = true;
 		VR_ENGINE_LOGINFO("Game application started running!");
 
-		RenderSubmitSystem renderSubmitSystem(engineContext.renderer, gameContext.world);
+		RenderSubmitSystem renderSubmitSystem(
+			gameContext.world,
+			&engineContext.cameraSystem,
+			&gameContext.space,
+			engineContext.renderer);
+
+		DirtySystem dirtySystem(gameContext.world);
 
 		sleeping::beginTimerPrecision(1);
 		using sleeping::ms;
@@ -107,18 +113,20 @@ namespace vray {
 			this->update();
 
 			gameContext.space.update();
-			renderSubmitSystem.update(gameContext.space, engineContext.cameraSystem);
+			renderSubmitSystem.update();
 
 			engineContext.audio->update();
 
-			engineContext.renderer->clear();
-			engineContext.renderer->update(deltaTime());
+			engineContext.renderer->update(renderSubmitSystem.getFrustumCache(), deltaTime());
 
 			engineContext.window->onUpdate();
 			engineContext.debugger->update();
 			engineContext.window->swapBuffers();
 
-			//engineContext.cameraSystem.resetDirty();
+			engineContext.cameraSystem.getActiveCamera()->setViewDirty(false);
+			engineContext.cameraSystem.resetDirty();
+			dirtySystem.update();
+
 			handleUnloaded();
 
 			sleeping::sleepUntil(std::chrono::time_point_cast<std::chrono::steady_clock::duration>(frameEnd));
@@ -140,9 +148,11 @@ namespace vray {
 		dispatcher.fire<WindowCloseEvent>(
 			std::bind(&Game::onWindowClosing, this, std::placeholders::_1)
 		);
-		dispatcher.fire<WindowResizeEvent>(
-			std::bind(&Renderer::onWindowResize, engineContext.renderer, std::placeholders::_1)
-		);
+
+		dispatcher.fire<WindowResizeEvent>([this](WindowResizeEvent& evt) -> bool {
+			engineContext.renderer->setViewport(evt.getWidth(), evt.getHeight());
+			return true;
+		});
 
 		onEvent(evt);
 	}
@@ -152,12 +162,12 @@ namespace vray {
 	}
 
 	void Game::handleUnloaded() {
-		for (MeshId id : gameContext.meshes.getFreed()) {
-
+		for (auto id : gameContext.meshes.getFreed()) {
+			engineContext.renderer->unforwardMesh(id);
 		}
 
-		for (TextureId id : gameContext.textures.getFreed()) {
-
+		for (auto id : gameContext.textures.getFreed()) {
+			engineContext.renderer->unforwardTexture(id);
 		}
 	}
 

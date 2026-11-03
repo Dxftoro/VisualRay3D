@@ -84,4 +84,13 @@ namespace vray {
 
 		//debugVertexCount = elements.size();
 	}
+
+	void Renderer::unforwardMesh(GpuHandle handle) {
+		managers.meshes.unload(handle);
+	}
+
+	void Renderer::unforwardTexture(GpuHandle handle) {
+		managers.textures.unload(handle);
+	}
+
 }

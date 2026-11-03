@@ -129,7 +129,7 @@
     <ClCompile Include="src\visualray\spatial_service\spatial_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\visualray\render_service\render_submit_system.cpp">
+    <ClCompile Include="src\visualray\render_submit_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\render_service\gpu_mesh_loader.cpp">
@@ -154,6 +154,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\visualray\render_service\light_ubo.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visualray\dirty_system.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -560,7 +563,7 @@
     <ClInclude Include="src\visualray\event_service\camera_events.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\visualray\render_service\render_submit_system.h">
+    <ClInclude Include="src\visualray\render_submit_system.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\render_service\gpu_handle.h">
@@ -606,6 +609,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\visualray\render_service\light_ubo.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visualray\dirty_system.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

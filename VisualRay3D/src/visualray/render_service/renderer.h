@@ -31,10 +31,13 @@ namespace vray {
 		void update(const Frustum& frustum, float deltaTime);
 		void submit(const MeshRequest& request);
 		void submit(const BillboardRequest& request);
-		void setViewport(int widht, int height);
+		void setViewport(int width, int height);
 		void setClearColor(const glm::vec4& color);
 		void updateDebugPrimitives(const std::vector<float>& vertexData,
 			const std::vector<int>& elements);
+
+		void unforwardMesh(GpuHandle handle);
+		void unforwardTexture(GpuHandle handle);
 	};
 
 }
