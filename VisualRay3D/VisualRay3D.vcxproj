@@ -218,6 +218,7 @@
     <ClInclude Include="src\visualray\spatial_service\spatial_uniform_grid.h" />
     <ClInclude Include="src\visualray\render_service\camera_system.h" />
     <ClInclude Include="src\visualray\spatial_service\volume.h" />
+    <ClInclude Include="src\visualray\world\tags.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\thirdparty\GLAD\GLAD.vcxproj">
