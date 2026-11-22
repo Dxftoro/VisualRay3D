@@ -10,7 +10,9 @@ namespace vray {
 
 	MeshSystem::MeshSystem(GpuResourceManagers& _managers, MeshList& _meshList)
 	:	managers(_managers), meshList(_meshList) {
-		
+	}
+
+	void MeshSystem::init() {
 		CompRenderable::Material material = {
 			.ka = glm::vec3(0.1f),
 			.kd = glm::vec3(1.0f),
@@ -18,23 +20,17 @@ namespace vray {
 			.shininess = 32.0
 		};
 
-		try {
-			ctx.program.compileShader("shaders/phong.vert", ShaderType::VERTEX);
-			ctx.program.compileShader("shaders/phong.frag", ShaderType::FRAGMENT);
-			ctx.program.link();
-			ctx.program.validate();
+		ctx.program.compileShader("shaders/phong.vert", ShaderType::VERTEX);
+		ctx.program.compileShader("shaders/phong.frag", ShaderType::FRAGMENT);
+		ctx.program.link();
+		ctx.program.validate();
 
-			ctx.uProjectionMatrix = ctx.program.getUniform("projectionMatrix");
-			ctx.uViewMatrix = ctx.program.getUniform("viewMatrix");
-			ctx.uModelMatrix = ctx.program.getUniform("modelMatrix");
-			ctx.uNormalMatrix = ctx.program.getUniform("normalMatrix");
+		ctx.uProjectionMatrix = ctx.program.getUniform("projectionMatrix");
+		ctx.uViewMatrix = ctx.program.getUniform("viewMatrix");
+		ctx.uModelMatrix = ctx.program.getUniform("modelMatrix");
+		ctx.uNormalMatrix = ctx.program.getUniform("normalMatrix");
 
-			ctx.uboMaterial = ctx.program.createUniformBuffer("MaterialData", &material, sizeof(material));
-		}
-		catch (std::runtime_error& exc) {
-			VR_ENGINE_LOGERROR(exc.what());
-			std::terminate();
-		}
+		ctx.uboMaterial = ctx.program.createUniformBuffer("MaterialData", &material, sizeof(material));
 	}
 
 	void MeshSystem::update(const glm::mat4& projection, const glm::mat4& view) {

@@ -26,6 +26,15 @@ namespace vray {
 		glDebugMessageCallback(rendererDebugCallback, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 		glDisable(GL_DEBUG_OUTPUT);
+
+		try {
+			meshSystem.init();
+			lightSystem.init(meshSystem.getPipelineContext().program);
+		}
+		catch (std::runtime_error& exc) {
+			VR_ENGINE_LOGERROR(exc.what());
+			std::terminate();
+		}
 	}
 
 	Renderer::~Renderer() {
@@ -41,9 +50,6 @@ namespace vray {
 	}
 
 	void Renderer::update(const Frustum& frustum, float deltaTime) {
-		/* Update mesh system */
-		/* Clear mesh list */
-
 		lightSystem.update(frustum);
 		meshSystem.update(cameraSystem.getProjectionMatrix(), cameraSystem.getViewMatrix());
 		renderLists.meshes.clear();

@@ -25,7 +25,10 @@ namespace vray {
 	public:
 		MeshSystem(GpuResourceManagers& managers, MeshList& _meshList);
 
+		void init();
 		void update(const glm::mat4& projection, const glm::mat4& view);
+
+		PipelineContext& getPipelineContext() { return ctx; }
 	};
 
 }
