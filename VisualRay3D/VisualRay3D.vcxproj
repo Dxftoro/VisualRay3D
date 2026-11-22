@@ -37,7 +37,6 @@
     <ClCompile Include="src\visualray\render_service\glsl_flexible_buffer.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_program.cpp" />
     <ClCompile Include="src\visualray\render_service\glsl_uniform_buffer.cpp" />
-    <ClCompile Include="src\visualray\render_service\gpu_mesh_loader.cpp" />
     <ClCompile Include="src\visualray\render_service\gpu_mesh_manager.cpp" />
     <ClCompile Include="src\visualray\render_service\gpu_texture_manager.cpp" />
     <ClCompile Include="src\visualray\render_service\light_system.cpp" />
@@ -111,7 +110,6 @@
     <ClInclude Include="src\visualray\render_service\gpu_handle.h" />
     <ClInclude Include="src\visualray\render_service\gpu_lights.h" />
     <ClInclude Include="src\visualray\render_service\gpu_mesh.h" />
-    <ClInclude Include="src\visualray\render_service\gpu_mesh_loader.h" />
     <ClInclude Include="src\visualray\render_service\gpu_mesh_manager.h" />
     <ClInclude Include="src\visualray\render_service\gpu_resource_manager.h" />
     <ClInclude Include="src\visualray\render_service\gpu_resource_managers.h" />
