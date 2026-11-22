@@ -51,11 +51,14 @@ SpatialTest::SpatialTest()
 
 	spawner = new Spawner(game);
 
-	spawner->spawnMap(maps.get("light"), { 0.0f, 0.5f, 0.5f });
+	spawner->spawnMap(maps.get("spawn"), { 0.0f, 0.5f, 0.5f });
 
 	game.world.view<CompMapSpawn>().each([this] (entt::entity entity, CompMapSpawn& spawn) {
 		spawns.push_back(entity);
 	});
+
+	spawner->spawnPlatformGrid(glm::vec3(0.0f), { 3.0f, 3.0f }, 6);
+	spawner->spawnLight({ 0.0f, 5.0f, 0.0f }, { 0.0f, 0.5f, 0.5f });
 
 	// 2774 containts CompMapPart on heavy
 	//
@@ -196,6 +199,7 @@ void SpatialTest::loadAssets() {
 	maps.load("maps/light.txt", "light");
 	maps.load("maps/heavy.txt", "heavy");
 	maps.load("maps/test.txt", "test");
+	maps.load("maps/spawn.txt", "spawn");
 }
 
 VR_IMPLEMENT_GAME(SpatialTest);

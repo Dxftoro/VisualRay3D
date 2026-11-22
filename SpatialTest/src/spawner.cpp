@@ -20,21 +20,21 @@ entt::entity Spawner::spawnModel(const glm::vec3& pos, const std::string& resour
 }
 
 entt::entity Spawner::spawnLight(const glm::vec3& pos, const glm::vec3& color) {
-	entt::entity lightEntity = game.world.create();
+	entt::entity light = game.world.create();
 
 	vray::CompTransform transform;
 	transform.setPosition(pos);
 	transform.setSize({ 0.5f, 0.5f, 0.5f });
 
-	game.world.emplace<vray::CompPointLight>(lightEntity);
+	game.world.emplace<vray::CompPointLight>(light, vray::CompPointLight{
+		.color = color,
+		.intensity = 1.0f,
+		.range = 10.0f
+	});
 
-	vray::CompPointLightData& lightData = game.world.get<vray::CompPointLightData>(lightEntity);
-	lightData.position = glm::vec4(pos, 1.0f);
-	lightData.mergeColor(color);
+	game.world.emplace<vray::CompTransform>(light, transform);
 
-	game.world.emplace<vray::CompTransform>(lightEntity, transform);
-
-	return lightEntity;
+	return light;
 }
 
 entt::entity Spawner::spawnPlatform(const glm::vec3& position, const glm::vec2& size) {
