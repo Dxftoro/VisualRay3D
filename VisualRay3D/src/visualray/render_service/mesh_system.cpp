@@ -25,10 +25,10 @@ namespace vray {
 		ctx.program.link();
 		ctx.program.validate();
 
-		ctx.uProjectionMatrix = ctx.program.getUniform("projectionMatrix");
-		ctx.uViewMatrix = ctx.program.getUniform("viewMatrix");
-		ctx.uModelMatrix = ctx.program.getUniform("modelMatrix");
-		ctx.uNormalMatrix = ctx.program.getUniform("normalMatrix");
+		ctx.uProjectionMatrix = ctx.program.getUniform("uProjectionMatrix");
+		ctx.uViewMatrix = ctx.program.getUniform("uViewMatrix");
+		ctx.uModelMatrix = ctx.program.getUniform("uModelMatrix");
+		ctx.uNormalMatrix = ctx.program.getUniform("uNormalMatrix");
 
 		ctx.uboMaterial = ctx.program.createUniformBuffer("MaterialData", &material, sizeof(material));
 	}
